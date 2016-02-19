@@ -1,0 +1,19 @@
+{
+	"spm" : {
+		"alias" : {
+			"$" : "jquery/jquery/1.10.1/jquery"
+		},
+		"output" : {
+			"relative" : [
+				"index.js",
+				"browse.js",
+				"batchUpload.js",
+				"upload.js",
+				"edit.js",
+				"login.js",
+				"register.js",
+				"forgetPwd.js"				
+			]
+		}
+	}
+}

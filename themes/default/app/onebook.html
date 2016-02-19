@@ -1,0 +1,87 @@
+<!doctype html>
+<html>
+<head>
+<title>Ava is reading...</title>
+{% include 'common/link.html' %}
+</head>
+
+<body data-key="index">
+{% include 'common/header.html' %} 
+<div class="main_form">
+	{% if file|length != 0 %}
+    <div class="articleTitle">
+		<h1>{{file['bname']}}</h1>
+		<div class="heat">
+			热度：<span class="eva_count" id="eva_count_{{file['bid']}}">{{file['beva']}}</span>
+			{% if file['misc']['meva'] %}
+			<span class="eva eva_1" title="取消喜欢" id="eva_{{file['bid']}}"></span>
+			{% else %}
+			<span class="eva" title="喜欢" id="eva_{{file['bid']}}"></span>
+			{% endif %}
+		</div>
+	</div>
+    <div class="articleInfo">
+        <table>
+            <tr>
+                <th width="10%">作者</th>
+                <td width="40%">{{file['bauthor']}}</td>
+                <th width="10%">主角</th>
+                <td width="40%">{{file['brole']}}</td>
+            </tr>
+            <tr>
+                <th>分类</th>
+                <td>{{file['btype']}}</td>
+                <th>上传日期</th>
+                <td>{{file['bdate']}}</td>
+            </tr>
+            <tr>
+                <th>文风</th>
+                <td>{{file['bstyle']}}</td>
+                <th>文件大小</th>
+                <td>{{file['bsize']}}</td>
+            </tr>
+            <tr>
+                <th>标签</th>
+                <td>
+					{% for tag in file['btags'] %}
+                    <span>{{tag}}</span>
+                    {% endfor %}
+                </td>
+                <th>文件类型</th>
+                <td>{{file['bformat']}}</td>
+            </tr>
+            <tr>
+                <th>文案</th>
+                <td colspan="3">{{file['bsummary']}}</td>
+            </tr>
+            <tr>
+                <th>原创网址</th>
+                <td colspan="3"><a href="{{file['borig']}}" target="_blank">{{file['borig']}}</a></td>
+            </tr>
+			{% if file['bexist'] == 1 %}
+            <tr>
+            	<th>操作</th>
+                <td colspan="3" class="multiar"><a href="{{WEB_ROOT}}editbook.php?bid={{file['bid']}}">编辑</a><a href="{{WEB_ROOT}}download.php?bid={{file['bid']}}" target="_blank" class="ml2">下载</a></td>
+            </tr>
+			{% endif %}
+        </table>
+    </div>
+	<div class="articlePreview">
+		{% if file['bexist'] == 1 %}
+			<h3>文章试读</h3>
+			{{file['filePreview'] | raw}}
+			<div class="goOn">试读结束，请下载后阅读全文：<a href="{{WEB_ROOT}}download.php?bid={{file['bid']}}" target="_blank">{{file['bname']}}</a></div>
+		{% elseif file['bexist'] == 2 %}
+			<h3 class="deleted">该文件尚未通过审核，将于24小时内审核结束。</h3>
+		{% else %}
+			<h3 class="deleted">因版权或其它原因，该文件已删除。</h3>
+		{% endif %}
+    </div>
+	{% else %}
+	<div class="failDone doneMt">&times; 很遗憾，没找到！</div>
+	{% endif %}
+</div>
+{% include 'common/footer.html' %}
+{% include 'common/script.html' %}
+</body>
+</html>

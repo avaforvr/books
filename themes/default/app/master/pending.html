@@ -1,0 +1,29 @@
+<h1>待审核文件<span class="total">({{total}})</span></h1>
+<div class="fileBoxList">
+	{% for box in boxList %}
+	<dl class="fileBox">
+		{% for file in box['pending'] %}
+		<dt{{loop.last ? ' class="last"' : ''}} id="bid_{{file['bid']}}">
+			<h3>
+				<a href="{{WEB_ROOT}}onebook.php?bid={{file['bid']}}" target="_blank">{{file['bname']}}</a>
+				<span>by {{file['bauthor']}}</span>
+			</h3>
+			<div class="o">
+				<input class="btn5 btn-delete" type="submit" value="重复了">
+				<input class="btn6 btn-pass" type="submit" value="通 过">
+			</div>
+		</dt>
+		{% endfor %}
+		
+		{% if box['exist']|length != 0 %}
+		<dd>
+			<ul class="c">
+				{% for file in box['exist'] %}
+				<li><a href="{{WEB_ROOT}}onebook.php?bid={{file['bid']}}" target="_blank">{{file['bname']}}</a></li>
+				{% endfor %}
+			</ul>
+		</dd>
+		{% endif %}
+	</dl>
+	{% endfor %}
+</div>

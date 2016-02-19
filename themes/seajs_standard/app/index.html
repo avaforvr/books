@@ -1,0 +1,62 @@
+<!doctype html>
+<html>
+<head>
+<title>Ava is reading...</title>
+{template c_link.html}
+</head>
+
+<body>
+{template c_header.html}
+<div class="main_home">
+    <div class="quickNav">
+        <a href="{$WEB_ROOT}browse.php" class="a1">浏览书库</a><a href="{$WEB_ROOT}browse.php?sortby=1" class="a2">最新上传</a><a href="{$WEB_ROOT}upload.php" class="a3">上传新书</a><a href="{$WEB_ROOT}browse.php?sortby=2" class="a4">排行榜</a><a href="{$WEB_ROOT}user/index.php" class="a5">用户中心</a><a href="#" class="a6">网站论坛</a>
+    </div>
+    <div class="hotSearch">
+        热门搜索：<a href="">耽美</a><a href="">言情</a><a href="">同人</a><a href="">空间</a><a href="">末世</a><a href="">异世</a>
+    </div>
+	<ul class="novList separated">
+		<!--{loop $fileList $file}-->
+		<li id="nov_{$file['bid']}">
+            <div class="t">
+                <h3><a href="{$WEB_ROOT}details.php?bid={$file['bid']}" target="_blank">{$file['bname']}</a><span>作者：{$file['bauthor']}</span></h3>
+                <p>热度：<span class="evaCount">{$file['beva']}</span>
+				<!--{if $file['iseva']}-->
+				<span class="eva eva_1" title="取消喜欢"></span>
+				<!--{else}-->
+				<span class="eva" title="喜欢"></span>
+				<!--{/if}-->
+				</p>
+            </div>
+            <div class="d">{$file['bsummary']}</div>
+            <div class="o">
+                <p class="oc1">
+					<span>{$attr_type[$file['btype']]}</span>
+					<!--{if $file['bstyle'] != 0}-->
+					<span>{$attr_style[$file['bstyle']]}</span>
+					<!--{/if}-->
+					<!--{loop $file['btags'] $tag}-->
+					<span>{$tag}</span>
+					<!--{/loop}-->
+					<span>{$file['bsize']}</span>
+				</p>
+                <!--{if $file['bexist']}-->
+				<p class="oc2"><a href="{$WEB_ROOT}download.php?bid={$file['bid']}" target="_blank">下载</a><a href="{$WEB_ROOT}edit.php?bid={$file['bid']}">编辑</a><a href="javascript:void(0)" class="btnDelFile">删除</a></p>
+				<!--{/if}-->
+            </div>
+        </li>
+		<!--{/loop}-->
+	</ul>
+</div>
+{template c_footer.html}
+{template c_script.html}
+<script>
+<!--{if $GLOBALS['JS_DEBUG']}-->	
+	seajs.use('loc/index');
+<!--{else}-->
+	seajs.use('global', function () {
+		seajs.use(['global/global/0.0.1/index']);
+	})
+<!--{/if}-->
+</script>
+</body>
+</html>

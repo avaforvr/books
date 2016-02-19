@@ -1,0 +1,21 @@
+{
+  "family": "global",
+  "name": "global",
+  "version": "0.0.1",
+  "spm": {
+    "alias": {
+	  "$": "$"
+    },
+	"output": {
+		"global.js":[
+			"index.js",
+			"batchUpload.js",
+			"browse.js",
+			"forgetPwd.js",
+			"login.js",
+			"register.js",
+			"upload.js"
+		]
+	}
+  }
+}

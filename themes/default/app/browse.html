@@ -1,0 +1,25 @@
+<!doctype html>
+<html>
+<head>
+<title>Ava is reading...</title>
+{% include 'common/link.html' %}
+</head>
+
+<body data-key="browse">
+{% include 'common/header.html' %} 
+<div class="main_browse">
+    <div class="sidebar">
+		{% include 'browse/filterForm.html' %} 
+		{% include 'browse/keyForm.html' %} 
+		{% include 'common/hotSearch.html' %} 
+    </div>
+    <div class="col2Main">
+		{{html_fileList | raw}}
+    </div>
+    <div class="clear">
+    </div>
+</div>
+{% include 'common/footer.html' %}
+{% include 'common/script.html' %}
+</body>
+</html>

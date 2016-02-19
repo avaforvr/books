@@ -1,0 +1,49 @@
+{% if fileList | length != 0 %}
+	{{html_listFilter | raw}}
+	<ul class="novList{{extendClass}}">
+		{% for file in fileList %} 
+		<li>
+			<div class="t">
+				<h3>
+					<a href="{{WEB_ROOT}}onebook.php?bid={{file['bid']}}" target="_blank">{{file['bname']}}</a>
+					<span>作者：{{file['bauthor']}}</span>
+				</h3>
+				<p>
+					热度：<span class="eva_count" id="eva_count_{{file['bid']}}">{{file['beva']}}</span>
+					{% if file['misc']['meva'] %}
+					<span class="eva eva_1" title="取消喜欢" id="eva_{{file['bid']}}"></span>
+					{% else %}  
+					<span class="eva" title="喜欢" id="eva_{{file['bid']}}"></span>
+					{% endif %}
+				</p>
+			</div>
+			<div class="d">{{file['bsummary']}}</div>
+			<div class="o">
+				<p class="oc1">
+					<span>{{file['btype_lang']}}</span>
+					
+					{% if file['bstyle'] != 0 %}
+					<span>{{file['bstype_lang']}}</span>
+					{% endif %}
+					
+					{% for tag in file['btags'] %}
+					<span>{{tag}}</span>
+					{% endfor %}
+					
+					<span>{{file['bsize']}}</span>
+				</p>
+				{% if file['bexist'] %}
+				<p class="oc2">
+					<a href="{{WEB_ROOT}}download.php?bid={{file['bid']}}" target="_blank">下载</a>
+					<a href="{{WEB_ROOT}}editbook.php?bid={{file['bid']}}">编辑</a>
+					<a href="javascript:void(0)" class="btnDelFile" id="del_{{file['bid']}}">删除</a>
+				</p>
+				{% endif %}
+			</div>
+		</li>
+		{% endfor %}
+	</ul>
+	{{html_pageString | raw}}
+{% else %}
+	<div class="browseTip">没有记录</div>
+{% endif %}

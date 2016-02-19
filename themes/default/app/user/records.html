@@ -1,0 +1,22 @@
+<h1>
+	{{act_translate}}记录
+</h1>
+<div class="fileList bbord ntbord">
+	<h3>共{{act_translate}} {{total}} 个文件，文件列表如下：</h3>
+	<table>
+		<thead>
+			<tr>
+				<td>书名</td>
+				<td>作者</td>
+			</tr>
+		</thead>
+		<tbody>
+			{% for file in fileList %}
+			<tr>
+				<td><a href="{{WEB_ROOT}}onebook.php?bid={{file['bid']}}" target="_blank">{{file['bname']}}</a></td>
+				<td>{{file['bauthor']}}</td>
+			</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+</div>

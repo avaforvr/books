@@ -1,0 +1,87 @@
+<!doctype html>
+<html>
+<head>
+<title>Ava is reading...</title>
+{% include 'common/link.html' %}
+</head>
+
+<body data-key="upload">
+{% include 'common/header.html' %} 
+<div class="main_form">
+    <h1>{{file['bname']}}</h1>
+	<form action="{{WEB_ROOT}}editbook.php?bid={{file['bid']}}" method="post" id="editForm">
+		<input type="hidden" name="act" value="editInfo">
+		<input type="hidden" name="bookInfo[bid]" value="{{file['bid']}}">
+		<table class="tbl" width="100%">
+			<tr>
+				<th width="80">书名：<span class="required">*</span></th>
+				<td width="280"><input type="text" class="text" name="bookInfo[bname]" value="{{file['bname']}}" readonly></td>
+				<td><span id="bnameTip" class="tip">不可修改</span></td>
+			</tr>
+			<tr>
+				<th>作者：<span class="required">*</span></th>
+				<td><input type="text" class="text" name="bookInfo[bauthor]" value="{{file['bauthor']}}" readonly></td>
+				<td><span id="bauthorTip" class="tip">不可修改</span></td>
+			</tr>
+			<tr>
+				<th>分类：<span class="required">*</span></th>
+				<td>
+					<div class="sele">
+						<input type="hidden" name="bookInfo[btype]" value="{{file['btype']}}">
+						<span>{{attr_type[file['btype']]}}</span>
+						<ul>
+							{% for type in attr_type %}
+							<li>{{type}}</li>
+							{% endfor %}
+						</ul>
+					</div>
+				</td>
+				<td><span id="btypeTip" class="tip"></span></td>
+			</tr>
+			<tr>
+				<th>简介：</th>
+				<td colspan="2"><textarea class="area" name="bookInfo[bsummary]">{{file['bsummary']}}</textarea></td>
+			</tr>
+			<tr>
+				<th>主角：</th>
+				<td colspan="2"><input type="hidden" name="bookInfo[brole]" value="{{file['brole']}}"><span class="tip">多个主角用英文逗号隔开，如“张三,李四”</span></td>
+			</tr>
+			<tr>
+				<th>文风：</th>
+				<td>
+					<div class="sele">
+						<input type="hidden" name="bookInfo[bstyle]" value="{{file['bstyle']}}">
+						<span>{{attr_style[file['bstyle']]}}</span>
+						<ul>
+							{% for style in attr_style %}
+							<li>{{style}}</li>
+							{% endfor %}
+						</ul>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<th>原创网址：</th>
+				<td colspan="2"><input type="text" class="text" name="bookInfo[borig]" value="{{file['borig']}}"><span id="borigTip" class="tip"></span></td>
+			</tr>
+			<tr>
+				<th>标签：</th>
+				<td colspan="2">
+					<ul class="optionList">
+						{% for key, tag in tags_with_state %}
+						<li><input type="checkbox" name="bookInfo[btags][]" value="{{key}}"{{tag['checked']}}> <label>{{tag['text']}}</label></li>
+						{% endfor %}
+					</ul>
+					<p id="btagsTip" class="tip"></p>
+				</td>
+			</tr>
+			<tr>
+				<td class="btnTd" colspan="2"><input class="btn1" type="submit" value="保  存"><input class="btn3" type="reset" value="重  置"></td>
+			</tr>
+		</table>
+	</form>
+</div>
+{% include 'common/footer.html' %}
+{% include 'common/script.html' %}
+</body>
+</html>

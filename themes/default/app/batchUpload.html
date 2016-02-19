@@ -1,0 +1,59 @@
+<!doctype html>
+<html>
+<head>
+<title>Ava is reading...</title>
+{% include 'common/link.html' %}
+</head>
+
+<body data-key="batchUpload">
+{% include 'common/header.html' %} 
+<div class="main_form">
+    <h1>批量上传</h1>
+	<div class="related"><a href="{{WEB_ROOT}}upload.php">单个文件上传</a></div>
+	<form id="buForm">
+        <input type="hidden" name="act" value="batchUpload">
+		<input type="hidden" name="legalDir" value="">
+		<table class="tbl" id="setDir">
+			<tr>
+				<th>目录：</th>
+				<td><input type="text" class="text" name="dir" id="dir"></td>
+				<td><input type="button" class="btn2 ml" id="btnVerifyDir" value="验证目录"></td>
+			</tr>
+		</table>
+		<div class="batchOption" style="display:none">
+            <table class="tbl">
+                <tr>
+                    <th width="80">分类：</th>
+					<td width="280"><div class="sele">
+                            <input type="hidden" name="btype" value="0">
+                            <span>-</span>
+							<ul>
+								{% for type in attr_type %}
+								<li>{{type}}</li>
+								{% endfor %}
+                            </ul>
+                        </div></td>						
+                    <td><span id="btypeTip" class="tip"></span></td>
+                </tr>
+				<tr>
+					<th>标签：</th>
+					<td colspan="2">
+						<ul class="optionList">
+							{% for key, tag in attr_tags %}
+							<li><input type="checkbox" name="btags[]" value="{{key}}"> <label>{{tag}}</label></li>
+							{% endfor %}
+						</ul>
+						<p id="btagsTip" class="tip"></p>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="3"><input class="btn1" id="btnBatchUpload" type="submit" value="上  传"></td>
+				</tr>
+            </table>
+		</div>
+    </form>	
+</div>
+{% include 'common/footer.html' %}
+{% include 'common/script.html' %}
+</body>
+</html>

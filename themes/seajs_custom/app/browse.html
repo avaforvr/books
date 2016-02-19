@@ -1,0 +1,114 @@
+<!doctype html>
+<html>
+<head>
+<title>Ava is reading...</title>
+{template c_link.html}
+</head>
+
+<body>
+{template c_header.html}
+<div class="main_browse">
+    <div class="sidebar">
+        <section class="sbSearch">
+            <form action="{$WEB_ROOT}browse.php" method="get" id="filterForm">
+                <input type="hidden" name="act" value="sbfilter">
+                <div class="sele">
+                    <input type="hidden" value="0" name="ftype">
+                    <span>类型</span>
+                    <ul>
+                        <!--{loop $attr_type $type}-->
+                        <li>{$type}</li>
+                        <!--{/loop}-->
+                    </ul>
+                </div>
+                <div class="sele">
+                    <input type="hidden" value="0" name="fstyle">
+                    <span>文风</span>
+                    <ul>
+                        <!--{loop $attr_style $style}-->
+                        <li>{$style}</li>
+                        <!--{/loop}-->
+                    </ul>
+                </div>                
+                <input class="btn5" type="submit" value="搜  索">
+            </form>
+        </section>
+		<section class="sbSearch">
+            <form action="{$WEB_ROOT}browse.php" method="get" id="keyForm">
+                <input type="hidden" name="act" value="sbsearch">
+                <div class="sele">
+                    <input type="hidden" value="0" name="sbfield">
+                    <span>书名</span>
+                    <ul>
+                        <li>书名</li>
+                        <li>作者</li>
+                        <li>主角</li>
+                    </ul>
+                </div>
+                <input type="text" class="text" value="请输入关键字" name="sbkey">
+                <input class="btn5" type="submit" value="搜  索">
+            </form>
+        </section>
+        <section class="sbhot">
+            <h3>热门搜索：</h3>
+            <a href="#">耽美</a><a href="#">言情</a><a href="#">同人</a><a href="#">空间</a><a href="#">末世</a><a href="#">异世</a> </section>
+    </div>
+    <div class="result">
+        <section class="filter">
+            <div class="sort">
+                <span>排序：</span><a href="{$sortByDate}"{echo ($sortBy == 1) ? ' class="cur"' : ''}>按时间</a><a href="{$sortByEva}"{echo ($sortBy == 2) ? ' class="cur"' : ''}>按评价</a><a href="{$sortBySize}"{echo ($sortBy == 3) ? ' class="cur"' : ''}>按字数</a>
+            </div>
+            <div class="total">
+                共<span>{$filesTotal}</span>条记录，<span>{$pageTotal}</span>页
+            </div>
+        </section>
+		<!--{if !empty($fileList)}-->
+        <ul class="novList listing">
+            <!--{loop $fileList $file}-->
+            <li id="nov_{$file['bid']}">
+				<div class="t">
+					<h3><a href="{$WEB_ROOT}details.php?bid={$file['bid']}" target="_blank">{$file['bname']}</a><span>作者：{$file['bauthor']}</span></h3>
+					<p>热度：<span class="evaCount">{$file['beva']}</span>
+					<!--{if $file['iseva']}-->
+					<span class="eva eva_1" title="取消喜欢"></span>
+					<!--{else}-->
+					<span class="eva" title="喜欢"></span>
+					<!--{/if}-->
+					</p>
+				</div>
+				<div class="d">{$file['bsummary']}</div>
+				<div class="o">
+					<p class="oc1">
+						<span>{$attr_type[$file['btype']]}</span>
+						<!--{if $file['bstyle'] != 0}-->
+						<span>{$attr_style[$file['bstyle']]}</span>
+						<!--{/if}-->
+						<!--{loop $file['btags'] $tag}-->
+						<span>{$tag}</span>
+						<!--{/loop}-->
+						<span>{$file['bsize']}</span>
+					</p>
+					<!--{if $file['bexist']}-->
+					<p class="oc2"><a href="{$WEB_ROOT}download.php?bid={$file['bid']}" target="_blank">下载</a><a href="{$WEB_ROOT}edit.php?bid={$file['bid']}">编辑</a><a href="javascript:void(0)" class="btnDelFile">删除</a></p>
+					<!--{/if}-->
+				</div>
+			</li>
+            <!--{/loop}-->
+        </ul>
+        <div class="pages">
+            {$pageString}
+        </div>
+		<!--{else}-->
+		<div class="browseTip">没有记录</div>
+		<!--{/if}-->
+    </div>
+    <div class="clear">
+    </div>
+</div>
+{template c_footer.html} 
+{template c_script.html}
+<script>
+    seajs.use((seajs.production ? '' : '/themes/{$theme}/js/') + 'src/{$file_name}');
+</script>
+</body>
+</html>

@@ -1,0 +1,90 @@
+<!doctype html>
+<html>
+<head>
+<title>Ava is reading...</title>
+{template c_link.html}
+</head>
+
+<body>
+{template c_header.html}
+<div class="main_form">
+    <h1>{$file['bname']}</h1>
+	<form action="edit.php" method="post" id="editForm">
+		<input type="hidden" name="act" value="editInfo">
+		<input type="hidden" name="bid" value="{$bid}">
+		<table class="tbl">
+			<tr>
+				<th width="80">书名：</th>
+				<td width="280"><input type="text" class="text" name="bname" value="{$file['bname']}" readonly></td>
+				<td><span class="tip" id="bnameTip">不可修改</span></td>
+			</tr>
+			<tr>
+				<th>作者：</th>
+				<td><input type="text" class="text" name="bauthor" value="{$file['bauthor']}" readonly></td>
+				<td><span class="tip" id="bauthorTip">不可修改</span></td>
+			</tr>
+			<tr>
+				<th>分类：</th>
+				<td>
+					<div class="sele">
+						<input type="hidden" name="btype" value="{$file['btype']}">
+						<span>{$attr_type[$file['btype']]}</span>
+						<ul>
+							<!--{loop $attr_type $type}-->
+							<li>{$type}</li>
+							<!--{/loop}-->
+						</ul>
+					</div>
+				</td>
+				<td><span class="tip" id="btypeTip"></span></td>
+			</tr>
+			<tr>
+				<th>简介：</th>
+				<td colspan="2"><textarea class="area" name="bsummary">{$file['bsummary']}</textarea></td>
+			</tr>
+			<tr>
+				<th>主角：</th>
+				<td colspan="2"><input type="text" class="text" name="brole" value="{$file['brole']}"><span class="tip">多个主角用英文逗号隔开，如“张三,李四”</span></td>
+			</tr>			
+			<tr>
+				<th>文风：</th>
+				<td colspan="2">
+					<div class="sele">
+						<input type="hidden" name="bstyle" value="{$file['bstyle']}">
+						<span>{$attr_style[$file['bstyle']]}</span>
+						<ul>
+							<!--{loop $attr_style $style}-->
+							<li>{$style}</li>
+							<!--{/loop}-->
+						</ul>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<th>原创网址：</th>
+				<td colspan="2"><input type="text" class="text" name="borig" value="{$file['borig']}"><span class="tip" id="borigTip"></span></td>
+			</tr>
+			<tr>
+				<th>标签：</th>
+				<td colspan="2">
+					<ul class="optionList">
+						<!--{loop $attr_tags $key $tag}-->
+						<li><input type="checkbox" name='btags[]' value="{$key}"{echo in_array($key, $file_tag_arr) ? 'checked' : ''}> <label>{$tag}</label></li>
+						<!--{/loop}-->
+					</ul>
+					<p class="tip" id="btagsTip"></p>
+				</td>
+			</tr>
+			<tr>
+				<td class="btnTd" colspan="2"><input class="btn1" type="submit" value="保  存"><input class="btn3" type="reset" value="重  置"><input class="btn3" type="button" value="返  回" onclick="history.go(-1)"></td>
+			</tr>
+		</table>
+	</form>
+</div>
+{template c_footer.html}
+{template c_script.html}
+<script>
+	seajs.use((seajs.production ? '' : '/themes/{$theme}/js/') + 'src/{$file_name}');
+</script>
+</body>
+</html>

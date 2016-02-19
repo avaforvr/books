@@ -1,0 +1,110 @@
+<!doctype html>
+<html>
+<head>
+<title>Ava is reading...</title>
+{template c_link.html}
+</head>
+
+<body>
+{template c_header.html}
+<div class="main_form">
+    <h1>单个文件上传</h1>
+	<div class="related"><a href="{$WEB_ROOT}batchUpload.php">批量上传</a></div>
+	<form action="upload.php" method="post" enctype="multipart/form-data" id="attaForm">
+		<input type="hidden" name="act" value="verifyAtta">
+		<table class="tbl">
+			<tr>
+				<th>上传文件：</th>
+				<td><input type="file" name="attachment" id="attachment"><span id="attaInfo"></span></td>
+			</tr>
+		</table>
+	</form>
+	<form action="upload.php" method="post" id="uploadForm">
+		<input type="hidden" name="act" value="uploadNew">
+		<input type="hidden" name="bformat" value="">
+		<input type="hidden" name="bsize" value="">
+		<input type="hidden" name="bpath" value="">
+		<table class="tbl" style="display:none">
+			<tr>
+				<th width="80">书名：<span class="required">*</span></th>
+				<td width="280"><input type="text" class="text" name="bname"></td>
+				<td><span id="bnameTip"></span></td>
+			</tr>
+			<tr>
+				<th>作者：<span class="required">*</span></th>
+				<td><input type="text" class="text" name="bauthor"></td>
+				<td><span id="bauthorTip"></span></td>
+			</tr>
+			<tr>
+				<th>分类：<span class="required">*</span></th>
+				<td>
+					<div class="sele">
+						<input type="hidden" name="btype" value="0">
+						<span>-</span>
+						<ul>
+							<!--{loop $attr_type $type}-->
+							<li>{$type}</li>
+							<!--{/loop}-->
+						</ul>
+					</div>
+				</td>
+				<td><span id="btypeTip"></span></td>
+			</tr>
+			<tr>
+				<th>简介：</th>
+				<td colspan="2"><textarea class="area" name="bsummary"></textarea></td>
+			</tr>
+			<tr>
+				<th>主角：</th>
+				<td colspan="2"><input type="hidden" name="brole"><span class="tip">多个主角用英文逗号隔开，如“张三,李四”</span></td>
+			</tr>
+			<tr>
+				<th>文风：</th>
+				<td>
+					<div class="sele">
+						<input type="hidden" name="bstyle" value="0">
+						<span>-</span>
+						<ul>
+							<!--{loop $attr_style $style}-->
+							<li>{$style}</li>
+							<!--{/loop}-->
+						</ul>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<th>原创网址：</th>
+				<td colspan="2"><input type="text" class="text" name="borig"><span class="tip" id="borigTip"></span></td>
+			</tr>
+			<tr>
+				<th>标签：</th>
+				<td colspan="2">
+					<ul class="optionList">
+						<!--{loop $attr_tags $key $tag}-->
+						<li><input type="checkbox" name="btags[]" value="{$key}"> <label>{$tag}</label></li>
+						<!--{/loop}-->
+					</ul>
+					<p id="btagsTip"></p>
+				</td>
+			</tr>
+			<tr>
+				<td class="btnTd" colspan="2"><input class="btn1" type="submit" value="上  传"><input class="btn3" type="reset" value="重  置"></td>
+			</tr>
+		</table>
+	</form>
+	
+	<!--{if isset($uploadResult)}-->
+		<!--{if $uploadResult}-->
+			<div class="sucDone tac">&radic; 上传成功</div>
+		<!--{else}-->			
+			<div class="failDone tac">&times; 上传失败</div>
+		<!--{/if}-->
+	<!--{/if}-->
+</div>
+{template c_footer.html}
+{template c_script.html}
+<script>
+	seajs.use((seajs.production ? '' : '/themes/{$theme}/js/') + 'src/{$file_name}');
+</script>
+</body>
+</html>

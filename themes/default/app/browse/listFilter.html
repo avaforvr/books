@@ -1,0 +1,11 @@
+<section class="filter">
+	<div class="sort">
+		<span>排序：</span>
+		<a href="{{sortByUrl}}sortby=1"{{(sortBy == 1) ? ' class="cur"' : ''}}>按时间</a>
+		<a href="{{sortByUrl}}sortby=3"{{(sortBy == 3) ? ' class="cur"' : ''}}>按评价</a>
+		<a href="{{sortByUrl}}sortby=2"{{(sortBy == 2) ? ' class="cur"' : ''}}>按字数</a>
+	</div>
+	<div class="total">
+		共<span>{{filesTotal}}</span>条记录，<span>{{pageTotal}}</span>页
+	</div>
+</section>

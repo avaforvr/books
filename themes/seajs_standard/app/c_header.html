@@ -1,0 +1,22 @@
+<div class="header clearfix">
+    <a href="{$WEB_ROOT}index.php" class="logo">Ava is reading...</a>
+    <ul class="topNav">
+        <li><a href="{$WEB_ROOT}browse.php">浏览书库</a></li>
+        <li><a href="{$WEB_ROOT}user/index.php">我的书库</a></li>
+        <li>
+			<!--{if isset($_SESSION['uid']) && $_SESSION['uid'] > 0}-->
+				<a href="{$WEB_ROOT}login.php?act=logout&back={echo urlencode($_SERVER['REQUEST_URI'])}">退出</a>
+			<!--{else}-->
+				<a href="{$WEB_ROOT}login.php?back={echo urlencode($_SERVER['REQUEST_URI'])}">登陆</a>
+			<!--{/if}-->
+		</li>
+        <!--{*<li><a href="{$WEB_ROOT}master/index.php">我是站长</a></li>*}-->
+    </ul>
+    <div id="topSearch">
+        <form action="{$WEB_ROOT}browse.php" method="get">
+            <input type="hidden" name="act" value="hsearch">
+            <input type="text" name="hkey" id="topSearchText">
+            <input type="submit" value="search" id="topSearchBtn">
+        </form>
+    </div>
+</div>

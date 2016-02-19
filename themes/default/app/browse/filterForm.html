@@ -1,0 +1,24 @@
+<section class="sbSearch">
+	<form action="{{WEB_ROOT}}browse.php" method="get" id="filterForm">
+		<input type="hidden" name="act" value="sbfilter">
+		<div class="sele">
+			<input type="hidden" value="0" name="ftype">
+			<span>类型</span>
+			<ul>
+				{% for type in attr_type %}
+				<li>{{type}}</li>
+				{% endfor %}
+			</ul>
+		</div>
+		<div class="sele">
+			<input type="hidden" value="0" name="fstyle">
+			<span>文风</span>
+			<ul>
+				{% for style in attr_style %}
+				<li>{{style}}</li>
+				{% endfor %}
+			</ul>
+		</div>                
+		<input class="btn5" type="submit" value="搜  索">
+	</form>
+</section>

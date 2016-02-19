@@ -1,0 +1,54 @@
+<!doctype html>
+<html>
+<head>
+<title>Ava is reading...</title>
+{template ../c_link.html}
+</head>
+
+<body>
+{template ../c_header.html}
+<div class="main_form">
+    <h1>找回密码</h1>
+	<div class="related"><a href="{$WEB_ROOT}login.php?back={$back}">快速登陆</a><a href="{$WEB_ROOT}login.php?act=toRegister&back={$back}">快速注册</a></div>
+	<form id="findPwdForm" method="post">
+		<input type="hidden" name="act" value="">
+		<table class="tbl">
+			<tr>
+				<th width="80">用户名：<span class="required">*</span></th>
+				<td width="280"><input type="text" class="text" name="name"></td>
+				<td><span id="nameTip" class="tip">由3-10位英文字母或数字组成</span></td>
+			</tr>
+			<tr>
+				<th>邮 箱：<span class="required">*</span></th>
+				<td><input type="text" class="text" name="email"></td>
+				<td><span id="emailTip" class="tip">注册时所填写的邮箱</span></td>
+			</tr>
+			<tr class="pwdtr" style="display:none">
+				<th>密码：<span class="required">*</span></th>
+				<td><input type="password" class="text" name="pwd" maxLength="16"></td>
+				<td><span id="pwdTip" class="tip">由6-16位下划线、英文字母或数字组成</span></td>
+			</tr>
+			<tr class="pwdtr" style="display:none">
+				<th>确认密码：<span class="required">*</span></th>
+				<td><input type="password" class="text" name="repwd" maxLength="16"></td>
+				<td><span id="repwdTip" class="tip"></span></td>
+			</tr>
+			<tr>
+				<td class="btnTd" colspan="3"><input class="btn1" type="submit" value="提  交"><a href="javascript:history.go(-1)" class="btn3">返&nbsp;&nbsp;回</a><span id="submitTip" class="tip"></span></td>
+			</tr>
+		</table>
+	</form>
+</div>
+{template ../c_footer.html}
+{template ../c_script.html}
+<script>
+<!--{if $GLOBALS['JS_DEBUG']}-->	
+	seajs.use('loc/forgetPwd');
+<!--{else}-->
+	seajs.use('global', function () {
+		seajs.use(['global/global/0.0.1/forgetPwd']);
+	})
+<!--{/if}-->
+</script>
+</body>
+</html>
