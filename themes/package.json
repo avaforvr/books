@@ -1,0 +1,37 @@
+{
+    "name": "avalearn",
+    "version": "0.1.0",
+    "description": "front end",
+    "main": "devnode.js",
+    "browserify": {
+        "transform": [
+            "browserify-shim"
+        ]
+    },
+    "browserify-shim": {
+        "jquery": {
+            "exports": "global:$"
+        }
+    },
+    "dependencies": {
+        "jquery": "~2.1.3"
+    },
+    "devDependencies": {
+        "browserify": "^5.11.0",
+        "browserify-middleware": "^3.0.1",
+        "browserify-shim": "^3.7.0",
+        "express": "^4.8.7",
+        "gulp": "~3.8.7",
+        "gulp-less": "~1.3.5",
+        "gulp-uglify": "~0.3.2",
+        "less-middleware": "^1.0.4",
+        "gulp-streamify": "0.0.5",
+        "vinyl-source-stream": "^0.1.1"
+    },
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "",
+    "license": "",
+    "readme": "readme"
+}

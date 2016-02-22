@@ -1,5 +1,5 @@
 <?
-include_once __DIR__ . '/includes/global.init.php';
+include_once __DIR__ . '/includes/init/global.php';
 
 //{{{ fileList
 include_once __DIR__ . '/includes/processor/FileListProcessor.php';

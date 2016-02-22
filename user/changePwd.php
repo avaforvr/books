@@ -2,7 +2,7 @@
 include_once __DIR__ . '../../includes/global.init.php';
 
 if(! isLogin()) {
-	redirect($container['WEB_ROOT'] . "login.php?back=" . $_SERVER['PHP_SELF']);
+	$container['util']->redirect($container['WEB_ROOT'] . "login.php?back=" . $_SERVER['PHP_SELF']);
 }
 
 $act = isset($_REQUEST['act']) && $_REQUEST['act'] ? $_REQUEST['act'] : '';

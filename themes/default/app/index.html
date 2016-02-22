@@ -1,18 +1,9 @@
-<!doctype html>
-<html>
-<head>
-<title>Ava is reading...</title>
-{% include 'common/link.html' %}
-</head>
+{% extends "common/base.html" %}
 
-<body data-key="index">
-{% include 'common/header.html' %} 
+{% block main %}
 <div class="main_home">
-	{% include 'common/quickNav.html' %} 
-	{% include 'common/hotSearch.html' %} 
+    {% include 'common/quickNav.html' %}
+    {% include 'common/hotSearch.html' %}
     {{html_fileList | raw}}
 </div>
-{% include 'common/footer.html' %}
-{% include 'common/script.html' %} 
-</body>
-</html>
+{% endblock %}

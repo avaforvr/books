@@ -2,7 +2,7 @@
 include_once __DIR__ . '../../includes/global.init.php';
 
 if(! isLogin()) {
-	redirect($container['WEB_ROOT'] . "login.php?back=" . $_SERVER['PHP_SELF']);
+	$container['util']->redirect($container['WEB_ROOT'] . "login.php?back=" . $_SERVER['PHP_SELF']);
 }
 
 //include_once __DIR__ . '../../includes/file.func.php';
@@ -26,7 +26,7 @@ switch ($act) {
 		$sql = "SELECT bid FROM misc WHERE meva=1 AND uid=$uid ORDER BY mid DESC";
 		break;
 	default:
-		redirect($container['WEB_ROOT'] . "user/index.php");
+		$container['util']->redirect($container['WEB_ROOT'] . "user/index.php");
 		break;
 }
 

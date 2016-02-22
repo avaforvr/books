@@ -1,4 +1,5 @@
 <?php
+use \PDO;
 
 abstract class BaseDao{
     public $container;

@@ -5,8 +5,7 @@
         <li><a href="{{WEB_ROOT}}user/index.php">我的书库</a></li>
         <li><a href="{{WEB_ROOT}}master/index.php">站长</a></li>
         <li>
-			{{html_login | raw}}
-			{% if is_login %}
+			{% if user_name is defined %}
 				<a href="{{WEB_ROOT}}user/index.php">{{user_name}}</a>，<a href="{{WEB_ROOT}}login.php?act=logout&back={{REQUEST_URI}}">退出</a>
 			{% else %}
 				<a href="{{WEB_ROOT}}login.php?act=logout&back={{REQUEST_URI}}">登录/注册</a>

@@ -1,0 +1,32 @@
+{% spaceless %}
+<!DOCTYPE HTML>
+<html>
+<head>
+    {% block title %}
+        <title>Ava is reading...</title>
+    {% endblock %}
+    {% block meta %}
+        {% include 'common/meta.html' %}
+    {% endblock %}
+    {% block css %}
+        {% include 'common/css.html' %}
+    {% endblock %}
+</head>
+
+<body>
+    {% block header %}
+        {% include 'common/header.html' %}
+    {% endblock %}
+
+    {% block main %}{% endblock %}
+
+    {% block footer %}
+        {% include 'common/footer.html' %}
+    {% endblock %}
+
+    {% block script %}
+        {% include 'common/script.html' %}
+    {% endblock %}
+</body>
+</html>
+{% endspaceless %}

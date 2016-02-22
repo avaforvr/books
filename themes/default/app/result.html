@@ -1,16 +1,7 @@
-<!doctype html>
-<html>
-<head>
-<title>Ava is reading...</title>
-{% include 'common/link.html' %}
-</head>
+{% extends "common/base.html" %}
 
-<body>
-{% include 'common/header.html' %} 
+{% block main %}
 <div class="main_form">
-	{{html_result | raw}}
+    {{html_result | raw}}
 </div>
-{% include 'common/footer.html' %}
-{% include 'common/script.html' %}
-</body>
-</html>
+{% endblock %}

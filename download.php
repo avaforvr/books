@@ -1,13 +1,13 @@
 <?
-include_once __DIR__ . '/includes/global.init.php';
+include_once __DIR__ . '/includes/init/global.php';
 
 $bid = isset($_REQUEST['bid']) && $_REQUEST['bid'] ? intval($_REQUEST['bid']) : 0;
 if($bid == 0) {
-	redirect("index.php");
+	$container['util']->redirect("index.php");
 }
 
 if(! isLogin()) {
-	redirect($container['WEB_ROOT'] . "login.php?back=" . $_SERVER['PHP_SELF']);
+	$container['util']->redirect($container['WEB_ROOT'] . "login.php?back=" . $_SERVER['PHP_SELF']);
 }
 
 $file = $container['filedao']->getFileByBid($bid);

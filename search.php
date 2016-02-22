@@ -1,5 +1,5 @@
 <?
-include_once __DIR__ . '/includes/global.init.php';
+include_once __DIR__ . '/includes/init/global.php';
 
 //{{{ 类型、文风筛选
 $tplArray['attr_type'] = $container['vars']['attr_type'];

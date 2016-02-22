@@ -1,13 +1,13 @@
 <?
-include_once __DIR__ . '/includes/global.init.php';
+include_once __DIR__ . '/includes/init/global.php';
 
 if(! isLogin()) {
-	redirect($container['WEB_ROOT'] . "login.php?back=" . $_SERVER['PHP_SELF']);
+	$container['util']->redirect($container['WEB_ROOT'] . "login.php?back=" . $_SERVER['PHP_SELF']);
 }
 
 $bid = isset($_REQUEST['bid']) && $_REQUEST['bid'] ? intval($_REQUEST['bid']) : 0;
 if($bid == 0) {
-	redirect("index.php");
+	$container['util']->redirect("index.php");
 }
 
 $act = isset($_REQUEST['act']) && $_REQUEST['act'] ? $_REQUEST['act'] : '';
@@ -22,9 +22,9 @@ switch ($act) {
 		$file['borig'] = trim($file['borig']);
 		$isok = $container['filedao']->setFileByBid($file['bid'], $file);
 		if($isok) {
-			redirect('onebook.php?bid='. $bid);
+			$container['util']->redirect('onebook.php?bid='. $bid);
 		} else {
-			redirect('editbook.php?bid=' . $bid);
+			$container['util']->redirect('editbook.php?bid=' . $bid);
 		}
 		break;
 	default:

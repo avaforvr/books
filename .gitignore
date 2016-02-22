@@ -26,3 +26,4 @@ temp/*
 
 # 忽略文件
 test.php
+themes/node_modules/

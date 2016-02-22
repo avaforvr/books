@@ -1,13 +1,13 @@
 <?
-include_once __DIR__ . '/includes/global.init.php';
+include_once __DIR__ . '/includes/init/global.php';
 
 $act = isset($_REQUEST['act']) && $_REQUEST['act'] ? $_REQUEST['act'] : '';
+$back = isset($_REQUEST['back']) && $_REQUEST['back'] ? $_REQUEST['back'] : $WEB_ROOT;
 
-if($act != 'logout' && isLogin()) {
-	redirect($container['WEB_ROOT'] . "index.php");
+if($act != 'logout' && $container['login']) {
+    $container['util']->redirect($back);
 }
 
-$back = isset($_REQUEST['back']) && $_REQUEST['back'] ? $_REQUEST['back'] : $WEB_ROOT;
 
 $tplArray['data_key'] = 'login';
 $tplArray['html_page_content'] = $container['twig']->render('login/login.html', array('WEB_ROOT' => $container['WEB_ROOT'], 'back'=> $back));
@@ -37,8 +37,7 @@ switch ($act) {
 		die();
 		break;
 	case 'pageRegister':
-		$tplArray['html_page_content'] = $container['twig']->render('login/register.html', array('WEB_ROOT' => $container['WEB_ROOT'], 'back'=> $back));
-		$tplArray['data_key'] = 'register';
+        echo $container['twig']->render('login/register.html', array('back'=>$back));
 		break;
 	case 'verifyRegister':
 		$r = array('code' => 0, 'msg' =>'');
@@ -128,13 +127,11 @@ switch ($act) {
 		break;
 	case 'logout':
 		unset($_SESSION['user']);
-		redirect($WEB_ROOT . "login.php?back=$back");
+		$container['util']->redirect($WEB_ROOT . "login.php?back=$back");
 		break;
 	default:
-		//redirect($back);
+        echo $container['twig']->render('login/login.html', array('back'=>$back));
 		break;
 }
-
-echo $container['twig']->render('login/login_tpl.html', $tplArray);
 
 ?>
