@@ -98,7 +98,7 @@ switch ($act) {
 	case 'verifyFindPwd':
         $data = $util->trimArray($_POST['data']);
 		$result = $userdao->setPwd($data['user_pwd'], $data['user_id']);
-        if($result === 1 || $result === 0) {
+        if($result) {
             $r = array('code' => 0, 'msg' =>'密码设置成功', 'back' => $back);
         } else {
             $r = array('code' => 1, 'msg' =>'密码设置失败，请刷新页面后重试。');
