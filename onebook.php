@@ -1,7 +1,7 @@
 <?
 include_once __DIR__ . '/includes/init/global.php';
 
-$bid = isset($_REQUEST['bid']) && $_REQUEST['bid'] ? intval($_REQUEST['bid']) : 0;
+$bid = isset($_REQUEST['book_id']) && $_REQUEST['book_id'] ? intval($_REQUEST['book_id']) : 0;
 if($bid == 0) {
 	$util->redirect("index.php");
 }
@@ -13,7 +13,7 @@ include_once __DIR__ . '/includes/processor/OnebookProcessor.php';
 $onebook = new OnebookProcessor();
 $tplArray['file'] = $onebook->process(array(
 		'container' => $container,
-		'bid' => $bid,
+		'book_id' => $bid,
 	));
 
 echo $container['twig']->render('onebook.html', $tplArray);

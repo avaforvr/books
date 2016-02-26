@@ -15,7 +15,7 @@ var init = function () {
             break;
 
         case 'upload':
-            require('./modules/upload');
+            require('./modules/upload').init();
             break;
 
         case 'batchUpload':

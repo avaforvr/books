@@ -8,27 +8,27 @@
 <body data-key="upload">
 {% include 'common/header.html' %} 
 <div class="main-a">
-    <h1>{{file['bname']}}</h1>
-	<form action="{{WEB_ROOT}}editbook.php?bid={{file['bid']}}" method="post" id="editForm">
+    <h1>{{file['book_name']}}</h1>
+	<form action="{{WEB_ROOT}}editbook.php?book_id={{file['book_id']}}" method="post" id="editForm">
 		<input type="hidden" name="act" value="editInfo">
-		<input type="hidden" name="bookInfo[bid]" value="{{file['bid']}}">
+		<input type="hidden" name="bookInfo[book_id]" value="{{file['book_id']}}">
 		<table width="100%">
 			<tr>
 				<th width="80">书名：<span class="required">*</span></th>
-				<td width="280"><input type="text" class="text" name="bookInfo[bname]" value="{{file['bname']}}" readonly></td>
+				<td width="280"><input type="text" class="text" name="bookInfo[book_name]" value="{{file['book_name']}}" readonly></td>
 				<td><span id="bnameTip" class="tip">不可修改</span></td>
 			</tr>
 			<tr>
 				<th>作者：<span class="required">*</span></th>
-				<td><input type="text" class="text" name="bookInfo[bauthor]" value="{{file['bauthor']}}" readonly></td>
+				<td><input type="text" class="text" name="bookInfo[book_author]" value="{{file['book_author']}}" readonly></td>
 				<td><span id="bauthorTip" class="tip">不可修改</span></td>
 			</tr>
 			<tr>
 				<th>分类：<span class="required">*</span></th>
 				<td>
 					<div class="select">
-						<input type="hidden" name="bookInfo[btype]" value="{{file['btype']}}">
-						<span>{{attr_type[file['btype']]}}</span>
+						<input type="hidden" name="bookInfo[book_type]" value="{{file['book_type']}}">
+						<span>{{attr_type[file['book_type']]}}</span>
 						<ul>
 							{% for type in attr_type %}
 							<li>{{type}}</li>
@@ -40,7 +40,7 @@
 			</tr>
 			<tr>
 				<th>简介：</th>
-				<td colspan="2"><textarea class="area" name="bookInfo[bsummary]">{{file['bsummary']}}</textarea></td>
+				<td colspan="2"><textarea class="area" name="bookInfo[book_summary]">{{file['book_summary']}}</textarea></td>
 			</tr>
 			<tr>
 				<th>主角：</th>
@@ -50,8 +50,8 @@
 				<th>文风：</th>
 				<td>
 					<div class="select">
-						<input type="hidden" name="bookInfo[bstyle]" value="{{file['bstyle']}}">
-						<span>{{attr_style[file['bstyle']]}}</span>
+						<input type="hidden" name="bookInfo[book_style]" value="{{file['book_style']}}">
+						<span>{{attr_style[file['book_style']]}}</span>
 						<ul>
 							{% for style in attr_style %}
 							<li>{{style}}</li>
@@ -62,7 +62,7 @@
 			</tr>
 			<tr>
 				<th>原创网址：</th>
-				<td colspan="2"><input type="text" class="text" name="bookInfo[borig]" value="{{file['borig']}}"><span id="borigTip" class="tip"></span></td>
+				<td colspan="2"><input type="text" class="text" name="bookInfo[book_original_site]" value="{{file['book_original_site']}}"><span id="borigTip" class="tip"></span></td>
 			</tr>
 			<tr>
 				<th>标签：</th>

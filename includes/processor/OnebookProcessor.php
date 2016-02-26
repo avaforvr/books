@@ -12,7 +12,7 @@ class OnebookProcessor implements BaseProcessor {
             $$key = $param;
         }
 		$fileDao = $container['filedao'];
-		$file = $fileDao->getFileByBid($bid);
+		$file = $fileDao->getFileByBookId($bid);
 		
 		$filePath = toGb($container['ROOT_PATH'] . $file['bpath']);
 		$content = file_get_contents($filePath);

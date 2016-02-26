@@ -1,7 +1,7 @@
 <?
 include_once __DIR__ . '/includes/init/global.php';
 
-$bid = isset($_REQUEST['bid']) && $_REQUEST['bid'] ? intval($_REQUEST['bid']) : 0;
+$bid = isset($_REQUEST['book_id']) && $_REQUEST['book_id'] ? intval($_REQUEST['book_id']) : 0;
 if($bid == 0) {
 	$util->redirect("index.php");
 }
@@ -10,7 +10,7 @@ if(! isLogin()) {
 	$util->redirect($container['WEB_ROOT'] . "login.php?back=" . $_SERVER['PHP_SELF']);
 }
 
-$file = $container['filedao']->getFileByBid($bid);
+$file = $container['filedao']->getFileByBookId($bid);
 $filePath = $container['ROOT_PATH'] . $file['bpath'];
 $fileName = basename($filePath);
 

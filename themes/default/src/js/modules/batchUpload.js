@@ -13,7 +13,7 @@ define(function(require, exports, module) {
 	};
 	
 	var verifyDir = function() {
-		$('input[name="btype"]').parent().selectInit();	
+		$('input[name="book_type"]').parent().selectInit();
 		$('.batchOption').hide();
 		$('.fileList').remove();
 
@@ -45,8 +45,8 @@ define(function(require, exports, module) {
 						for(var key in r.legal) {
 							var file = r.legal[key];
 							result += '<tr>';
-							result += '<td>' + file.bname + '</td>';
-							result += '<td>' + file.bauthor + '</td>';
+							result += '<td>' + file.book_name + '</td>';
+							result += '<td>' + file.book_author + '</td>';
 							result += '<td>' + file.bformat + '</td>';
 							result += '<td>' + file.bpath + '</td>';
 							result += '</tr>';
@@ -92,11 +92,11 @@ define(function(require, exports, module) {
 			return false;
 		}
 		
-		var btype = $('input[name="btype"]');
+		var book_type = $('input[name="book_type"]');
 		var btags = $('input[name="btags[]"]:checked');
-		if(btype.val() == 0) {
+		if(book_type.val() == 0) {
 			$('#btypeTip').html('请选择分类').addClass('error');
-			btype.next().mousedown(function() {
+			book_type.next().mousedown(function() {
 				$('#btypeTip').html('').removeClass('error');
 			});
 			return false;
@@ -114,7 +114,7 @@ define(function(require, exports, module) {
 			url: webData.WEB_ROOT + 'batchUpload.php',
 			dataType: 'json',
 			beforeSubmit: function() {
-				$('input[name="btype"]').parent().selectInit();	
+				$('input[name="book_type"]').parent().selectInit();
 				$('.batchOption').hide();
 				$('.fileList').remove();
 				showLoading('文件正在上传，请稍候...');
@@ -132,8 +132,8 @@ define(function(require, exports, module) {
 						for(var key in r.illegal) {
 							var file = r.illegal[key];
 							result += '<tr>';
-							result += '<td>' + file.bname + '</td>';
-							result += '<td>' + file.bauthor + '</td>';
+							result += '<td>' + file.book_name + '</td>';
+							result += '<td>' + file.book_author + '</td>';
 							result += '<td>' + file.bformat + '</td>';
 							result += '<td>' + file.bpath + '</td>';
 							result += '</tr>';
@@ -153,8 +153,8 @@ define(function(require, exports, module) {
 						for(var key in r.legal) {
 							var file = r.legal[key];
 							result += '<tr>';
-							result += '<td>' + file.bname + '</td>';
-							result += '<td>' + file.bauthor + '</td>';
+							result += '<td>' + file.book_name + '</td>';
+							result += '<td>' + file.book_author + '</td>';
 							result += '<td>' + file.bformat + '</td>';
 							result += '<td>' + file.bpath + '</td>';
 							result += '</tr>';

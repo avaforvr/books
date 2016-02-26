@@ -4,31 +4,31 @@ include_once __DIR__ . '/BaseDao.php';
 class FileDao extends BaseDao{
 	
 	public function handleFile($file) {
-		$file['bsize'] = transSize($file['bsize']);
-		$file['bpath'] = 'files/' . $file['bauthor'] . '/' . $file['bname'] . ' by ' . $file['bauthor'] . '.' . $file['bformat'];
-		$file['bsummary'] = dataToHtml($file['bsummary']);
+		$file['book_size'] = transSize($file['book_size']);
+		$file['bpath'] = 'files/' . $file['book_author'] . '/' . $file['book_name'] . ' by ' . $file['book_author'] . '.' . $file['bformat'];
+		$file['book_summary'] = dataToHtml($file['book_summary']);
 		$vars = $this->container['vars'];
-		$file['btype_lang'] = $vars['attr_type'][$file['btype']];
-		$file['bstyle_lang'] = $vars['attr_style'][$file['bstyle']];
+		$file['btype_lang'] = $vars['attr_type'][$file['book_type']];
+		$file['bstyle_lang'] = $vars['attr_style'][$file['book_style']];
 		return $file;
 	}
 	
-	public function getBooksByBid($bid) {
+	public function getBooksByBookId($bookId) {
 		$db = $this->db();
-		$sql = "SELECT * FROM book WHERE bid=$bid LIMIT 1";
+		$sql = "SELECT * FROM book WHERE book_id=$bookId LIMIT 1";
 		$file = $db->fetchAssoc($sql);
 		return $file;
 	}
 	
-	public function getTagsByBid($bid) {
+	public function getTagsByBookId($bookId) {
 		$db = $this->db();
-		$sql = "SELECT * FROM tag WHERE bid=$bid LIMIT 1";
+		$sql = "SELECT * FROM tag WHERE book_id=$bookId LIMIT 1";
 		$tags = array();
 		$alltags = $db->fetchAssoc($sql);
 		if(! empty($alltags)) {
 			$attr_tags = $this->container['vars']['attr_tags'];
 			foreach($alltags as $key => $value) {
-				if($value == 1 && $key != 'bid') {
+				if($value == 1 && $key != 'book_id') {
 					$tags[$key] = $attr_tags[$key];
 				}
 			}
@@ -36,9 +36,9 @@ class FileDao extends BaseDao{
 		return $tags;
 	}
 	
-	public function getMiscByBidUid($bid, $userId) {
+	public function getMiscByBidUid($bookId, $userId) {
 		$db = $this->db();
-		$sql = "SELECT `mdown`, `meva`, `mbrowse` FROM `misc` WHERE bid=$bid AND user_id=$userId LIMIT 1";
+		$sql = "SELECT `mdown`, `meva`, `mbrowse` FROM `misc` WHERE book_id=$bookId AND user_id=$userId LIMIT 1";
 		$misc = $db->fetchAssoc($sql);
 		return $misc;
 	}
@@ -47,98 +47,51 @@ class FileDao extends BaseDao{
 		$db = $this->db();
 		$fileList = $db->fetchAssocArray($sql);
 		foreach($fileList as $key => $file) {
-			$bid = $file['bid'];
-			$file['btags'] = $this->getTagsByBid($bid);
-			$file['misc'] = isLogin() ? $this->getMiscByBidUid($bid, $_SESSION['user']['user_id']) : array();
+			$bookId = $file['book_id'];
+			$file['btags'] = $this->getTagsByBookId($bookId);
+			$file['misc'] = isLogin() ? $this->getMiscByBidUid($bookId, $_SESSION['user']['user_id']) : array();
 			$fileList[$key] = $this->handleFile($file);
 		}
 		return $fileList;
 	}
 	
-	public function getFileByBid($bid) {
-		$file = $this->getBooksByBid($bid);
-		$file['btags'] = $this->getTagsByBid($bid);
-		$file['misc'] = isLogin() ? $this->getMiscByBidUid($bid, $_SESSION['user']['user_id']) : array();
+	public function getFileByBookId($bookId) {
+		$file = $this->getBooksByBookId($bookId);
+		$file['btags'] = $this->getTagsByBookId($bookId);
+		$file['misc'] = isLogin() ? $this->getMiscByBidUid($bookId, $_SESSION['user']['user_id']) : array();
 		$file = $this->handleFile($file);
 		return $file;
 	}
 	
-	public function getBids($sql) {
+	public function getBookIds($sql) {
 		$db = $this->db();
-		$bids = array();
+		$bookIds = array();
 		$rows = $db->fetchAssocArray($sql);
 		foreach($rows as $row) {
-			$bids[] = $row['bid'];
+			$bookIds[] = $row['book_id'];
 		}
-		return $bids;
+		return $bookIds;
 	}
 	
-	public function getFilesByBids($bids) {
+	public function getFilesByBookIds($bookIds) {
 		$fileList = array();
-		foreach($bids as $bid) {
-			$fileList[] = $this->getFileByBid($bid);
+		foreach($bookIds as $bookId) {
+			$fileList[] = $this->getFileByBookId($bookId);
 		}
 		return $fileList;
 	}
 	
 	public function isFileExist($bname, $bauthor) {
 		$db = $this->db();
-		$sql = "SELECT 1 FROM book WHERE bname='" . $bname . "' AND bauthor='" . $bauthor . "' LIMIT 1";
+		$sql = "SELECT 1 FROM book WHERE book_name='" . $bname . "' AND book_author='" . $bauthor . "' LIMIT 1";
 		return $db->checkExist($sql);
 	}
-	
-	public function insertBooks($file) {
-		$db = $this->db();
-		$sql = "INSERT INTO book(bname, bauthor, bsummary, brole, bsize, btype, bstyle, bexist, bformat, borig, user_id, btime, beva, bdown, bbrowse) VALUES(
-			'" . addslashes($file['bname']) . "',
-			'" . addslashes($file['bauthor']) . "',
-			'" . addslashes($file['bsummary']) . "',
-			'" . $file['brole'] . "',
-			'" . $file['bsize'] . "',
-			'" . $file['btype'] . "',
-			'" . $file['bstyle'] . "',
-			'2',
-			'" . $file['bformat'] . "',
-			'" . $file['borig'] . "',
-			'" . $_SESSION['user']['user_id'] . "',
-			'" . date('Y-m-d H:i:s') . "',
-			0,
-			0,
-			0)";
-		if($db->query($sql)) {
-			$bid = mysql_insert_id();
-			return $bid;
-		}
-		return false;
-	}
-	
-	public function insertTags($bid, $btags) {
-		$db = $this->db();
-		$fieldStr = '';
-		$valueStr = '';
-		$container = $this->container;
-		foreach($container['vars']['attr_tags'] as $key=>$tag) {
-			$fieldStr .= (',' . $key);
-			if(in_array($key, $btags)) {
-				$valueStr .= ',1';
-			} else {
-				$valueStr .= ',0';
-			}
-		}
-		$sql = "INSERT INTO tag(bid" . $fieldStr . ") VALUES(" . $bid . $valueStr . ")";
-		if($db->query($sql)) {
-			return $bid;
-		} else {
-			return false;
-		}
-		
-	}
-	
-	public function delFileOnDisk($bid) {
-		$file = $this->getBooksByBid($bid);
+
+	public function delFileOnDisk($bookId) {
+		$file = $this->getBooksByBookId($bookId);
 		if(! empty($file)) {
 			$container = $this->container;
-			$disk_path = $container['ROOT_PATH'] . 'files/' . $file['bauthor'] . '/' . $file['bname'] . ' by ' . $file['bauthor'] . '.' . $file['bformat'];
+			$disk_path = $container['ROOT_PATH'] . 'files/' . $file['book_author'] . '/' . $file['book_name'] . ' by ' . $file['book_author'] . '.' . $file['bformat'];
 			$disk_path = toGb($disk_path);
 			if(file_exists($disk_path)) {
 				unlink($disk_path);
@@ -148,54 +101,50 @@ class FileDao extends BaseDao{
 		return false;
 	}
 	
-	public function delBooksByBid($bid) {
+
+	
+	public function delTagByBookId($bookId) {
 		$db = $this->db();
-		$sql = "DELETE FROM book WHERE bid=$bid";
+		$sql = "DELETE FROM tag WHERE book_id=$bookId";
 		return $db->query($sql);
 	}
 	
-	public function delTagsByBid($bid) {
-		$db = $this->db();
-		$sql = "DELETE FROM tag WHERE bid=$bid";
-		return $db->query($sql);
-	}
-	
-	public function delFileByBid($bid) {
+	public function delFileByBookId($bookId) {
 		//删除txt文件
-		$del_disk = $this->delFileOnDisk($bid);
-		$del_books = $this->delBooksByBid($bid);
-		$del_tags = $this->delTagsByBid($bid);
+		$del_disk = $this->delFileOnDisk($bookId);
+		$del_books = $this->delBooksByBid($bookId);
+		$del_tags = $this->delTagByBookId($bookId);
 		return ($del_disk && $del_books && $del_extra && $del_tags) ? true : false;
 	}
 	
-	public function setBooksByBid($bid, $file) {
+	public function setBooksByBookId($bookId, $file) {
 		$db = $this->db();
 		$sql = "UPDATE book SET
-			bname='". addslashes($file['bname']) ."',
-			bauthor='". addslashes($file['bauthor']) ."',
-			bsummary='". addslashes($file['bsummary']) ."',
+			book_name='". addslashes($file['book_name']) ."',
+			book_author='". addslashes($file['book_author']) ."',
+			book_summary='". addslashes($file['book_summary']) ."',
 			brole='". $file['brole'] ."',
-			btype='". $file['btype'] ."',
-			bstyle='". $file['bstyle'] ."',
-			borig='". addslashes($file['borig']) ."'
-			WHERE bid=" . $bid;
+			book_type='". $file['book_type'] ."',
+			book_style='". $file['book_style'] ."',
+			book_original_site='". addslashes($file['book_original_site']) ."'
+			WHERE book_id=" . $bookId;
 		$isok = $db->query($sql);
 		return $isok ? true : false;
 	}
 	
-	public function setTagsByBid($bid, $file) {
+	public function setTagByBookId($bookId, $file) {
 		$db = $this->db();
 		$btags = empty($file['btags']) ? array() : $file['btags'];
-		$btagsInDb = $this->getTagsByBid($bid);
+		$btagsInDb = $this->getTagsByBookId($bookId);
 		if(empty($btagsInDb)) {
 			if(empty($btags)) {
 				$isok = true;
 			} else {
-				$isok = $this->insertTags($bid, $btags);
+				$isok = $this->insertTag($bookId, $btags);
 			}
 		} else {
 			if(empty($btags)) {
-				$isok = $this->delTagsByBid($bid);
+				$isok = $this->delTagByBookId($bookId);
 			} else {
 				$sql = "UPDATE tag SET ";
 				$attr_tags = $this->container['vars']['attr_tags'];
@@ -208,7 +157,7 @@ class FileDao extends BaseDao{
 					if($key != ('t' . count($attr_tags))) {
 						$sql .= ",";
 					} else {
-						$sql .= " WHERE bid=" . $bid;
+						$sql .= " WHERE book_id=" . $bookId;
 					}
 				}
 				$isok = $db->query($sql);
@@ -218,38 +167,91 @@ class FileDao extends BaseDao{
 		return $isok ? true : false;
 	}
 	
-	public function setFileByBid($bid, $file) {
-		$isok_books = $this->setBooksByBid($bid, $file);
-		$isok_tags = $this->setTagsByBid($bid, $file);
+	public function setFileByBookId($bookId, $file) {
+		$isok_books = $this->setBooksByBookId($bookId, $file);
+		$isok_tags = $this->setTagByBookId($bookId, $file);
 		return ($isok_books && $isok_tags) ? true : false;
 	}
 	
-	public function setExtra($option, $bid, $value) {
+	public function setExtra($option, $bookId, $value) {
 		$db = $this->db();
 		$field = 'b' . $option;
 		if($field == 'beva' && $value !== 1) {
-			$sql_get = "SELECT $field FROM `book` WHERE bid=$bid;";
+			$sql_get = "SELECT $field FROM `book` WHERE book_id=$bookId;";
 			$row = $db->fetchAssoc($sql_get);
 			if($row[$field] > 0) {
-				$sql = "UPDATE book SET $field=$field-1 WHERE bid=$bid";
+				$sql = "UPDATE book SET $field=$field-1 WHERE book_id=$bookId";
 			}
 		} else {
-			$sql = "UPDATE book SET $field=$field+1 WHERE bid=$bid";
+			$sql = "UPDATE book SET $field=$field+1 WHERE book_id=$bookId";
 		}
 		if(isset($sql)) {
 			$db->query($sql);
 		}
 	}
 	
-	public function setExist($bid, $val) {
+	public function setExist($bookId, $val) {
 		$db = $this->db();
-		$sql = "UPDATE book SET bexist=$val WHERE bid=$bid";
+		$sql = "UPDATE book SET book_exist=$val WHERE book_id=$bookId";
 		if($db->query($sql)) {
 			return true;
 		} else {
 			return false;
 		}
 	}
+
+    //--------------------------------
+    //插入一条 book 记录
+    public function insertBook($file) {
+        $db = $this->db();
+        $sql = "INSERT INTO book(book_name, book_author, book_summary, book_size, book_type, book_style, book_exist, book_original_site, book_uploader, book_upload_time) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        $stmt = $db->prepare($sql);
+        $param = array(
+            $file['book_name'],
+            $file['book_author'],
+            $file['book_summary'],
+            $file['book_size'],
+            $file['book_type'],
+            $file['book_style'],
+            1,
+            $file['book_original_site'],
+            $_SESSION['user']['user_id'],
+            date('Y-m-d H:i:s')
+        );
+        if($stmt->execute($param)) {
+            return $db->lastInsertId();
+        } else {
+            return false;
+        }
+    }
+
+    //删除一个 book 记录
+    public function delBooksByBid($bookId) {
+        $db = $this->db();
+        $sql = "DELETE FROM book WHERE book_id=$bookId";
+        return $db->query($sql);
+    }
+
+    //插入一条 tag 记录
+    public function insertTag($bookId, $tags) {
+        $fieldStr = 'book_id';
+        $valueStr = $bookId;
+        $container = $this->container;
+        $updateStr= '';
+        foreach($container['vars']['attr_tags'] as $key=>$tag) {
+            $fieldStr .= (',' . $key);
+            if(in_array($key, $tags)) {
+                $valueStr .= ',1';
+                $updateStr .= ",`$key` = 1";
+            } else {
+                $valueStr .= ',0';
+                $updateStr .= ",`$key` = 0";
+            }
+        }
+        $updateStr = trim($updateStr,",");
+        $sql = "INSERT INTO `tag` ( $fieldStr) VALUES ($valueStr) on duplicate key update $updateStr;";
+        $this->db()->exec($sql);
+    }
 	
 }
 ?>

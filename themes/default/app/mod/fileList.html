@@ -5,24 +5,24 @@
 		<li>
 			<div class="t">
 				<h3>
-					<a href="{{WEB_ROOT}}onebook.php?bid={{file['bid']}}" target="_blank">{{file['bname']}}</a>
-					<span>作者：{{file['bauthor']}}</span>
+					<a href="{{WEB_ROOT}}onebook.php?book_id={{file['book_id']}}" target="_blank">{{file['book_name']}}</a>
+					<span>作者：{{file['book_author']}}</span>
 				</h3>
 				<p>
-					热度：<span class="eva_count" id="eva_count_{{file['bid']}}">{{file['beva']}}</span>
+					热度：<span class="eva_count" id="eva_count_{{file['book_id']}}">{{file['beva']}}</span>
 					{% if file['misc']['meva'] %}
-					<span class="eva eva_1" title="取消喜欢" id="eva_{{file['bid']}}"></span>
+					<span class="eva eva_1" title="取消喜欢" id="eva_{{file['book_id']}}"></span>
 					{% else %}  
-					<span class="eva" title="喜欢" id="eva_{{file['bid']}}"></span>
+					<span class="eva" title="喜欢" id="eva_{{file['book_id']}}"></span>
 					{% endif %}
 				</p>
 			</div>
-			<div class="d">{{file['bsummary']}}</div>
+			<div class="d">{{file['book_summary']}}</div>
 			<div class="o">
 				<p class="oc1">
 					<span>{{file['btype_lang']}}</span>
 					
-					{% if file['bstyle'] != 0 %}
+					{% if file['book_style'] != 0 %}
 					<span>{{file['bstype_lang']}}</span>
 					{% endif %}
 					
@@ -30,13 +30,13 @@
 					<span>{{tag}}</span>
 					{% endfor %}
 					
-					<span>{{file['bsize']}}</span>
+					<span>{{file['book_size']}}</span>
 				</p>
-				{% if file['bexist'] %}
+				{% if file['book_exist'] %}
 				<p class="oc2">
-					<a href="{{WEB_ROOT}}download.php?bid={{file['bid']}}" target="_blank">下载</a>
-					<a href="{{WEB_ROOT}}editbook.php?bid={{file['bid']}}">编辑</a>
-					<a href="javascript:void(0)" class="btnDelFile" id="del_{{file['bid']}}">删除</a>
+					<a href="{{WEB_ROOT}}download.php?book_id={{file['book_id']}}" target="_blank">下载</a>
+					<a href="{{WEB_ROOT}}editbook.php?book_id={{file['book_id']}}">编辑</a>
+					<a href="javascript:void(0)" class="btnDelFile" id="del_{{file['book_id']}}">删除</a>
 				</p>
 				{% endif %}
 			</div>

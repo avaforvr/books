@@ -5,10 +5,10 @@ class MiscDao extends BaseDao{
 
 	public function setRecord($key, $bid, $userId) {
 		$db = $this->db();
-		$sql = "SELECT * FROM `misc` WHERE bid=$bid AND user_id=$userId LIMIT 1";
+		$sql = "SELECT * FROM `misc` WHERE book_id=$bid AND user_id=$userId LIMIT 1";
 		$row = $db->fetchAssoc($sql);
 		if(empty($row)) {
-			$sql = "INSERT INTO misc(bid, user_id) VALUES($bid, $userId);";
+			$sql = "INSERT INTO misc(book_id, user_id) VALUES($bid, $userId);";
 			$db->query($sql);
 			$mid = mysql_insert_id();
 			$row['meva'] = 0;

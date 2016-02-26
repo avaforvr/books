@@ -46,7 +46,7 @@ class SearchDao extends BaseDao{
 		//$filedao = $container['filedao'];
 		$file_cont = array();
 		foreach($bids as $bid) {
-			$sql = "SELECT bid,bsize,beva,btime FROM book WHERE bid = $bid LIMIT 1";
+			$sql = "SELECT book_id,book_size,beva,book_upload_time FROM book WHERE book_id = $bid LIMIT 1";
 			$row = $db->fetchAssoc($sql);
 			$file_cont[] = json_encode($row);
 		}
@@ -65,11 +65,11 @@ class SearchDao extends BaseDao{
 		
 		//创建临时表
 		$create_sql = "CREATE TEMPORARY TABLE IF NOT EXISTS $tmpbooks(
-						bid int NOT NULL,
-						PRIMARY KEY(bid),
-						bsize int, 
+						book_id int NOT NULL,
+						PRIMARY KEY(book_id),
+						book_size int,
 						beva int,
-						btime timestamp
+						book_upload_time timestamp
 						)";
 		$db->query($create_sql);
 		
@@ -78,11 +78,11 @@ class SearchDao extends BaseDao{
 		$file_cont = json_decode($file_cont, true);
 		foreach($file_cont as $row) {
 			$row = json_decode($row, true);
-			$insert_sql = "INSERT INTO $tmpbooks(bid, bsize, beva, btime) VALUES(
-				" . $row['bid'] . ",
-				" . $row['bsize'] . ",
+			$insert_sql = "INSERT INTO $tmpbooks(book_id, book_size, beva, book_upload_time) VALUES(
+				" . $row['book_id'] . ",
+				" . $row['book_size'] . ",
 				" . $row['beva'] . ",
-				'" . $row['btime'] . "')";
+				'" . $row['book_upload_time'] . "')";
 			$db->query($insert_sql);
 		}
 		return $tmpbooks;

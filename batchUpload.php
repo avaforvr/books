@@ -27,7 +27,7 @@ switch ($act) {
 				'container' => $container,
 				'act' => $act,
 				'dir' => $_POST['dir'],
-				'btype' => $_POST['btype'],
+				'book_type' => $_POST['book_type'],
 				'btags' => isset($_POST['btags']) ? $_POST['btags'] : array(),
 			));
 		echo json_encode($result);

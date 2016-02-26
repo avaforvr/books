@@ -5,7 +5,7 @@ if(! isLogin()) {
 	$util->redirect($container['WEB_ROOT'] . "login.php?back=" . $_SERVER['PHP_SELF']);
 }
 
-$bid = isset($_REQUEST['bid']) && $_REQUEST['bid'] ? intval($_REQUEST['bid']) : 0;
+$bid = isset($_REQUEST['book_id']) && $_REQUEST['book_id'] ? intval($_REQUEST['book_id']) : 0;
 if($bid == 0) {
 	$util->redirect("index.php");
 }
@@ -15,20 +15,20 @@ $act = isset($_REQUEST['act']) && $_REQUEST['act'] ? $_REQUEST['act'] : '';
 switch ($act) {
 	case 'editInfo':
 		$file = $_POST['bookInfo'];
-		$file['bname'] = trim($file['bname']);
-		$file['bauthor'] = trim($file['bauthor']);
-		$file['bsummary'] = trim($file['bsummary']);
+		$file['book_name'] = trim($file['book_name']);
+		$file['book_author'] = trim($file['book_author']);
+		$file['book_summary'] = trim($file['book_summary']);
 		$file['brole'] = trim($file['brole']);
-		$file['borig'] = trim($file['borig']);
-		$isok = $container['filedao']->setFileByBid($file['bid'], $file);
+		$file['book_original_site'] = trim($file['book_original_site']);
+		$isok = $container['filedao']->setFileByBookId($file['book_id'], $file);
 		if($isok) {
-			$util->redirect('onebook.php?bid='. $bid);
+			$util->redirect('onebook.php?book_id='. $bid);
 		} else {
-			$util->redirect('editbook.php?bid=' . $bid);
+			$util->redirect('editbook.php?book_id=' . $bid);
 		}
 		break;
 	default:
-		$file = $container['filedao']->getFileByBid($bid);
+		$file = $container['filedao']->getFileByBookId($bid);
 	
 		$tags_with_state = array();
 		$attr_tags = $container['vars']['attr_tags'];

@@ -14,21 +14,21 @@ $acts = array(
 
 switch ($act) {
 	case 'upload':
-		$sql = "SELECT bid FROM book WHERE user_id=$userId ORDER BY btime DESC";
+		$sql = "SELECT book_id FROM book WHERE user_id=$userId ORDER BY book_upload_time DESC";
 		break;
 	case 'download':
-		$sql = "SELECT bid FROM misc WHERE mdown=1 AND user_id=$userId ORDER BY mid DESC";
+		$sql = "SELECT book_id FROM misc WHERE mdown=1 AND user_id=$userId ORDER BY mid DESC";
 		break;
 	case 'favorable':
-		$sql = "SELECT bid FROM misc WHERE meva=1 AND user_id=$userId ORDER BY mid DESC";
+		$sql = "SELECT book_id FROM misc WHERE meva=1 AND user_id=$userId ORDER BY mid DESC";
 		break;
 	default:
 		$util->redirect($container['WEB_ROOT'] . "user/index.php");
 		break;
 }
 
-$bids = $filedao->getBids($sql);
-$fileList = $filedao->getFilesByBids($bids);
+$bids = $filedao->getBookIds($sql);
+$fileList = $filedao->getFilesByBookIds($bids);
 
 echo $container['twig']->render('user/records.html', array(
     'act_translate' => $acts[$act],

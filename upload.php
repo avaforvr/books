@@ -1,20 +1,20 @@
 <?
 include_once __DIR__ . '/includes/init/global.php';
-
-if(! $container['login']) {
-    $util->redirect($container['WEB_ROOT'] . "login.php?back=" . $_SERVER['PHP_SELF']);
-}
+$util->checkLogin($container);
 
 $act = isset($_REQUEST['act']) && $_REQUEST['act'] ? $_REQUEST['act'] : '';
 
+//测试 filedao
+include_once __DIR__ . '/includes/test/testFileDao.php';
+
 //{{{ Upload Processor
 include_once __DIR__ . '/includes/processor/UploadProcessor.php';
-$uploador = new UploadProcessor();
+$upload = new UploadProcessor();
 //}}}
 
 switch ($act) {
 	case 'verifyAtta':
-		$result = $uploador->process(array(
+		$result = $upload->process(array(
 				'container' => $container,
 				'act' => $act,
 				'attachment' => $_FILES["attachment"],
@@ -24,12 +24,12 @@ switch ($act) {
 		break;
 	case 'uploadNew':
 		$file = $_POST['bookInfo'];
-		$file['bname'] = trim($file['bname']);
-		$file['bauthor'] = trim($file['bauthor']);
-		$file['bsummary'] = trim($file['bsummary']);
+		$file['book_name'] = trim($file['book_name']);
+		$file['book_author'] = trim($file['book_author']);
+		$file['book_summary'] = trim($file['book_summary']);
 		$file['brole'] = trim($file['brole']);
-		$file['borig'] = trim($file['borig']);
-		$bid = $uploador->process(array(
+		$file['book_original_site'] = trim($file['book_original_site']);
+		$bid = $upload->process(array(
 				'container' => $container,
 				'act' => $act,
 				'file' => $file,

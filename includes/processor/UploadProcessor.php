@@ -1,9 +1,9 @@
 <?php
 include_once __DIR__ . '/BaseProcessor.php';
 
-class UploadProcessor implements BaseProcessor {
+class UploadProcessor extends BaseProcessor{
 
-	public function verifyFile($filedao, $wholename) {
+	public function verifyFile($wholename) {
 		$bformat = end(explode('.', $wholename));
 		if($bformat != 'txt') {
 			return array(
@@ -22,7 +22,7 @@ class UploadProcessor implements BaseProcessor {
 		$bname = trim(substr($wholename, 0, $pos_by-1));
 		$bauthor = trim(substr($wholename, $pos_by+3, $pos_dot-$pos_by-3));
 		
-		if($filedao->isFileExist($bname, $bauthor)) {
+		if($this->container['filedao']->isFileExist($bname, $bauthor)) {
 			return array(
 				'code' => 3,
 				'msg' => '文件已存在'
@@ -31,8 +31,8 @@ class UploadProcessor implements BaseProcessor {
 		return array(
 			'code' => 0,
 			'msg' => '可以上传',
-			'bname' => $bname,
-			'bauthor' => $bauthor,
+			'book_name' => $bname,
+			'book_author' => $bauthor,
 			'bformat' => $bformat
 		);
 	}
@@ -42,23 +42,23 @@ class UploadProcessor implements BaseProcessor {
 			return false;
 		}
 		$filedao = $container['filedao'];
-		if($filedao->isFileExist($file['bname'], $file['bauthor'])) {
+		if($filedao->isFileExist($file['book_name'], $file['book_author'])) {
 			return false;
 		}
-		$bid = $filedao->insertBooks($file);
+		$bid = $filedao->insertBook($file);
 		if(! $bid) {
 			return false;
 		}
 		if(isset($file['btags']) && ! empty($file['btags'])) {
-			$filedao->insertTags($bid, $file['btags']);
+			$filedao->insertTag($bid, $file['btags']);
 		}
 		return $bid;
 	}
 	
 	public function moveFile($ROOT_PATH, $file) {
 		$oldPath = $file['bpath'];
-		$newFolder = $ROOT_PATH . 'files/' . $file['bauthor'];
-		$newPath = $newFolder . '/' . $file['bname'] . ' by ' . $file['bauthor'] . '.' . $file['bformat'];
+		$newFolder = $ROOT_PATH . 'files/' . $file['book_author'];
+		$newPath = $newFolder . '/' . $file['book_name'] . ' by ' . $file['book_author'] . '.' . $file['bformat'];
 
 		$oldPath = toGb($oldPath);
 		$newFolder = toGb($newFolder);
@@ -123,18 +123,46 @@ class UploadProcessor implements BaseProcessor {
 			$wholename = end($path_arr);
 			$file = $this->verifyFile($filedao, $wholename);
 			if($file['code'] == 0) {
-				$file['bsize'] = filesize(toGb($path));
+				$file['book_size'] = filesize(toGb($path));
 			}
 			$file['bpath'] = $path;
 			$files[] = $file;
 		}
 		return $files;
 	}
-	
-	public function isActive() {
-		return true;
-	}
-	
+
+    //验证上传的附件，返回附件中包含的信息
+    function verifyAtta($attachment) {
+        $result = array();
+        if ($attachment["error"] > 0) {
+            $result = array(
+                'code' => 99,
+                'msg' => $attachment["error"]
+            );
+        } else {
+            $attaInfo = $this->verifyFile($attachment["name"]);
+            if($attaInfo['code'] === 0) {
+                $tempPath = $this->container['ROOT_PATH'] . 'temp/' . $attaInfo['book_name'] . ' by ' . $attaInfo['book_author'] . '.' . $attaInfo['bformat'];
+                move_uploaded_file($attachment["tmp_name"], toGb($tempPath));
+                $result = array(
+                    'code' => 0,
+                    'msg' => $attaInfo['msg'],
+                    'book_name' => $attaInfo['book_name'],
+                    'book_author' => $attaInfo['book_author'],
+                    'bformat' => $attaInfo['bformat'],
+                    'book_size' => $attachment["size"],
+                    'bpath' => $tempPath
+                );
+            } else {
+                $result = array(
+                    'code' => $attaInfo['code'],
+                    'msg' => $attaInfo['msg']
+                );
+            }
+        }
+        return $result;
+    }
+
 	public function process($params = array()) {
 		foreach ($params as $key => $param) {
             $$key = $param;
@@ -142,32 +170,9 @@ class UploadProcessor implements BaseProcessor {
 		
 		switch ($act) {
 			case 'verifyAtta': //验证上传的附件，返回附件中包含的信息
-				if ($attachment["error"] > 0) {
-					$result = array(
-						'code' => 99,
-						'msg' => $attachment["error"]
-					);
-				} else {
-					$attaInfo = $this->verifyFile($container['filedao'], $attachment["name"]);
-					if($attaInfo['code'] === 0) {
-						$tempPath = $container['ROOT_PATH'] . 'temp/' . $attaInfo['bname'] . ' by ' . $attaInfo['bauthor'] . '.' . $attaInfo['bformat'];
-						move_uploaded_file($attachment["tmp_name"], toGb($tempPath));
-						$result = array(
-							'code' => 0,
-							'msg' => $attaInfo['msg'],
-							'bname' => $attaInfo['bname'],
-							'bauthor' => $attaInfo['bauthor'],
-							'bformat' => $attaInfo['bformat'],
-							'bsize' => $attachment["size"],
-							'bpath' => $tempPath
-						);
-					} else {
-						$result = array(
-							'code' => $attaInfo['code'],
-							'msg' => $attaInfo['msg']
-						);
-					}
-				}
+                $result = verifyAtta();
+                break;
+
 				break;
 			case 'uploadNew': //单本上传
 				$bid = $this->insertFile($container, $file);
@@ -212,11 +217,11 @@ class UploadProcessor implements BaseProcessor {
 				);
 				$filesInDir = $this->get_files($container['filedao'], $dir);
 				foreach($filesInDir as $file) {
-					$file['btype'] = $btype;
-					$file['bsummary'] = '';
+					$file['book_type'] = $btype;
+					$file['book_summary'] = '';
 					$file['brole'] = '';
-					$file['bstyle'] = 0;
-					$file['borig'] = '';
+					$file['book_style'] = 0;
+					$file['book_original_site'] = '';
 					$file['btags'] = $btags;
 					$bid = $this->insertFile($container, $file);
 					if($bid) {
@@ -234,10 +239,6 @@ class UploadProcessor implements BaseProcessor {
 				break;
 		}
 		return $result;
-	}
-	
-    public function render($params = array()) {
-		return false;
 	}
 }
 ?>

@@ -10,34 +10,34 @@ $filedao = $container['filedao'];
 $act = isset($_REQUEST['act']) && $_REQUEST['act'] ? $_REQUEST['act'] : '';
 switch ($act) {
 	case 'pass':
-		$bid = $_POST['bid'];
+		$bid = $_POST['book_id'];
 		$result = $filedao->setExist($bid, 1);
 		if($result) {
-			$file = $filedao->getBooksByBid($bid);
+			$file = $filedao->getBooksByBookId($bid);
 			$container['userdao']->setMoneyAndCtbt($file['user_id'], 2, 1); //上传一本新书，财富+2，贡献+1
 		}
 		echo $result ? 1 : 0;
 		die;
 	case 'repeat':
-		$bid = $_POST['bid'];
-		$file = $filedao->getBooksByBid($bid);
+		$bid = $_POST['book_id'];
+		$file = $filedao->getBooksByBookId($bid);
 		$container['userdao']->setMoneyAndCtbt($file['user_id'], 0, 1); //上传一本新书，财富+0，贡献+1
-		$result = $filedao->delFileByBid($bid);
+		$result = $filedao->delFileByBookId($bid);
 		echo $result ? 1 : 0;
 		die;
 	default:
 		$boxList = array();
-		$sql = "SELECT bauthor FROM `book` WHERE bexist=2 GROUP BY bauthor";
+		$sql = "SELECT book_author FROM `book` WHERE book_exist=2 GROUP BY book_author";
 		$db = $container['db'];
 		$rows = $db->fetchAssocArray($sql);
 		foreach($rows as $key => $row) {
 			$boxList[$key]['pending'] = array();
 			$boxList[$key]['exist'] = array();
-			$bauthor = $row['bauthor'];
-			$box_files_sql = "SELECT bid, bname, bauthor, bexist FROM book WHERE bauthor='$bauthor' ORDER BY btime DESC";
+			$bauthor = $row['book_author'];
+			$box_files_sql = "SELECT book_id, book_name, book_author, book_exist FROM book WHERE book_author='$bauthor' ORDER BY book_upload_time DESC";
 			$box_files = $db->fetchAssocArray($box_files_sql);
 			foreach($box_files as $file) {
-				if($file['bexist'] == 2) {
+				if($file['book_exist'] == 2) {
 					$boxList[$key]['pending'][] = $file;
 				} else {
 					$boxList[$key]['exist'][] = $file;

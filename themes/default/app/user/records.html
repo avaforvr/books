@@ -14,8 +14,8 @@
 		<tbody>
 			{% for file in fileList %}
 			<tr>
-				<td><a href="{{WEB_ROOT}}onebook.php?bid={{file['bid']}}" target="_blank">{{file['bname']}}</a></td>
-				<td>{{file['bauthor']}}</td>
+				<td><a href="{{WEB_ROOT}}onebook.php?book_id={{file['book_id']}}" target="_blank">{{file['book_name']}}</a></td>
+				<td>{{file['book_author']}}</td>
 			</tr>
 			{% endfor %}
 		</tbody>

@@ -2,25 +2,29 @@
 include_once __DIR__ . '/BaseDao.php';
 
 class UserDao extends BaseDao{
-	
+
+    //通过 user_id 获取 user数组
 	public function getUserByUid($userId) {
         $sql = "SELECT * FROM user WHERE user_id=$userId LIMIT 1";
         $user = $this->getOneRow($sql);
 		return $user;
 	}
-	
+
+    //通过 user_name 获取 user数组
 	public function getUserByUname($userName) {
 		$sql = "SELECT * FROM user WHERE user_name='" . $userName . "' LIMIT 1";
         $user = $this->getOneRow($sql);
         return $user;
 	}
-	
+
+    //通过 user_email 获取 user数组
 	public function getUserByUemail($userEmail) {
         $sql = "SELECT * FROM user WHERE user_email='" . $userEmail . "' LIMIT 1";
         $user = $this->getOneRow($sql);
         return $user;
 	}
-	
+
+    //插入一条记录
 	public function insertUser($user) {
 		$regMoney = 5; //注册时获取的财富
 		$regCtbt = 1; //注册时获取的贡献值
@@ -48,11 +52,13 @@ class UserDao extends BaseDao{
 		}
 	}
 
+    //更新 user_pwd
     public function setPwd($userPwd, $userId) {
 		$sql = "UPDATE user SET user_pwd='$userPwd' WHERE user_id=$userId";
 		return $this->db()->exec($sql);
 	}
 
+    //更新 user_money 和 user_contribute
     public function setMoneyAndCtbt($userId, $addMoney, $addCtbt) {
 		$user = $this->getUserByUid($userId);
         $umoney = $user['user_money'] + $addMoney;
@@ -64,6 +70,7 @@ class UserDao extends BaseDao{
         $this->db()->exec($sql);
 	}
 
+    //登录
     public function doLogin($user) {
 		$_SESSION['user'] = $user;
 		$userId = $user['user_id'];
@@ -74,12 +81,14 @@ class UserDao extends BaseDao{
 		$sql = "UPDATE user SET user_last_time='$now' WHERE user_id=$userId";
         $this->db()->exec($sql);
 	}
-	
+
+    //验证 user_name 是否存在
 	public function verifyUname($userName) {
 		$sql = "SELECT 1 FROM user WHERE user_name = '" . $userName . "' LIMIT 1";
         return $this->isExist($sql);
 	}
-	
+
+    //验证 user_email 是否存在
 	public function verifyUemail($userEmail) {
 		$sql = "SELECT 1 FROM user WHERE user_email = '" . $userEmail . "' LIMIT 1";
         return $this->isExist($sql);

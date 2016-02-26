@@ -1,8 +1,15 @@
 <?php
+abstract class BaseProcessor {
+    public $container;
 
-interface BaseProcessor {
-    public function isActive();
-    public function process($params = array());
-    public function render($params = array());
+    public function __construct($container){
+        $this->container = $container;
+    }
+
+    public function isActive() {
+        return true;
+    }
+    public function process() {}
+    public function render(){}
 }
 ?>

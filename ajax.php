@@ -12,7 +12,7 @@ switch ($act) {
 			$result['msg'] = 'Please login first.';
 		} else {
 			$userId = $_SESSION['user']['user_id'];
-			$bid = $_POST['bid'];
+			$bid = $_POST['book_id'];
 			$record_result = $container['miscdao']->setRecord('eva', $bid, $userId); //更新misc记录
 			$container['filedao']->setExtra('eva', $bid, $record_result); //好评总数更新
 			if($record_result){
@@ -29,7 +29,7 @@ switch ($act) {
 		die();
 		break;
 	case 'delFile':
-		$bid = $_POST['bid'];
+		$bid = $_POST['book_id'];
 		$result = $container['filedao']->setExist($bid, 0);
 		echo $result ? 1 : 0;
 		break;

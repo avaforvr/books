@@ -5,9 +5,9 @@ class FileListProcessor implements BaseProcessor {
 	
 	public function build_orderby($sortBy) {
 		if($sortBy == 1) {
-			$orderby = " ORDER BY btime DESC";
+			$orderby = " ORDER BY book_upload_time DESC";
 		} elseif($sortBy == 2) {
-			$orderby = " ORDER BY bsize DESC";
+			$orderby = " ORDER BY book_size DESC";
 		} elseif($sortBy == 3) {
 			$orderby = " ORDER BY beva DESC";
 		} else {
@@ -26,13 +26,13 @@ class FileListProcessor implements BaseProcessor {
 			if(strpos($condition, "=")) {
 				$condition .= " AND ";
 			}
-			$condition .= "btype=" . $ftype;
+			$condition .= "book_type=" . $ftype;
 		}
 		if($fstyle > 0) {
 			if(strpos($condition, "=")) {
 				$condition .= " AND ";
 			}
-			$condition .= "bstyle=" . $fstyle;
+			$condition .= "book_style=" . $fstyle;
 		}
 		
 		$sqls = array();
@@ -46,9 +46,9 @@ class FileListProcessor implements BaseProcessor {
 		$sbfield = $_GET['sbfield'];
 		$sbkey = $_GET['sbkey'];
 		if($sbfield == 0) {
-			$field = 'bname';
+			$field = 'book_name';
 		}elseif($sbfield == 1) {
-			$field = 'bauthor';
+			$field = 'book_author';
 		} else {
 			$field = 'brole';
 		}
@@ -78,19 +78,19 @@ class FileListProcessor implements BaseProcessor {
 			$hkeys = explode(' ', $hkeystr);
 			foreach($hkeys as $hkey) {
 				if(in_array($hkey, $attr_tags)) {
-					$sql = "SELECT bid FROM tag WHERE " . getKeyByValue($hkey, $attr_tags) . " = 1";
+					$sql = "SELECT book_id FROM tag WHERE " . getKeyByValue($hkey, $attr_tags) . " = 1";
 				} elseif(in_array($hkey, $attr_type)) {
-					$sql = "SELECT bid FROM book WHERE btype = '" . getKeyByValue($hkey, $attr_type) . "'";
+					$sql = "SELECT book_id FROM book WHERE book_type = '" . getKeyByValue($hkey, $attr_type) . "'";
 				} elseif(in_array($hkey, $attr_style)) {
-					$sql = "SELECT bid FROM book WHERE bstyle = '" . getKeyByValue($hkey, $attr_style) . "'";
+					$sql = "SELECT book_id FROM book WHERE book_style = '" . getKeyByValue($hkey, $attr_style) . "'";
 				} else {
 					$sql = '';
 				}
-				$bids_key = ($sql != '') ? $filedao->getBids($sql) : array();
+				$bids_key = ($sql != '') ? $filedao->getBookIds($sql) : array();
 				$bids = array_merge($bids, $bids_key);
 				
-				$sql_like = "SELECT bid FROM book WHERE (bname LIKE '%" . $hkey . "%') OR (bauthor LIKE '%" . $hkey . "%') OR (brole LIKE '%" . $hkey . "%')";
-				$bids_like = $filedao->getBids($sql_like);
+				$sql_like = "SELECT book_id FROM book WHERE (book_name LIKE '%" . $hkey . "%') OR (book_author LIKE '%" . $hkey . "%') OR (brole LIKE '%" . $hkey . "%')";
+				$bids_like = $filedao->getBookIds($sql_like);
 				$bids = array_merge($bids, $bids_like);
 			}
 			$cache_file = $searchdao->createCacheFile($sid, $bids);
@@ -99,15 +99,15 @@ class FileListProcessor implements BaseProcessor {
 		
 		$sqls = array();
 		$sqls['getTotal'] = "SELECT count(*) FROM $tmpbooks";
-		$sqls['getBids'] = "SELECT bid FROM $tmpbooks" . $orderby;
+		$sqls['getBookIds'] = "SELECT book_id FROM $tmpbooks" . $orderby;
 		return $sqls;
 	}
 
 	public function build_sql_default($sortBy) {
 		$orderby = $this->build_orderby($sortBy);
 		$sqls = array();
-		$sqls['getTotal'] = "SELECT count(*) FROM book WHERE bexist=1";
-		$sqls['getFiles'] = "SELECT * FROM book WHERE bexist=1" . $orderby;
+		$sqls['getTotal'] = "SELECT count(*) FROM book WHERE book_exist=1";
+		$sqls['getFiles'] = "SELECT * FROM book WHERE book_exist=1" . $orderby;
 		return $sqls;
 	}
 	
@@ -125,7 +125,7 @@ class FileListProcessor implements BaseProcessor {
 		$filedao = $container['filedao'];
 		
 		if($dataKey == 'index') {
-			$sql = "SELECT * FROM book WHERE bexist = 1 ORDER BY btime DESC LIMIT 20";
+			$sql = "SELECT * FROM book WHERE book_exist = 1 ORDER BY book_upload_time DESC LIMIT 20";
 			$this->fileList = $filedao->getFilesBySql($sql);
 		}
 		if($dataKey == 'browse') {
@@ -154,10 +154,10 @@ class FileListProcessor implements BaseProcessor {
 			}
 			
 			
-			if(! empty($sqls['getBids'])) {
-				$sqlGetBids = $sqls['getBids'] . $limitoffset;
-				$bids = $filedao->getBids($sqlGetBids);
-				$this->fileList = $filedao->getFilesByBids($bids);
+			if(! empty($sqls['getBookIds'])) {
+				$sqlGetBids = $sqls['getBookIds'] . $limitoffset;
+				$bids = $filedao->getBookIds($sqlGetBids);
+				$this->fileList = $filedao->getFilesByBookIds($bids);
 			} else {
 				$sqlGetFiles = $sqls['getFiles'] . $limitoffset;
 				$this->fileList = $filedao->getFilesBySql($getFilesByBids);

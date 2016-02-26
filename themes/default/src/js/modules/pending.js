@@ -6,12 +6,12 @@ define(function(require, exports, module) {
 	//审核通过
 	$('.btn-pass').click(function() {
 		var me = $(this);
-		var bid = parseInt(me.closest('dt').attr('id').replace('bid_', ''));
+		var book_id = parseInt(me.closest('dt').attr('id').replace('bid_', ''));
 		$.ajax({
 			type: 'POST',
 			url: webData.WEB_ROOT + 'master/pending.php',
 			dataType: 'text',
-			data: {'act':'pass','bid':bid},
+			data: {'act':'pass','book_id':book_id},
 			success: function(r){
 				if(parseInt(r) == 1) {
 					me.parent().html('审核通过');
@@ -25,12 +25,12 @@ define(function(require, exports, module) {
 	//删除重复文件并发出站内信
 	$('.btn-delete').click(function() {
 		var me = $(this);
-		var bid = parseInt(me.closest('dt').attr('id').replace('bid_', ''));
+		var book_id = parseInt(me.closest('dt').attr('id').replace('bid_', ''));
 		$.ajax({
 			type: 'POST',
 			url: webData.WEB_ROOT + 'master/pending.php',
 			dataType: 'text',
-			data: {'act':'repeat','bid':bid},
+			data: {'act':'repeat','book_id':book_id},
 			success: function(r){
 				if(parseInt(r) == 1) {
 					me.parent().html('已删除');

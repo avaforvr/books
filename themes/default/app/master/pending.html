@@ -3,10 +3,10 @@
 	{% for box in boxList %}
 	<dl class="fileBox">
 		{% for file in box['pending'] %}
-		<dt{{loop.last ? ' class="last"' : ''}} id="bid_{{file['bid']}}">
+		<dt{{loop.last ? ' class="last"' : ''}} id="bid_{{file['book_id']}}">
 			<h3>
-				<a href="{{WEB_ROOT}}onebook.php?bid={{file['bid']}}" target="_blank">{{file['bname']}}</a>
-				<span>by {{file['bauthor']}}</span>
+				<a href="{{WEB_ROOT}}onebook.php?book_id={{file['book_id']}}" target="_blank">{{file['book_name']}}</a>
+				<span>by {{file['book_author']}}</span>
 			</h3>
 			<div class="o">
 				<input class="btn5 btn-delete" type="submit" value="重复了">
@@ -19,7 +19,7 @@
 		<dd>
 			<ul class="c">
 				{% for file in box['exist'] %}
-				<li><a href="{{WEB_ROOT}}onebook.php?bid={{file['bid']}}" target="_blank">{{file['bname']}}</a></li>
+				<li><a href="{{WEB_ROOT}}onebook.php?book_id={{file['book_id']}}" target="_blank">{{file['book_name']}}</a></li>
 				{% endfor %}
 			</ul>
 		</dd>
