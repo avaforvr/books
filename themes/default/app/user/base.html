@@ -1,0 +1,10 @@
+{% extends "common/base.html" %}
+
+{% block main %}
+<div class="main-b">
+    {% include 'user/sidebar.html' %}
+    <div class="col2Main padMain">
+        {% block userMain %}{% endblock %}
+    </div>
+</div>
+{% endblock %}

@@ -1,6 +1,6 @@
 <?php
 $vars = array(
-    //attributes of books
+    //attributes of book
     'attr_type' => array(
         0 => '-',
         1 => '耽美',

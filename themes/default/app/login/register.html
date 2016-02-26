@@ -2,34 +2,45 @@
 {% extends "common/base.html" %}
 
 {% block main %}
-<div class="main_form">
-<h1>新用户注册</h1>
-<div class="related"><a href="{{WEB_ROOT}}login.php?back={{back}}">快速登陆</a><a href="{{WEB_ROOT}}login.php?act=pageFindPwd&back={{back}}">找回密码</a></div>
-    <form id="regForm" method="post" action="{{WEB_ROOT}}login.php?back={{back}}">
+<div class="main-a">
+    <div class="related-pages">
+        <a href="{{WEB_ROOT}}login.php?back={{back}}">登录</a>
+        <a href="{{WEB_ROOT}}login.php?act=pageFindPwd&back={{back}}">找回密码</a>
+    </div>
+
+    <h1>新用户注册</h1>
+
+    <form id="{{dataKey}}Form" method="post" action="{{WEB_ROOT}}login.php?back={{back}}" class="form-a">
         <input type="hidden" name="act" value="verifyRegister">
-        <table class="tbl">
+        <table>
+            <col width="80" />
+            <col width="280" />
             <tr>
-                <th width="80">用户名：<span class="required">*</span></th>
-                <td width="280"><input type="text" class="text" name="name" maxLength="10"></td>
-                <td><span id="nameTip" class="tip">由3-10位英文字母或数字组成</span></td>
+                <th>用户名：<span class="required">*</span></th>
+                <td><input type="text" class="text" name="data[user_name]" maxLength="10"></td>
+                <td><span class="tip">由3-10位英文字母或数字组成</span></td>
             </tr>
             <tr>
                 <th>邮箱：<span class="required">*</span></th>
-                <td><input type="text" class="text" name="email"></td>
-                <td><span id="emailTip" class="tip">通过邮箱，网站将不定期发放福利；找回密码</span></td>
+                <td><input type="text" class="text" name="data[user_email]"></td>
+                <td><span class="tip">通过邮箱，网站将不定期发放福利；找回密码</span></td>
             </tr>
             <tr>
                 <th>密码：<span class="required">*</span></th>
-                <td><input type="password" class="text" name="pwd" maxLength="16"></td>
-                <td><span id="pwdTip" class="tip">由6-16位下划线、英文字母或数字组成</span></td>
+                <td><input type="password" class="text" name="data[user_pwd]" maxLength="16"></td>
+                <td><span class="tip">由6-16位下划线、英文字母或数字组成</span></td>
             </tr>
             <tr>
                 <th>确认密码：<span class="required">*</span></th>
-                <td><input type="password" class="text" name="repwd" maxLength="16"></td>
-                <td><span id="repwdTip" class="tip"></span></td>
+                <td><input type="password" class="text" name="data[repwd]" maxLength="16"></td>
+                <td><span class="tip"></span></td>
             </tr>
             <tr>
-                <td class="btnTd" colspan="3"><input class="btn1" type="submit" value="注  册"><a href="javascript:history.go(-1)" class="btn3">返&nbsp;&nbsp;回</a><span id="submitTip" class="tip"></span></td>
+                <td class="td-btn" colspan="3">
+                    <button class="btn btn-primary" type="submit">注&nbsp;&nbsp;册</button>
+                    <a href="javascript:history.go(-1)" class="btn btn-secondary">返&nbsp;&nbsp;回</a>
+                    <span id="submitTip" class="tip"></span>
+                </td>
             </tr>
         </table>
     </form>

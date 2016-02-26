@@ -10,11 +10,11 @@
 *.config 
 
 # 忽略所有缓存文件
-caches/searches/*
-!caches/searches/.gitkeep
+caches/search/*
+!caches/search/.gitkeep
 
-caches/books/*
-!caches/books/.gitkeep
+caches/book/*
+!caches/book/.gitkeep
 
 # 忽略所有上传文件
 files/*

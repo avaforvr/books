@@ -12,9 +12,9 @@ class DbUtil {
 
     public function isTableExist($tablename) {
         $sql = "SHOW TABLES FROM " . $this->container['siteConf']['db_name'];
-        $res = $this->db()->query($sql);
-        $res->setFetchMode(PDO::FETCH_NUM);
-        $rows = $res->fetchAll();
+        $stmt = $this->db()->query($sql);
+        $stmt->setFetchMode(PDO::FETCH_NUM);
+        $rows = $stmt->fetchAll();
         if(! empty($rows)) {
             foreach($rows as $key=>$row) {
                 if($tablename == $row[0]) {

@@ -3,12 +3,12 @@ include_once __DIR__ . '/BaseDao.php';
 
 class MiscDao extends BaseDao{
 
-	public function setRecord($key, $bid, $uid) {
+	public function setRecord($key, $bid, $userId) {
 		$db = $this->db();
-		$sql = "SELECT * FROM `misc` WHERE bid=$bid AND uid=$uid LIMIT 1";
+		$sql = "SELECT * FROM `misc` WHERE bid=$bid AND user_id=$userId LIMIT 1";
 		$row = $db->fetchAssoc($sql);
 		if(empty($row)) {
-			$sql = "INSERT INTO misc(bid, uid) VALUES($bid, $uid);";
+			$sql = "INSERT INTO misc(bid, user_id) VALUES($bid, $userId);";
 			$db->query($sql);
 			$mid = mysql_insert_id();
 			$row['meva'] = 0;

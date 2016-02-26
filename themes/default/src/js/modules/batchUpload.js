@@ -5,7 +5,7 @@ define(function(require, exports, module) {
 	require('../mod/selectWidget');
 	
 	var showLoading = function(str) {
-		$('.main_form').append('<div class="fileList"><img src="' + webData.IMG_PATH + 'loading.gif" width="16" height="16" class="loading">' + str + '</div>');	
+		$('.main-a').append('<div class="fileList"><img src="' + webData.IMG_PATH + 'loading.gif" width="16" height="16" class="loading">' + str + '</div>');
 	};
 	
 	var hideLoading = function() {
@@ -52,10 +52,10 @@ define(function(require, exports, module) {
 							result += '</tr>';
 						}
 						result += '</tbody></table></div>';
-						$('.main_form').append(result);
+						$('.main-a').append(result);
 						return true;
 					} else if(r.code == 1) {
-						$('.main_form').append('<div class="fileList">' + r.msg + '</div>');
+						$('.main-a').append('<div class="fileList">' + r.msg + '</div>');
 					} else if(r.code == 2) {
 						var result = '<div class="fileList bbord">';
 						result += '<h3>' + r.msg + '</h3>';
@@ -70,7 +70,7 @@ define(function(require, exports, module) {
 							result += '</tr>';
 						}
 						result += '</tbody></table></div>';
-						$('.main_form').append(result);
+						$('.main-a').append(result);
 					} else {
 						alert('操作失败，请重新执行');
 					}
@@ -161,7 +161,7 @@ define(function(require, exports, module) {
 						}
 						result += '</tbody></table></div>';
 					}
-					$('.main_form').append(result);
+					$('.main-a').append(result);
 				} else {
 					alert('Something is wrong.');
 				}

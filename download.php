@@ -3,11 +3,11 @@ include_once __DIR__ . '/includes/init/global.php';
 
 $bid = isset($_REQUEST['bid']) && $_REQUEST['bid'] ? intval($_REQUEST['bid']) : 0;
 if($bid == 0) {
-	$container['util']->redirect("index.php");
+	$util->redirect("index.php");
 }
 
 if(! isLogin()) {
-	$container['util']->redirect($container['WEB_ROOT'] . "login.php?back=" . $_SERVER['PHP_SELF']);
+	$util->redirect($container['WEB_ROOT'] . "login.php?back=" . $_SERVER['PHP_SELF']);
 }
 
 $file = $container['filedao']->getFileByBid($bid);
@@ -16,10 +16,10 @@ $fileName = basename($filePath);
 
 if(file_exists(toGb($filePath))) {
 	
-	$uid = $_SESSION['user']['uid'];
-	$container['userdao']->setMoneyAndCtbt($uid, -1, 0); //下载，财富-1，贡献+0
+	$userId = $_SESSION['user']['user_id'];
+	$container['userdao']->setMoneyAndCtbt($userId, -1, 0); //下载，财富-1，贡献+0
 	$container['filedao']->setExtra('down', $bid, 1); //总下载次数+1
-	$container['miscdao']->setRecord('down', $bid, $uid); //记录
+	$container['miscdao']->setRecord('down', $bid, $userId); //记录
 
 	header("Content-type: text/plain");
 	

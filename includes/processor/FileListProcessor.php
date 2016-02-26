@@ -36,8 +36,8 @@ class FileListProcessor implements BaseProcessor {
 		}
 		
 		$sqls = array();
-		$sqls['getTotal'] = "SELECT count(*) FROM books b " . $condition;
-		$sqls['getFiles'] = "SELECT * FROM books " . $condition . $orderby;
+		$sqls['getTotal'] = "SELECT count(*) FROM book b " . $condition;
+		$sqls['getFiles'] = "SELECT * FROM book " . $condition . $orderby;
 		return $sqls;
 	}
 	
@@ -54,8 +54,8 @@ class FileListProcessor implements BaseProcessor {
 		}
 		
 		$sqls = array();
-		$sqls['getTotal'] = "SELECT count(*) FROM books WHERE $field LIKE '%" . $sbkey . "%'";
-		$sqls['getFiles'] = "SELECT * FROM books WHERE $field LIKE '%" . $sbkey . "%'" . $orderby;
+		$sqls['getTotal'] = "SELECT count(*) FROM book WHERE $field LIKE '%" . $sbkey . "%'";
+		$sqls['getFiles'] = "SELECT * FROM book WHERE $field LIKE '%" . $sbkey . "%'" . $orderby;
 		return $sqls;
 	}
 	
@@ -65,7 +65,7 @@ class FileListProcessor implements BaseProcessor {
 		$filedao = $container['filedao'];
 		$searchdao = $container['searchdao'];
 		
-		$hkeystr = $_GET['hkey'];
+		$hkeystr = $_GET['key'];
 		$sid = $searchdao->setRecord($hkeystr);
 		
 		$cache_file = $searchdao->getCacheFile($sid);
@@ -78,18 +78,18 @@ class FileListProcessor implements BaseProcessor {
 			$hkeys = explode(' ', $hkeystr);
 			foreach($hkeys as $hkey) {
 				if(in_array($hkey, $attr_tags)) {
-					$sql = "SELECT bid FROM tags WHERE " . getKeyByValue($hkey, $attr_tags) . " = 1";
+					$sql = "SELECT bid FROM tag WHERE " . getKeyByValue($hkey, $attr_tags) . " = 1";
 				} elseif(in_array($hkey, $attr_type)) {
-					$sql = "SELECT bid FROM books WHERE btype = '" . getKeyByValue($hkey, $attr_type) . "'";
+					$sql = "SELECT bid FROM book WHERE btype = '" . getKeyByValue($hkey, $attr_type) . "'";
 				} elseif(in_array($hkey, $attr_style)) {
-					$sql = "SELECT bid FROM books WHERE bstyle = '" . getKeyByValue($hkey, $attr_style) . "'";
+					$sql = "SELECT bid FROM book WHERE bstyle = '" . getKeyByValue($hkey, $attr_style) . "'";
 				} else {
 					$sql = '';
 				}
 				$bids_key = ($sql != '') ? $filedao->getBids($sql) : array();
 				$bids = array_merge($bids, $bids_key);
 				
-				$sql_like = "SELECT bid FROM books WHERE (bname LIKE '%" . $hkey . "%') OR (bauthor LIKE '%" . $hkey . "%') OR (brole LIKE '%" . $hkey . "%')";
+				$sql_like = "SELECT bid FROM book WHERE (bname LIKE '%" . $hkey . "%') OR (bauthor LIKE '%" . $hkey . "%') OR (brole LIKE '%" . $hkey . "%')";
 				$bids_like = $filedao->getBids($sql_like);
 				$bids = array_merge($bids, $bids_like);
 			}
@@ -106,8 +106,8 @@ class FileListProcessor implements BaseProcessor {
 	public function build_sql_default($sortBy) {
 		$orderby = $this->build_orderby($sortBy);
 		$sqls = array();
-		$sqls['getTotal'] = "SELECT count(*) FROM books WHERE bexist=1";
-		$sqls['getFiles'] = "SELECT * FROM books WHERE bexist=1" . $orderby;
+		$sqls['getTotal'] = "SELECT count(*) FROM book WHERE bexist=1";
+		$sqls['getFiles'] = "SELECT * FROM book WHERE bexist=1" . $orderby;
 		return $sqls;
 	}
 	
@@ -125,7 +125,7 @@ class FileListProcessor implements BaseProcessor {
 		$filedao = $container['filedao'];
 		
 		if($dataKey == 'index') {
-			$sql = "SELECT * FROM books WHERE bexist = 1 ORDER BY btime DESC LIMIT 20";
+			$sql = "SELECT * FROM book WHERE bexist = 1 ORDER BY btime DESC LIMIT 20";
 			$this->fileList = $filedao->getFilesBySql($sql);
 		}
 		if($dataKey == 'browse') {
@@ -136,7 +136,7 @@ class FileListProcessor implements BaseProcessor {
 				case 'sbsearch':
 					$sqls = $this->build_sql_sbsearch($sortBy);
 					break;
-				case 'hsearch':
+				case 'headerSearch':
 					$sqls = $this->build_sql_hsearch($sortBy, $container);
 					break;
 				default:

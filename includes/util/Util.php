@@ -21,7 +21,18 @@ class Util {
         }
     }
 
-//encoding
+    function trimArray($arr) {
+        foreach($arr as $key => $value) {
+            if(is_array($value)) {
+                $arr[$key] = trimArray($value);
+            } else {
+                $arr[$key] = trim($value);
+            }
+        }
+        return $arr;
+    }
+
+    //encoding
     function toUtf8($str) {
         try{
             $encode = mb_detect_encoding($str, array('ASCII','GB2312','GBK','UTF-8'));
@@ -83,7 +94,7 @@ class Util {
         return iconv('UCS-2', $encoding, $unistr);
     }
 
-//file size to [M, K, B]
+    //file size to [M, K, B]
     function transSize($size){
         if($size >= 1024*1024) {
             return number_format($size/(1024*1024), 1) . ' M';
@@ -94,13 +105,13 @@ class Util {
         }
     }
 
-//show summary with line feeds
+    //show summary with line feeds
     function dataToHtml($str){
         $newStr = str_replace("\r\n", "<br>", $str);
         return $newStr;
     }
 
-//get key according to value
+    //get key according to value
     function getKeyByValue($str, $arr){
         foreach($arr as $key => $value) {
             if($str == $value) {
@@ -109,7 +120,7 @@ class Util {
         }
     }
 
-//删除url中的参数
+    //删除url中的参数
     function remove_param_in_url($url, $pkey, $append = false) {
         if (is_array($pkey)) {
             foreach ($pkey as $v) {
@@ -185,6 +196,12 @@ class Util {
         }
         $pageString = '<div class="pages">' . $pageString . '</div>';
         return $pageString;
+    }
+
+    function checkLogin($container) {
+        if(! $container['login']) {
+            $this -> redirect($container['WEB_ROOT'] . "login.php?back=" . $_SERVER['PHP_SELF']);
+        }
     }
 }
 

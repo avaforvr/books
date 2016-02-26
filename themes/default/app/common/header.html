@@ -1,22 +1,24 @@
 <div class="header clearfix">
-    <a href="{{WEB_ROOT}}index.php" class="logo">Ava is reading...</a>
-    <ul class="topNav">
-        <li><a href="{{WEB_ROOT}}browse.php">浏览书库</a></li>
-        <li><a href="{{WEB_ROOT}}user/index.php">我的书库</a></li>
-        <li><a href="{{WEB_ROOT}}master/index.php">站长</a></li>
-        <li>
-			{% if user_name is defined %}
-				<a href="{{WEB_ROOT}}user/index.php">{{user_name}}</a>，<a href="{{WEB_ROOT}}login.php?act=logout&back={{REQUEST_URI}}">退出</a>
-			{% else %}
-				<a href="{{WEB_ROOT}}login.php?act=logout&back={{REQUEST_URI}}">登录/注册</a>
-			{% endif %}
-		</li>
-    </ul>
-    <div id="topSearch">
-        <form action="{{WEB_ROOT}}browse.php" method="get">
-            <input type="hidden" name="act" value="hsearch">
-            <input type="text" name="hkey" id="topSearchText" placeholder="请输入关键字">
-            <input type="submit" value="search" id="topSearchBtn">
+    <div class="wrapper">
+        <a href="{{WEB_ROOT}}index.php" class="header-logo">Ava is reading...</a>
+
+        <nav class="header-nav">
+            <a href="{{WEB_ROOT}}browse.php">浏览书库</a>
+            <a href="{{WEB_ROOT}}user/index.php">我的书库</a>
+            <a href="{{WEB_ROOT}}master/index.php">站长</a>
+
+            {% if user_name is defined %}
+                <a href="{{WEB_ROOT}}user/index.php">{{user_name}}</a>
+                <a href="{{WEB_ROOT}}login.php?act=logout&back={{REQUEST_URI}}">退出</a>
+            {% else %}
+                <a href="{{WEB_ROOT}}login.php?act=logout&back={{REQUEST_URI}}">登录/注册</a>
+            {% endif %}
+        </nav>
+
+        <form action="{{WEB_ROOT}}browse.php" method="get" id="header-search">
+            <input type="hidden" name="act" value="headerSearch">
+            <input type="text" name="key" placeholder="请输入关键字" class="key">
+            <button type="submit" class="btn"><i class="fa fa-search"></i></button>
         </form>
     </div>
 </div>

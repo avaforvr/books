@@ -15,14 +15,14 @@ class FileDao extends BaseDao{
 	
 	public function getBooksByBid($bid) {
 		$db = $this->db();
-		$sql = "SELECT * FROM books WHERE bid=$bid LIMIT 1";
+		$sql = "SELECT * FROM book WHERE bid=$bid LIMIT 1";
 		$file = $db->fetchAssoc($sql);
 		return $file;
 	}
 	
 	public function getTagsByBid($bid) {
 		$db = $this->db();
-		$sql = "SELECT * FROM tags WHERE bid=$bid LIMIT 1";
+		$sql = "SELECT * FROM tag WHERE bid=$bid LIMIT 1";
 		$tags = array();
 		$alltags = $db->fetchAssoc($sql);
 		if(! empty($alltags)) {
@@ -36,9 +36,9 @@ class FileDao extends BaseDao{
 		return $tags;
 	}
 	
-	public function getMiscByBidUid($bid, $uid) {
+	public function getMiscByBidUid($bid, $userId) {
 		$db = $this->db();
-		$sql = "SELECT `mdown`, `meva`, `mbrowse` FROM `misc` WHERE bid=$bid AND uid=$uid LIMIT 1";
+		$sql = "SELECT `mdown`, `meva`, `mbrowse` FROM `misc` WHERE bid=$bid AND user_id=$userId LIMIT 1";
 		$misc = $db->fetchAssoc($sql);
 		return $misc;
 	}
@@ -49,7 +49,7 @@ class FileDao extends BaseDao{
 		foreach($fileList as $key => $file) {
 			$bid = $file['bid'];
 			$file['btags'] = $this->getTagsByBid($bid);
-			$file['misc'] = isLogin() ? $this->getMiscByBidUid($bid, $_SESSION['user']['uid']) : array();
+			$file['misc'] = isLogin() ? $this->getMiscByBidUid($bid, $_SESSION['user']['user_id']) : array();
 			$fileList[$key] = $this->handleFile($file);
 		}
 		return $fileList;
@@ -58,7 +58,7 @@ class FileDao extends BaseDao{
 	public function getFileByBid($bid) {
 		$file = $this->getBooksByBid($bid);
 		$file['btags'] = $this->getTagsByBid($bid);
-		$file['misc'] = isLogin() ? $this->getMiscByBidUid($bid, $_SESSION['user']['uid']) : array();
+		$file['misc'] = isLogin() ? $this->getMiscByBidUid($bid, $_SESSION['user']['user_id']) : array();
 		$file = $this->handleFile($file);
 		return $file;
 	}
@@ -83,13 +83,13 @@ class FileDao extends BaseDao{
 	
 	public function isFileExist($bname, $bauthor) {
 		$db = $this->db();
-		$sql = "SELECT 1 FROM books WHERE bname='" . $bname . "' AND bauthor='" . $bauthor . "' LIMIT 1";
+		$sql = "SELECT 1 FROM book WHERE bname='" . $bname . "' AND bauthor='" . $bauthor . "' LIMIT 1";
 		return $db->checkExist($sql);
 	}
 	
 	public function insertBooks($file) {
 		$db = $this->db();
-		$sql = "INSERT INTO books(bname, bauthor, bsummary, brole, bsize, btype, bstyle, bexist, bformat, borig, uid, btime, beva, bdown, bbrowse) VALUES(
+		$sql = "INSERT INTO book(bname, bauthor, bsummary, brole, bsize, btype, bstyle, bexist, bformat, borig, user_id, btime, beva, bdown, bbrowse) VALUES(
 			'" . addslashes($file['bname']) . "',
 			'" . addslashes($file['bauthor']) . "',
 			'" . addslashes($file['bsummary']) . "',
@@ -100,7 +100,7 @@ class FileDao extends BaseDao{
 			'2',
 			'" . $file['bformat'] . "',
 			'" . $file['borig'] . "',
-			'" . $_SESSION['user']['uid'] . "',
+			'" . $_SESSION['user']['user_id'] . "',
 			'" . date('Y-m-d H:i:s') . "',
 			0,
 			0,
@@ -125,7 +125,7 @@ class FileDao extends BaseDao{
 				$valueStr .= ',0';
 			}
 		}
-		$sql = "INSERT INTO tags(bid" . $fieldStr . ") VALUES(" . $bid . $valueStr . ")";
+		$sql = "INSERT INTO tag(bid" . $fieldStr . ") VALUES(" . $bid . $valueStr . ")";
 		if($db->query($sql)) {
 			return $bid;
 		} else {
@@ -150,13 +150,13 @@ class FileDao extends BaseDao{
 	
 	public function delBooksByBid($bid) {
 		$db = $this->db();
-		$sql = "DELETE FROM books WHERE bid=$bid";
+		$sql = "DELETE FROM book WHERE bid=$bid";
 		return $db->query($sql);
 	}
 	
 	public function delTagsByBid($bid) {
 		$db = $this->db();
-		$sql = "DELETE FROM tags WHERE bid=$bid";
+		$sql = "DELETE FROM tag WHERE bid=$bid";
 		return $db->query($sql);
 	}
 	
@@ -170,7 +170,7 @@ class FileDao extends BaseDao{
 	
 	public function setBooksByBid($bid, $file) {
 		$db = $this->db();
-		$sql = "UPDATE books SET 
+		$sql = "UPDATE book SET
 			bname='". addslashes($file['bname']) ."',
 			bauthor='". addslashes($file['bauthor']) ."',
 			bsummary='". addslashes($file['bsummary']) ."',
@@ -197,7 +197,7 @@ class FileDao extends BaseDao{
 			if(empty($btags)) {
 				$isok = $this->delTagsByBid($bid);
 			} else {
-				$sql = "UPDATE tags SET ";
+				$sql = "UPDATE tag SET ";
 				$attr_tags = $this->container['vars']['attr_tags'];
 				foreach($attr_tags as $key=>$tag) {
 					if(in_array($key, $btags)) {
@@ -228,13 +228,13 @@ class FileDao extends BaseDao{
 		$db = $this->db();
 		$field = 'b' . $option;
 		if($field == 'beva' && $value !== 1) {
-			$sql_get = "SELECT $field FROM `books` WHERE bid=$bid;";
+			$sql_get = "SELECT $field FROM `book` WHERE bid=$bid;";
 			$row = $db->fetchAssoc($sql_get);
 			if($row[$field] > 0) {
-				$sql = "UPDATE books SET $field=$field-1 WHERE bid=$bid";
+				$sql = "UPDATE book SET $field=$field-1 WHERE bid=$bid";
 			}
 		} else {
-			$sql = "UPDATE books SET $field=$field+1 WHERE bid=$bid";
+			$sql = "UPDATE book SET $field=$field+1 WHERE bid=$bid";
 		}
 		if(isset($sql)) {
 			$db->query($sql);
@@ -243,7 +243,7 @@ class FileDao extends BaseDao{
 	
 	public function setExist($bid, $val) {
 		$db = $this->db();
-		$sql = "UPDATE books SET bexist=$val WHERE bid=$bid";
+		$sql = "UPDATE book SET bexist=$val WHERE bid=$bid";
 		if($db->query($sql)) {
 			return true;
 		} else {

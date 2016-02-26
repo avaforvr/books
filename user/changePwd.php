@@ -1,40 +1,36 @@
 <?
-include_once __DIR__ . '../../includes/global.init.php';
-
-if(! isLogin()) {
-	$container['util']->redirect($container['WEB_ROOT'] . "login.php?back=" . $_SERVER['PHP_SELF']);
-}
+include_once __DIR__ . '../../includes/init/global.php';
+$util->checkLogin($container);
 
 $act = isset($_REQUEST['act']) && $_REQUEST['act'] ? $_REQUEST['act'] : '';
 
-switch ($act) {
-	case 'changePwd':
-		$r = array('code' => 0, 'msg' => '');
-		$oldpwd = trim($_POST['oldpwd']);
-		if($oldpwd !== $_SESSION['user']['upwd']) {
-			$r['code'] = 1;
-			$r['msg'] = 'The Old Password is wrong.';
-		} else {
-			$upwd = trim($_POST['pwd']);
-			if($container['userdao']->setPwd($upwd, $_SESSION['user']['uid'])) {
-				$_SESSION['user']['upwd'] = $upwd;
-				$r['code'] = 0;
-				$r['msg'] = 'Success.';
-			} else {
-				$r['code'] = 2;
-				$r['msg'] = 'Something is wrong.';
-			}
-		}
-		echo json_encode($r);
-		die();
-		break;
-	default:
-		break;
+if($act == 'changePwd') {
+    $r = array();
+    $data = $util->trimArray($_POST['data']);
+
+    if($data['oldpwd'] !== $_SESSION['user']['user_pwd']) {
+        $r['code'] = 1;
+        $r['msg'] = '旧密码错误，请重新输入';
+    } else if($data['oldpwd'] == $data['user_pwd']) {
+        $r['code'] = 2;
+        $r['msg'] = '新密码不能与旧密码相同';
+    } else if($data['repwd'] != $data['user_pwd']) {
+        $r['code'] = 3;
+        $r['msg'] = '两次输入的新密码不一致';
+    } else {
+        if($container['userdao']->setPwd($data['user_pwd'], $_SESSION['user']['user_id'])) {
+            $r['code'] = 0;
+            $r['msg'] = '修改成功';
+            $_SESSION['user']['user_pwd'] = $data['user_pwd'];
+        } else {
+            $r['code'] = 4;
+            $r['msg'] = '密码修改失败，请刷新后重试';
+        }
+    }
+
+    echo json_encode($r);
+    die();
 }
 
-$tplArray['data_key'] = 'changePwd';
-
-$tplArray['html_main'] = $container['twig']->render('user/changePwd.html', array());
-
-echo $container['twig']->render('user/c_user_tpl.html', $tplArray);
+echo $container['twig']->render('user/changePwd.html');
 ?>

@@ -1,7 +1,7 @@
 function Request() {}
 module.exports = new Request();
 
-var getAll = function () {
+Request.prototype.getAll = function () {
     var url = location.search;
     var requests = new Object();
     if (url.indexOf("?") != -1) {

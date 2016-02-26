@@ -6,7 +6,7 @@ define(function(require, exports, module) {
 	
 	//下拉框
 	require('../mod/selectWidget');
-	$('.sele').each(function () {
+	$('.select').each(function () {
 		$(this).selectWidget();
 	});
 

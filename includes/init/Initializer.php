@@ -66,7 +66,7 @@ class Initializer{
         };
 
         $container['login'] = function($c){
-            return (isset($_SESSION['user']) && !empty($_SESSION['user']) && $_SESSION['user']['uid'] > 0);
+            return (isset($_SESSION['user']) && !empty($_SESSION['user']) && $_SESSION['user']['user_id'] > 0);
         };
         return $container;
     }
@@ -90,7 +90,7 @@ class Initializer{
                 'VERSION' => substr((strtotime(date('Y-m-d H:i:s')) - strtotime('2014-04-01 00:00:00')), -6)
             );
             if($c['login']) {
-                $globals['user_name'] = $_SESSION['user']['uname'];
+                $globals['user_name'] = $_SESSION['user']['user_name'];
             }
 
             foreach($globals as $key => $value) {

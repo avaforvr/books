@@ -1,8 +1,8 @@
 <?
-include_once __DIR__ . '../../includes/global.init.php';
+include_once __DIR__ . '../../includes/init/global.php';
 
 if(! isLogin()) {
-	$container['util']->redirect($container['WEB_ROOT'] . "login.php?back=" . $_SERVER['PHP_SELF']);
+	$util->redirect($container['WEB_ROOT'] . "login.php?back=" . $_SERVER['PHP_SELF']);
 }
 
 $tplArray['html_main'] = $container['twig']->render('master/letters.html', array());

@@ -48,7 +48,7 @@ define(function(require, exports, modulselectWidgete) {
 	
 	//下拉框
 	require('../mod/selectWidget');
-	$('.sele').each(function () {
+	$('.select').each(function () {
 		$(this).selectWidget();
 	});
 	

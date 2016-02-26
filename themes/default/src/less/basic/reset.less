@@ -3,10 +3,21 @@ body, h1, h2, h3, h4, h5, h6, hr, p, blockquote, dl, dt, dd, ul, ol, li, pre, fo
 	margin: 0;
 	padding: 0;
 }
-body, button, input, select, textarea {
+body {
 	font-size: 12px;
-	font-family: @font-family;
-	color: @base-color;
+	font-family: @fontFamilyBase;
+	color: @colorText;
+    background: @colorBody;
+}
+button, input, select, textarea {
+    font-size: 14px;
+    font-family: @fontFamilyBase;
+    color: @colorText;
+    vertical-align: middle;
+    .box-sizing(border-box);
+    &:focus {
+        outline: none;
+    }
 }
 h1, h2, h3, h4, h5, h6 {
 	font-size: 100%;
@@ -15,7 +26,7 @@ address, cite, dfn, em, var {
 	font-style: normal;
 }
 code, kbd, pre, samp {
-	font-family: @font-family;
+	font-family: @fontFamilyBase;
 }
 small {
 	font-size: 12px;
@@ -25,7 +36,7 @@ ul, ol {
 }
 a {
 	text-decoration: none;
-	color: @link-color;
+	color: @colorLink;
 }
 a:hover {
 	text-decoration: underline;
@@ -42,10 +53,6 @@ legend {
 fieldset, img {
 	border: 0;
 }
-button, input, select, textarea {
-	font-size: 14px;
-	vertical-align: middle;
-}
 table {
 	border-collapse: collapse;
 	border-spacing: 0;
@@ -59,5 +66,12 @@ mark {
 	background: #ff0;
 }
 img {
-	vertical-align: middle;
+	vertical-align: top;
+}
+
+h1 {
+    font-size: 28px;
+    font-family: @fontFamilyYahei;
+    font-weight: normal;
+    line-height: 36px;
 }

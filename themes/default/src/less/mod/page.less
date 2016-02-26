@@ -1,127 +1,8 @@
-/*common*/
-.fl { float: left; }
-.fr { float: right; }
-.clear { clear: both; }
-.clearfix:after, .column:after { content: "."; clear: both; height: 0; visibility: hidden; display: block; }
-.clearfix, .column { *zoom:1; }
-.tac { text-align: center; }
-.mt1 { margin-top: 5px; }
-.mt2 { margin-top: 10px; }
-.mt3 { margin-top: 15px; }
-.mt4 { margin-top: 20px; }
-.mb1 { margin-bottom: 5px; }
-.mb2 { margin-bottom: 10px; }
-.mb3 { margin-bottom: 15px; }
-.mb4 { margin-bottom: 20px; }
-.ml1 { margin-left: 5px; }
-.ml2 { margin-left: 10px; }
-.ml3 { margin-left: 15px; }
-.ml4 { margin-left: 20px; }
-.multial a { margin-left: 10px; }
-.multiar a { margin-right: 10px; }
-.loading { margin-right: 5px; }
-h1 {
-	font-size: 28px;
-	font-family: Microsoft YaHei;
-	font-weight: normal;
-	line-height: 36px;
-}
-
-/*layout*/
-body {
-	background: url(../images/bodybg.png) repeat-x 0 0 @body-bg-color;
-}
-.wrapper {
-	width: @total-width;
-	margin: 0 auto;
-}
-.header {
-	margin: 0 auto;
-	width: @total-width;
-	height: 40px;
-	line-height: 40px;
-	white-space: nowrap;
-}
-.logo {
-	display: block;
-	float: left;
-	width: 140px;
-	height: 40px;
-	overflow: hidden;
-	background: url(../images/logo.png) no-repeat 0 0;
-	text-indent: -1000px;
-	&:hover {
-		background-position: 0 -40px;
-	}
-}
-//导航
-.topNav {
-	float: left;
-	li {
-		color: #ddd;
-		font-size: 14px;
-		float: left;
-		white-space: nowrap;
-		padding-left: 20px;
-		a{
-			color: #ddd;
-		}
-	}
-}
-#topSearch {
-	width: 210px;
-	height: 24px;
-	overflow: hidden;
-	float: right;
-	margin-top: 8px;
-	background: #e5e5e5;
-	position: relative;
-	#topSearchText {
-		width: 170px;
-		padding: 0 6px;
-		height: 24px;
-		line-height: 24px;
-		background: none;
-		border: none;
-		position: absolute;
-		left: 0;
-		top: 0;
-	}
-	#topSearchBtn {
-		width: 28px;
-		height: 24px;
-		overflow: hidden;
-		text-indent: 200px;
-		background: url(../images/btn.gif) no-repeat 0 0;
-		border: none;
-		cursor: pointer;
-		position: absolute;
-		right: 0;
-		top: 0;
-		&:hover {
-			background-position: -30px 0;
-		}
-	}
-}
-.footer {
-	clear: both;
-	width: 970px;
-	padding: 15px 5px;
-	margin: 0 auto;
-	height: 20px;
-	line-height: 20px;
-	text-align: right;
-	color: #666;
-	white-space: nowrap;
-	a {
-		margin-right: 13px;
-	}
-}
 /*main*/
 .main_home {
 	clear: both;
 	margin: 0 auto;
-	width: @total-width;
+	width: @maxWidth;
 }
 //快速导航
 .quickNav_a(@index:1) {
@@ -144,7 +25,7 @@ body {
 		text-indent: -1000px;
 		background: url(../images/quicknav.png) no-repeat;
 		margin-left: 10px;
-		box-shadow: 0 1px 3px #999;
+		.box-shadow(0 1px 3px @colorLightGray);
 		&.a1{
 			margin-left: 0;
 			.quickNav_a(1);
@@ -170,7 +51,7 @@ body {
 //热门搜索
 .hotSearch {
 	background: #fff;
-	box-shadow: 0 1px 3px #999;
+	box-shadow: 0 1px 3px @colorLightGray;
 	height: 32px;
 	line-height: 32px;
 	padding: 0 30px;
@@ -190,7 +71,7 @@ body {
 		h3 {
 			font-size: 14px;
 			span {
-				color: #999;
+				color: @colorLightGray;
 				margin-left: 10px;
 				font-size: 12px;
 				font-weight: normal;
@@ -200,7 +81,7 @@ body {
 			position: absolute;
 			right: 0;
 			top: 0;
-			color: #999;
+			color: @colorLightGray;
 			text-align: right;
 		}
 	}
@@ -214,7 +95,7 @@ body {
 		position: relative;
 		margin-top: 10px;
 		.oc1 {
-			color: #999;
+			color: @colorLightGray;
 			span {
 				margin-right: 10px;
 			}
@@ -231,7 +112,7 @@ body {
 }
 .separated li {
 	background: #fff;
-	box-shadow: 0 1px 3px #999;
+	box-shadow: 0 1px 3px @colorLightGray;
 	padding: 18px 30px 15px;
 	margin-top: 20px;
 	line-height: 22px;
@@ -261,15 +142,15 @@ body {
 /*书库*/
 .main_browse {
 	clear: both;
-	width: @total-width;
+	width: @maxWidth;
 	margin: 20px auto 0;
 	padding-bottom: 20px;
 	background: url(../images/sidebar.gif) repeat-y 0 0 #fff;
-	box-shadow: 0 1px 3px #999;
+	box-shadow: 0 1px 3px @colorLightGray;
 	min-height:600px;
 }
 .sidebar {
-	width: @left-side-width;
+	width: @sideWidth;
 	float: left;
 }
 .sbSearch {
@@ -280,8 +161,8 @@ body {
 		width: 128px;
 		margin-top: 10px;
 	}
-	.sele {
-		.seleWidth(148px);
+	.select {
+		.selectWidth(148px);
 		margin-top: 10px;
 	}
 	.btn5 {
@@ -308,14 +189,14 @@ body {
 	}
 }
 .col2Main {
-	margin-left: @left-side-width;
+	margin-left: @sideWidth;
 }
 .padMain {
 	padding: 0 30px 30px;
 	h1 {
 		padding: 25px 0;
 		.total {
-			color:#999;
+			color:@colorLightGray;
 			margin-left: 15px;
 		}
 	}
@@ -358,7 +239,7 @@ body {
 		position: absolute;
 		top: 15px;
 		right: 25px;
-		color: #999;
+		color: @colorLightGray;
 		span {
 			margin: 0 6px;
 		}
@@ -369,8 +250,17 @@ body {
 	clear: both;
 	padding-top: 30px;
 	.pre, .next {
-		.base-btn;
-		width: 36px;
+        display: inline-block;
+        vertical-align: middle;
+        background: url(../images/btn.gif) no-repeat;
+        border: none;
+        cursor: pointer;
+        text-align: center;
+        overflow: hidden;
+        &:hover {
+            text-decoration: none;
+        }
+        width: 36px;
 		height: 36px;
 		line-height: 300px;
 		margin: 0 10px;
@@ -387,8 +277,8 @@ body {
 			background-position: -114px -26px;
 		}
 	}
-	.sele {
-		.seleWidth(70px);
+	.select {
+		.selectWidth(70px);
 		ul {
 			top: auto;
 			bottom: 29px;
@@ -402,28 +292,6 @@ body {
 	padding: 25px;
 }
 //上传新书
-.main_form {
-	clear: both;
-	width: @total-width - 60;
-	margin: 20px auto 0;
-	padding: 0 30px 30px;
-	background: #fff;
-	.base-box-shadow;
-	min-height: 560px;
-	position: relative;
-	h1 {
-		padding: 25px 70px 25px 0;		
-	}
-	.related {
-		position: absolute;
-		top: 34px;
-		right: 30px;
-		font-size: 14px;
-	}
-	.related a {
-		margin-left: 15px;
-	}
-}
 .tbl {
 	td {
 		padding-bottom: 10px;
@@ -455,13 +323,13 @@ body {
 			vertical-align: middle;
 		}
 	}
-	.sele {
-		.seleWidth(270px);
+	.select {
+		.selectWidth(270px);
 	}
 	.ml {
 		margin-left: 10px;
 	}
-	.btnTd {
+	.td-btn {
 		padding-top: 20px;
 		input {
 			margin-right: 10px;
@@ -470,19 +338,6 @@ body {
 	.tip {
 		color: #aaa;
 		font-size: 12px;
-		&.suc, &.error {
-			font-size: 14px;
-			font-weight: bold;		
-			padding-left: 22px;
-		}		
-		&.suc {
-			color:@suc-color;
-			background: url(../images/suc.gif) no-repeat 0 1px;
-		}
-		&.error {
-			color:@error-color;
-			background: url(../images/error.gif) no-repeat 0 1px;
-		}
 	}
 	span.tip {
 		margin-left: 10px;
@@ -490,10 +345,6 @@ body {
 	p.tip {
 		margin-top: 5px;
 	}
-}
-.required {
-	color:@highlight;
-	font-weight: bold;
 }
 #setDir {
 	th {
@@ -515,7 +366,7 @@ body {
 	}
 }
 .fileList {
-	border-top: solid 1px @border-color;
+	border-top: solid 1px @colorBorder;
 	padding-top: 20px;
 	margin-top: 10px;
 	h3 {
@@ -527,7 +378,7 @@ body {
 		td {
 			line-height: 18px;
 			padding: 5px 10px;
-			border-top: dotted 1px @border-color;
+			border-top: dotted 1px @colorBorder;
 		}
 		thead td {
 			background: #f5f5f5;
@@ -536,7 +387,7 @@ body {
 		}
 	}
 	&.bbord {
-		border-bottom: solid 1px @border-color;
+		border-bottom: solid 1px @colorBorder;
 	}
 	&.ntbord {
 		border-top: none;
@@ -545,7 +396,7 @@ body {
 	}
 }
 .fileBox {
-	border: solid 1px @border-color;
+	border: solid 1px @colorBorder;
 	margin-bottom: 15px;
 	font-size: 14px;
 	dt {
@@ -555,7 +406,7 @@ body {
 		line-height: 30px;
 		white-space: nowrap;
 		position: relative;
-		border-bottom: dotted 1px @border-color;
+		border-bottom: dotted 1px @colorBorder;
 		&.last{
 			border-bottom: none;
 		}
@@ -570,7 +421,7 @@ body {
 		right: 10px;
 	}
 	.c {
-		border-top: dotted 1px @border-color;
+		border-top: dotted 1px @colorBorder;
 		padding: 10px 0;
 		overflow: hidden;
 		li {
@@ -581,7 +432,7 @@ body {
 	}
 }
 .optionList li {
-	.inline-block;
+	display: inline-block;
 	white-space: nowrap;
 	width: 80px;
 }
@@ -598,10 +449,10 @@ body {
 	}
 }
 .sucDone {
-	color:@suc-color;
+	color:@colorSuccess;
 }
 .failDone {
-	color:@error-color;
+	color:@colorError;
 }
 .articleTitle {
 	position: relative;
@@ -609,7 +460,7 @@ body {
 		position: absolute;
 		top: 38px;
 		right: 0;
-		color: #999;
+		color: @colorLightGray;
 		font-size: 12px;
 	}
 }
@@ -617,7 +468,7 @@ body {
 	width: 100%;
 	th, td {
 		text-align: left;
-		border: solid 1px @border-color;
+		border: solid 1px @colorBorder;
 		padding: 4px 10px;
 		font-size: 14px;
 		font-weight: normal;

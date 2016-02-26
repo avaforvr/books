@@ -27,7 +27,7 @@ define(function(require, exports, module) {
 		});
 
 		var showMenu = function () {
-			$('.sele').removeClass('active');
+			$('.select').removeClass('active');
 			$sele.addClass('active');
 			$(document).bind('click', hideMenu);
 		};
@@ -35,7 +35,7 @@ define(function(require, exports, module) {
 		var hideMenu = function (e) {
 			var src = e ? e.target : e.srcElement;
 			do {
-				if ($(src).closest('.sele').length > 0)
+				if ($(src).closest('.select').length > 0)
 					return;
 				src = src.parentNode;
 			} while (src.parentNode)

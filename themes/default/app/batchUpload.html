@@ -7,13 +7,17 @@
 
 <body data-key="batchUpload">
 {% include 'common/header.html' %} 
-<div class="main_form">
+<div class="main-a">
+    <div class="related-pages">
+        <a href="{{WEB_ROOT}}upload.php">单个文件上传</a>
+    </div>
+
     <h1>批量上传</h1>
-	<div class="related"><a href="{{WEB_ROOT}}upload.php">单个文件上传</a></div>
+
 	<form id="buForm">
         <input type="hidden" name="act" value="batchUpload">
 		<input type="hidden" name="legalDir" value="">
-		<table class="tbl" id="setDir">
+		<table id="setDir">
 			<tr>
 				<th>目录：</th>
 				<td><input type="text" class="text" name="dir" id="dir"></td>
@@ -21,10 +25,10 @@
 			</tr>
 		</table>
 		<div class="batchOption" style="display:none">
-            <table class="tbl">
+            <table>
                 <tr>
                     <th width="80">分类：</th>
-					<td width="280"><div class="sele">
+					<td width="280"><div class="select">
                             <input type="hidden" name="btype" value="0">
                             <span>-</span>
 							<ul>
@@ -47,7 +51,7 @@
 					</td>
 				</tr>
 				<tr>
-					<td colspan="3"><input class="btn1" id="btnBatchUpload" type="submit" value="上  传"></td>
+					<td colspan="3"><input class="btn btn-primary" id="btnBatchUpload" type="submit" value="上  传"></td>
 				</tr>
             </table>
 		</div>

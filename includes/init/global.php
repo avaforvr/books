@@ -28,4 +28,16 @@ $container = $baseinit->initBase($container);
 $container = $baseinit->initUtil($container);
 $container = $baseinit->initTwig($container);
 
+$util = $container['util'];
+
+function p() {
+    $argvs = func_get_args();
+    echo "<div style=\"text-align: left;\">\r\n";
+    foreach ($argvs as $v) {
+        echo "<xmp>";
+        print_r($v);
+        echo "</xmp>\r\n";
+    }
+    echo "\r\n</div>\r\n";
+}
 ?>

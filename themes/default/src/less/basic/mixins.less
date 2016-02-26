@@ -1,0 +1,54 @@
+.gradient(@from, @to) {
+    background: @to;
+    background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(@from), to(@to));
+    background: -moz-linear-gradient(top, @from, @to);
+    background: -o-linear-gradient(top,@from, @to);
+}
+
+.border-radius(@radius) {
+    -webkit-border-radius: @radius;
+    -moz-border-radius: @radius;
+    -ms-border-radius: @radius;
+    border-radius: @radius;
+}
+
+.appearance(@appearance) {
+    -webkit-appearance: @appearance;
+    -moz-appearance: @appearance;
+    -ms-appearance: @appearance;
+    -o-appearance: @appearance;
+    appearance: @appearance;
+}
+
+.user-select(@select) {
+    -webkit-user-select: @select;
+    -moz-user-select: @select;
+    -ms-user-select: @select; // IE10+
+    user-select: @select;
+}
+
+.opacity(@opacity) {
+    opacity: @opacity;
+    // IE8 filter
+    @opacity-ie: (@opacity * 100);
+    filter: ~"alpha(opacity=@{opacity-ie})";
+}
+
+.box-shadow(@shadow) {
+    -webkit-box-shadow: @shadow; // iOS <4.3 & Android <4.1
+    box-shadow: @shadow;
+}
+
+.box-sizing(@boxmodel: border-box) {
+    -webkit-box-sizing: @boxmodel;
+    -moz-box-sizing: @boxmodel;
+    box-sizing: @boxmodel;
+}
+
+.clearfix() {
+    &:after {
+        content: "";
+        display: table;
+        clear: both;
+    }
+}

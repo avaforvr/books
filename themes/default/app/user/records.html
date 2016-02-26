@@ -1,6 +1,7 @@
-<h1>
-	{{act_translate}}记录
-</h1>
+{% extends "user/base.html" %}
+
+{% block userMain %}
+<h1>{{act_translate}}记录</h1>
 <div class="fileList bbord ntbord">
 	<h3>共{{act_translate}} {{total}} 个文件，文件列表如下：</h3>
 	<table>
@@ -20,3 +21,4 @@
 		</tbody>
 	</table>
 </div>
+{% endblock %}

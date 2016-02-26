@@ -1,134 +1,117 @@
 <?
 include_once __DIR__ . '/includes/init/global.php';
 
+
 $act = isset($_REQUEST['act']) && $_REQUEST['act'] ? $_REQUEST['act'] : '';
 $back = isset($_REQUEST['back']) && $_REQUEST['back'] ? $_REQUEST['back'] : $WEB_ROOT;
 
 if($act != 'logout' && $container['login']) {
-    $container['util']->redirect($back);
+    $util->redirect($back);
 }
-
-
-$tplArray['data_key'] = 'login';
-$tplArray['html_page_content'] = $container['twig']->render('login/login.html', array('WEB_ROOT' => $container['WEB_ROOT'], 'back'=> $back));
 
 $userdao = $container['userdao'];
 
 switch ($act) {
 	case 'verifyLogin':
-		$uname = trim($_POST['name']);
-		$upwd = trim($_POST['pwd']);
-		$user = $userdao->getUserByUname($uname);
-		
+        $data = $util->trimArray($_POST['data']);
+		$user = $userdao->getUserByUname($data['user_name']);
 		$r = array('code' => 0, 'msg' =>'');
-		if(empty($user)) {
+		if(! $user) {
 			$r['code'] = 1;
-			$r['msg'] = 'The user name is inexistence.';
-		} elseif($user['upwd'] != $upwd) {
+			$r['msg'] = '该用户不存在';
+		} elseif($user['user_pwd'] != $data['user_pwd']) {
 			$r['code'] = 2;
-			$r['msg'] = 'The password is wrong.';
+			$r['msg'] = '密码错误';
 		} else {
 			$userdao->doLogin($user);
-			$r['msg'] = 'Success.';
+			$r['msg'] = '登录成功！';
 			$r['user'] = $user;
 			$r['back'] = $back;
 		}
 		echo json_encode($r);
 		die();
 		break;
+
 	case 'pageRegister':
         echo $container['twig']->render('login/register.html', array('back'=>$back));
 		break;
+
 	case 'verifyRegister':
 		$r = array('code' => 0, 'msg' =>'');
-		
-		$uname = trim($_POST['name']);
-		$user = $userdao->getUserByUname($uname);
-		if(! empty($user)) {
+        $data = $util->trimArray($_POST['data']);
+
+		if($userdao->getUserByUname($data['user_name'])) {
 			$r['code'] = 1;
-			$r['msg'] = 'Your name already exists.';
+			$r['msg'] = '用户名已经注册';
 			echo json_encode($r);
 			die();
 		}
-		
-		$uemail = trim($_POST['email']);
-		$user = $userdao->getUserByUemail($uemail);
-		if(! empty($user)) {
+
+		if($userdao->getUserByUemail($data['user_email'])) {
 			$r['code'] = 2;
-			$r['msg'] = 'Your email already exists.';
+			$r['msg'] = '邮箱已经注册';
 			echo json_encode($r);
 			die();
 		}
-		
-		$upwd = trim($_POST['pwd']);
-		$urepwd = trim($_POST['repwd']);
-		if($upwd != $urepwd) {
+
+		if($data['user_pwd'] != $data['repwd']) {
 			$r['code'] = 3;
-			$r['msg'] = 'The two passwords you typed do not match.';
+			$r['msg'] = '密码不一致';
 			echo json_encode($r);
 			die();
 		}
-		
-		$user['name'] = trim($_POST['name']);
-		$user['email'] = trim($_POST['email']);
-		$user['pwd'] = trim($_POST['pwd']);
-		if($userdao->insertUser($user)) {
+
+		if($userdao->insertUser($data)) {
 			$r['code'] = 0;
 			$r['msg'] = 'Success';
 			$r['back'] = $back;
 		} else {
 			$r['code'] = 4;
-			$r['msg'] = 'Something is wrong.';
+			$r['msg'] = '数据库写入失败，请刷新后重试。';
 		}
 		echo json_encode($r);
-		die();
-		break;
+        die();
+        break;
+
 	case 'pageFindPwd':
-		$tplArray['html_page_content'] = $container['twig']->render('login/forgetPwd.html', array('WEB_ROOT' => $container['WEB_ROOT'], 'back'=> $back));
-		$tplArray['data_key'] = 'forgetPwd';
+        echo $container['twig']->render('login/forgetPwd.html', array('back'=>$back));
 		break;
-	case 'verifyName':
-		$uname = trim($_POST['name']);
-		$isExist = $userdao->verifyUname($uname);
-		echo $isExist ? 1 : 0;
-		die();
-		break;
-	case 'verifyEmail':
-		$uemail = trim($_POST['email']);
-		$isExist = $userdao->verifyUemail($uemail);
-		echo $isExist ? 1 : 0;
-		die();
-		break;
+
 	case 'verifyNameAndEmail':
 		$r = array('code' => 0, 'msg' =>'');
-		$uname = trim($_POST['name']);
-		$uemail = trim($_POST['email']);		
-		$user = $userdao->getUserByUname($uname);
-		if(empty($user)) {
+        $data = $util->trimArray($_POST['data']);
+		$user = $userdao->getUserByUname($data['user_name']);
+		if(! $user) {
 			$r['code'] = 1;
 			$r['msg'] = '用户名不存在';
-		} elseif($user['uemail'] != $uemail) {
+		} elseif($user['user_email'] != $data['user_email']) {
 			$r['code'] = 2;
 			$r['msg'] = '邮箱不正确';
 		} else {
-			$r['code'] = 0;
 			$r['msg'] = '用户名存在，邮箱正确';
-			$r['uid'] = $user['uid'];
+			$r['user_id'] = $user['user_id'];
 		}
 		echo json_encode($r);
 		die();
 		break;
+
 	case 'verifyFindPwd':
-		$uid = trim($_POST['uid']);
-		$upwd = trim($_POST['pwd']);
-		$isSuc = $userdao->setPwd($upwd, $uid);
-		echo $isSuc ? 1 : 0;
+        $data = $util->trimArray($_POST['data']);
+		$result = $userdao->setPwd($data['user_pwd'], $data['user_id']);
+        if($result === 1 || $result === 0) {
+            $r = array('code' => 0, 'msg' =>'密码设置成功', 'back' => $back);
+        } else {
+            $r = array('code' => 1, 'msg' =>'密码设置失败，请刷新页面后重试。');
+        }
+        echo json_encode($r);
 		die();
 		break;
+
 	case 'logout':
 		unset($_SESSION['user']);
-		$container['util']->redirect($WEB_ROOT . "login.php?back=$back");
+		$util->redirect($WEB_ROOT . "login.php?back=$back");
 		break;
+
 	default:
         echo $container['twig']->render('login/login.html', array('back'=>$back));
 		break;

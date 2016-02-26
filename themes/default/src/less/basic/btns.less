@@ -1,0 +1,53 @@
+.btn {
+    display: inline-block;
+    margin: 0;
+    padding: 7px 20px;
+    line-height: 1.42;
+    font-size: 16px;
+    font-weight: normal;
+    text-decoration: none;
+    text-align: center;
+    vertical-align: middle;
+    white-space: nowrap;
+    cursor: pointer;
+    border: none;
+    .user-select('none');
+    .appearance('none');
+    .border-radius(3px);
+
+    //==================== Set primary button colors - can override later ====================
+    &,
+    &:hover,
+    &:active,
+    &:focus {
+        text-decoration: none;
+        background-color: @colorBtnPrimary;
+        color: #fff;
+    }
+
+    &[disabled],
+    &.disabled {
+        cursor: default;
+        pointer-events: none;
+        background-color: @colorLightGray;
+    }
+}
+
+.btn-primary {
+    &,
+    &:hover,
+    &:active,
+    &:focus {
+        background-color: @colorBtnPrimary;
+        color: #fff;
+    }
+}
+.btn-secondary {
+    &,
+    &:hover,
+    &:active,
+    &:focus {
+        background-color: @colorBtnSecondary;
+        color: @colorText;
+    }
+}

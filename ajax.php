@@ -11,12 +11,12 @@ switch ($act) {
 			$result['code'] = 1;
 			$result['msg'] = 'Please login first.';
 		} else {
-			$uid = $_SESSION['user']['uid'];
+			$userId = $_SESSION['user']['user_id'];
 			$bid = $_POST['bid'];
-			$record_result = $container['miscdao']->setRecord('eva', $bid, $uid); //更新misc记录
+			$record_result = $container['miscdao']->setRecord('eva', $bid, $userId); //更新misc记录
 			$container['filedao']->setExtra('eva', $bid, $record_result); //好评总数更新
 			if($record_result){
-				$container['userdao']->setMoneyAndCtbt($uid, 0, 1); //好评，财富+0，贡献+1，取消好评不加财富
+				$container['userdao']->setMoneyAndCtbt($userId, 0, 1); //好评，财富+0，贡献+1，取消好评不加财富
 				$result['msg'] = 'Success plus.';
 				$result['isplus'] = 1;
 			} else {

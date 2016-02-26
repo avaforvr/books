@@ -1,24 +1,36 @@
+{% set dataKey = 'changePwd' %}
+{% extends "user/base.html" %}
+
+{% block userMain %}
 <h1>修改密码</h1>
-<form id="changePwdForm" method="post">
-	<input type="hidden" name="act" value="changePwd">
-	<table class="tbl">
-		<tr>
-			<th>旧密码：<span class="required">*</span></th>
-			<td><input type="password" class="text" name="oldpwd" maxLength="16"></td>
-			<td><span id="oldpwdTip" class="tip">由6-16位下划线、英文字母或数字组成</span></td>
-		</tr>
-		<tr>
-			<th>新密码：<span class="required">*</span></th>
-			<td><input type="password" class="text" name="pwd" maxLength="16"></td>
-			<td><span id="pwdTip" class="tip">由6-16位下划线、英文字母或数字组成</span></td>
-		</tr>
-		<tr>
-			<th>确认新密码：<span class="required">*</span></th>
-			<td><input type="password" class="text" name="repwd" maxLength="16"></td>
-			<td><span id="repwdTip" class="tip"></span></td>
-		</tr>
-		<tr>
-			<td class="btnTd" colspan="3"><input class="btn1" type="submit" value="提  交"><a href="javascript:history.go(-1)" class="btn3">返&nbsp;&nbsp;回</a><span id="submitTip" class="tip"></span></td>
-		</tr>
-	</table>
+<form id="changePwdForm" method="post" action="{{WEB_ROOT}}user/changePwd.php" class="form-a">
+    <input type="hidden" name="act" value="changePwd">
+    <table>
+        <col width="110"/>
+        <col width="280"/>
+        <tr>
+            <th>旧密码：<span class="required">*</span></th>
+            <td><input type="password" class="text" name="data[oldpwd]" maxLength="16"></td>
+            <td><span class="tip" data-tip="由6-16位下划线、英文字母或数字组成">由6-16位下划线、英文字母或数字组成</span></td>
+        </tr>
+        <tr>
+            <th>新密码：<span class="required">*</span></th>
+            <td><input type="password" class="text" name="data[user_pwd]" maxLength="16"></td>
+            <td><span class="tip" data-tip="由6-16位下划线、英文字母或数字组成">由6-16位下划线、英文字母或数字组成</span></td>
+        </tr>
+        <tr>
+            <th>确认新密码：<span class="required">*</span></th>
+            <td><input type="password" class="text" name="data[repwd]" maxLength="16"></td>
+            <td><span class="tip" data-tip=""></span></td>
+        </tr>
+        <tr>
+            <td class="td-btn" colspan="3">
+                <button class="btn btn-primary" type="submit">提&nbsp;&nbsp;交</button>
+                <a href="javascript:history.go(-1)" class="btn btn-secondary">返&nbsp;&nbsp;回</a>
+                <span id="submitTip" class="tip"></span>
+            </td>
+        </tr>
+    </table>
 </form>
+{% endblock %}
+

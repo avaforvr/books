@@ -23,19 +23,19 @@ var init = function () {
             break;
 
         case 'login':
-            require('./modules/login').init();
+            require('./modules/login').init(dataKey);
             break;
 
         case 'register':
-            require('./modules/register').init();
+            require('./modules/login').init(dataKey);
             break;
 
         case 'forgetPwd':
-            require('./modules/forgetPwd');
+            require('./modules/login').init(dataKey);
             break;
 
         case 'changePwd':
-            require('./modules/changePwd');
+            require('./modules/login').init(dataKey);
             break;
 
         case 'pending':

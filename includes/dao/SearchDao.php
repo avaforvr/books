@@ -5,7 +5,7 @@ class SearchDao extends BaseDao{
 
 	public function getRecordBySkey($skey) {
 		$db = $this->db();
-		$sql = "SELECT * FROM searches WHERE skey='$skey' LIMIT 1";
+		$sql = "SELECT * FROM search WHERE skey='$skey' LIMIT 1";
 		$record = $db->fetchAssoc($sql);
 		return $record;
 	}
@@ -14,11 +14,11 @@ class SearchDao extends BaseDao{
 		$db = $this->db();
 		$record = $this->getRecordBySkey($skey);
 		if(empty($record)) {
-			$sql = "INSERT INTO searches(skey, scount, slasttime) VALUES('$skey', 1, '" . date('Y-m-d H:i:s') . "')";
+			$sql = "INSERT INTO search(skey, scount, slasttime) VALUES('$skey', 1, '" . date('Y-m-d H:i:s') . "')";
 			$db->query($sql);
 			$sid = mysql_insert_id();
 		} else {
-			$sql = "UPDATE searches SET 
+			$sql = "UPDATE search SET
 					scount=scount+1,
 					slasttime='" . date('Y-m-d H:i:s') . "' 
 					WHERE skey='$skey'";
@@ -30,7 +30,7 @@ class SearchDao extends BaseDao{
 	
 	public function getCacheFile($sid) {
 		$container = $this->container;
-		$file_path = $container['path']['caches'] . 'searches/sid_' . $sid . '.json';
+		$file_path = $container['path']['caches'] . 'search/sid_' . $sid . '.json';
 		if(file_exists($file_path)) {
 			return $file_path;
 		} else {
@@ -41,12 +41,12 @@ class SearchDao extends BaseDao{
 	public function createCacheFile($sid, $bids) {
 		$db = $this->db();
 		$container = $this->container;
-		$file_path = $container['path']['caches'] . 'searches/sid_' . $sid . '.json';
+		$file_path = $container['path']['caches'] . 'search/sid_' . $sid . '.json';
 		
 		//$filedao = $container['filedao'];
 		$file_cont = array();
 		foreach($bids as $bid) {
-			$sql = "SELECT bid,bsize,beva,btime FROM books WHERE bid = $bid LIMIT 1";
+			$sql = "SELECT bid,bsize,beva,btime FROM book WHERE bid = $bid LIMIT 1";
 			$row = $db->fetchAssoc($sql);
 			$file_cont[] = json_encode($row);
 		}
