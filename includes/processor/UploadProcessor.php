@@ -96,6 +96,7 @@ class UploadProcessor extends BaseProcessor{
 		return $files;
 	}
 
+    //-------------------------------------------------------------------
     //验证文件格式及book表相关信息
     public function verifyFile($wholename) {
         $wholenameArr = explode('.', $wholename);
