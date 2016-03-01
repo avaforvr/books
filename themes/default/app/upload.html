@@ -19,10 +19,11 @@
         </table>
     </form>
 
-    <form action="{{ WEB_ROOT }}upload.php" method="post" id="uploadForm" class="form-a hide">
+    <form action="{{ WEB_ROOT }}upload.php" method="post" id="uploadForm" class="form-a">
         <input type="hidden" name="act" value="uploadNew">
         <input type="hidden" name="data[book_size]" value="">
         <input type="hidden" name="data[book_path]" value="">
+        <input type="hidden" name="check_book_tags" value="">
         <table>
             <col width="80" />
             <col width="280" />
@@ -74,13 +75,14 @@
                         <label><input type="checkbox" name="data[book_tags][]" value="{{ id }}">{{ tag }}</label>
                         {% endfor %}
                     </ul>
-                    <p id="btagsTip" class="tip"></p>
+                    <p id="bookTagsTip" class="tip" style="margin: 0;"></p>
                 </td>
             </tr>
             <tr>
                 <td class="td-btn" colspan="2">
                     <button class="btn btn-primary" type="submit">上&nbsp;&nbsp;传</button>
                     <button class="btn btn-secondary" type="reset">重&nbsp;&nbsp;置</button>
+                    <span id="submitTip" class="tip"></span>
                 </td>
             </tr>
         </table>
