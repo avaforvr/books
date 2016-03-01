@@ -5,7 +5,7 @@ $util->checkLogin($container);
 $act = isset($_REQUEST['act']) && $_REQUEST['act'] ? $_REQUEST['act'] : '';
 
 //测试 filedao
-include_once __DIR__ . '/includes/test/testFileDao.php';
+//include_once __DIR__ . '/includes/test/testFileDao.php';
 
 //{{{ Upload Processor
 include_once __DIR__ . '/includes/processor/UploadProcessor.php';
@@ -44,10 +44,10 @@ switch ($act) {
 		break;
 }
 
-$tplArray['attr_type'] = $container['vars']['attr_type'];
-$tplArray['attr_style'] = $container['vars']['attr_style'];
-$tplArray['attr_tags'] = $container['vars']['attr_tags'];
-
-echo $container['twig']->render('upload.html', $tplArray);
+echo $container['twig']->render('upload.html', array(
+    'attr_type' => $container['vars']['attr_type'],
+    'attr_style' => $container['vars']['attr_style'],
+    'attr_tags' => $container['vars']['attr_tags']
+));
 
 ?>

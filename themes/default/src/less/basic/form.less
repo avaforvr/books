@@ -1,20 +1,33 @@
+.base-input, .text, select, textarea {
+    background: #fff;
+    border: solid 1px @colorInputBorder;
+    line-height: 1.3;
+    box-sizing: border-box;
+    padding: 8px 10px;
+}
+.text:read-only {
+    background:#f5f5f5;
+}
+textarea {
+    line-height: 26px;
+}
 .required {
     color:@colorHighlight;
 }
 
 .form-a {
-    th {
-        padding-bottom: 10px;
+    th, td {
+        padding-bottom: 15px;
+        line-height: 36px;
         vertical-align: top;
-        line-height: 30px;
-        font: normal 14px/30px @fontFamilyBase;
-        text-align: left;
+        font-size: 14px;
+    }
+    th {
         padding-right: 5px;
         white-space: nowrap;
     }
-    td {
-        padding-bottom: 10px;
-        font-size: 14px;
+    .pad-tip {
+        padding-left: 15px;
     }
     .td-btn {
         padding-top: 20px;
@@ -22,25 +35,16 @@
             margin-right: 20px;
         }
     }
-    .text {
-        width: 250px;
+    .text, select, textarea {
+        width: 100%;
     }
-    .area {
-        width: 95%;
+    textarea {
         height: 130px;
     }
-    .select {
-        .selectWidth(270px);
-    }
     .tip {
+        margin-left: 15px;
         color: @colorTip;
         font-size: 12px;
-    }
-    .fa {
-        position: relative;
-        top: 1px;
-        margin-right: 5px;
-        font-size: 16px;
     }
     .success {
         color:@colorSuccess;
@@ -49,5 +53,22 @@
     .error {
         color:@colorError;
         font-size: 14px;
+    }
+    .fa {
+        position: relative;
+        top: 1px;
+        margin-right: 5px;
+        font-size: 16px;
+    }
+}
+
+.option-list {
+    label {
+        display: inline-block;
+        white-space: nowrap;
+        width: 80px;
+    }
+    input {
+        margin-right: 5px;
     }
 }

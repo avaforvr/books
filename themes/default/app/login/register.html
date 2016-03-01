@@ -4,13 +4,13 @@
 {% block main %}
 <div class="main-a">
     <div class="related-pages">
-        <a href="{{WEB_ROOT}}login.php?back={{back}}">登录</a>
-        <a href="{{WEB_ROOT}}login.php?act=pageFindPwd&back={{back}}">找回密码</a>
+        <a href="{{ WEB_ROOT }}login.php?back={{back}}">登录</a>
+        <a href="{{ WEB_ROOT }}login.php?act=pageFindPwd&back={{back}}">找回密码</a>
     </div>
 
     <h1>新用户注册</h1>
 
-    <form id="{{dataKey}}Form" method="post" action="{{WEB_ROOT}}login.php?back={{back}}" class="form-a">
+    <form id="{{dataKey}}Form" method="post" action="{{ WEB_ROOT }}login.php?back={{back}}" class="form-a">
         <input type="hidden" name="act" value="verifyRegister">
         <table>
             <col width="80" />

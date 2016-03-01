@@ -1,4 +1,5 @@
 require('../lib/jqueryForm');
+require('../mod/textarea').init();
 
 var elem = {
     "attaForm": $('#attaForm'),
@@ -22,7 +23,7 @@ var initAttaForm = function () {
     attaElem.change(function() {
         if(attaElem.val() == '') {
             attaTip.attr('class', 'tip error').html('请选择文件');
-            uploadForm.hide();
+            elem.uploadForm.hide();
             return false;
         }
         var options = {
@@ -30,16 +31,15 @@ var initAttaForm = function () {
             success: function(r) {
                 attaTip.innerHTML = r.msg;
                 if(r.code == 0) {
-                    attaTip.className = 'tip suc';
-                    $('input[name="bookInfo[book_name]"]').val(r.book_name);
-                    $('input[name="bookInfo[book_author]"]').val(r.book_author);
-                    $('input[name="bookInfo[bformat]"]').val(r.bformat);
-                    $('input[name="bookInfo[book_size]"]').val(r.book_size);
-                    $('input[name="bookInfo[bpath]"]').val(r.bpath);
-                    uploadForm.show();
+                    elem.uploadForm.find('input[name="data[book_name]"]').val(r.book_name);
+                    elem.uploadForm.find('input[name="data[book_author]"]').val(r.book_author);
+                    elem.uploadForm.find('input[name="data[book_size]"]').val(r.book_size);
+                    elem.uploadForm.find('input[name="data[book_path]"]').val(r.book_path);
+                    attaTip.attr('class', 'tip success').html(r.msg);
+                    elem.uploadForm.show();
                 } else {
-                    attaTip.className = 'tip error';
-                    uploadForm.hide();
+                    attaTip.attr('class', 'tip error').html(r.msg);
+                    elem.uploadForm.hide();
                 }
             }
         };
@@ -49,28 +49,10 @@ var initAttaForm = function () {
 
 //提交文件信息表单
 var initUploadForm = function () {
-    //下拉框
-    require('../mod/selectWidget');
-    $('.select').each(function () {
-        $(this).selectWidget();
-    });
-
-    //填写简介后消除空行
-    $('textarea[name="bookInfo[book_summary]"]').blur(function() {
-        var elem = $(this);
-        var str = elem.val().replace(/\n\s*/g, '\n');
-        str = str.replace(/\n{2,}/g, '\n');
-        elem.val(str);
-    });
-
-    //上传和编辑页面表单验证
+     //上传和编辑页面表单验证
     $('#uploadForm, #editForm').submit(function() {
-        var book_name = $('input[name="bookInfo[book_name]"]');
-        var book_author = $('input[name="bookInfo[book_author]"]');
-        var book_type = $('input[name="bookInfo[book_type]"]');
-        var btags = $('input[name="bookInfo[btags][]"]:checked');
-        var bnameTip = document.getElementById('bnameTip');
-        var bnameTip = document.getElementById('bnameTip');
+        var book_type = $('input[name="data[book_type]"]');
+        var btags = $('input[name="data[btags][]"]:checked');
         var btypeTip = document.getElementById('btypeTip');
         var btagsTip = document.getElementById('btagsTip');
         var setTip = function(elemTip, isRight, tipText) {
@@ -78,7 +60,7 @@ var initUploadForm = function () {
             if(isRight == 0) {
                 tipClass = 'tip error';
             } else if(isRight == 1) {
-                tipClass = 'tip suc';
+                tipClass = 'tip success';
             } else {
                 tipClass = 'tip';
             }
@@ -122,7 +104,7 @@ var initUploadForm = function () {
 
 
 module.exports = {
-    "init": function (key) {
+    "init": function () {
         initAttaForm();
         initUploadForm();
     }

@@ -11,7 +11,7 @@ if(! isLogin()) {
 }
 
 $file = $container['filedao']->getFileByBookId($bid);
-$filePath = $container['ROOT_PATH'] . $file['bpath'];
+$filePath = $container['ROOT_PATH'] . $file['book_path'];
 $fileName = basename($filePath);
 
 if(file_exists(toGb($filePath))) {

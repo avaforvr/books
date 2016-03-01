@@ -9,7 +9,7 @@
 {% include 'common/header.html' %} 
 <div class="main-a">
     <h1>{{file['book_name']}}</h1>
-	<form action="{{WEB_ROOT}}editbook.php?book_id={{file['book_id']}}" method="post" id="editForm">
+	<form action="{{ WEB_ROOT }}editbook.php?book_id={{file['book_id']}}" method="post" id="editForm">
 		<input type="hidden" name="act" value="editInfo">
 		<input type="hidden" name="bookInfo[book_id]" value="{{file['book_id']}}">
 		<table width="100%">

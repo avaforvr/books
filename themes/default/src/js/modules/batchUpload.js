@@ -40,15 +40,14 @@ define(function(require, exports, module) {
 						var result = '<div class="fileList bbord">';
 						result += '<h3>' + r.msg + '</h3>';
 						result += '<table><thead><tr>';
-						result += '<td>书名</td><td>作者</td><td>格式</td><td>文件路径</td>';
+						result += '<td>书名</td><td>作者</td><td>文件路径</td>';
 						result += '</tr></thead><tbody>';					
 						for(var key in r.legal) {
 							var file = r.legal[key];
 							result += '<tr>';
 							result += '<td>' + file.book_name + '</td>';
 							result += '<td>' + file.book_author + '</td>';
-							result += '<td>' + file.bformat + '</td>';
-							result += '<td>' + file.bpath + '</td>';
+							result += '<td>' + file.book_path + '</td>';
 							result += '</tr>';
 						}
 						result += '</tbody></table></div>';
@@ -65,7 +64,7 @@ define(function(require, exports, module) {
 						for(var key in r.illegal) {
 							var file = r.illegal[key];
 							result += '<tr>';
-							result += '<td>' + file.bpath + '</td>';
+							result += '<td>' + file.book_path + '</td>';
 							result += '<td>' + file.msg + '</td>';
 							result += '</tr>';
 						}
@@ -127,15 +126,14 @@ define(function(require, exports, module) {
 						result += '<div class="fileList bbord">';
 						result += '<h3>' + r.illegal.length + ' 个文件上传失败</h3>';
 						result += '<table><thead><tr>';
-						result += '<td>书名</td><td>作者</td><td>格式</td><td>文件路径</td>';
+						result += '<td>书名</td><td>作者</td><td>文件路径</td>';
 						result += '</tr></thead><tbody>';					
 						for(var key in r.illegal) {
 							var file = r.illegal[key];
 							result += '<tr>';
 							result += '<td>' + file.book_name + '</td>';
 							result += '<td>' + file.book_author + '</td>';
-							result += '<td>' + file.bformat + '</td>';
-							result += '<td>' + file.bpath + '</td>';
+							result += '<td>' + file.book_path + '</td>';
 							result += '</tr>';
 						}
 						result += '</tbody></table></div>';
@@ -148,15 +146,14 @@ define(function(require, exports, module) {
 						}
 						result += '<h3>' + r.legal.length + ' 个文件上传成功</h3>';
 						result += '<table><thead><tr>';
-						result += '<td>书名</td><td>作者</td><td>格式</td><td>文件路径</td>';
+						result += '<td>书名</td><td>作者</td><td>文件路径</td>';
 						result += '</tr></thead><tbody>';					
 						for(var key in r.legal) {
 							var file = r.legal[key];
 							result += '<tr>';
 							result += '<td>' + file.book_name + '</td>';
 							result += '<td>' + file.book_author + '</td>';
-							result += '<td>' + file.bformat + '</td>';
-							result += '<td>' + file.bpath + '</td>';
+							result += '<td>' + file.book_path + '</td>';
 							result += '</tr>';
 						}
 						result += '</tbody></table></div>';

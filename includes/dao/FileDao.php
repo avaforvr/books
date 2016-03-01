@@ -2,10 +2,10 @@
 include_once __DIR__ . '/BaseDao.php';
 
 class FileDao extends BaseDao{
-	
+/*
 	public function handleFile($file) {
 		$file['book_size'] = transSize($file['book_size']);
-		$file['bpath'] = 'files/' . $file['book_author'] . '/' . $file['book_name'] . ' by ' . $file['book_author'] . '.' . $file['bformat'];
+		$file['book_path'] = 'files/' . $file['book_author'] . '/' . $file['book_name'] . ' by ' . $file['book_author'] . '.txt';
 		$file['book_summary'] = dataToHtml($file['book_summary']);
 		$vars = $this->container['vars'];
 		$file['btype_lang'] = $vars['attr_type'][$file['book_type']];
@@ -80,29 +80,7 @@ class FileDao extends BaseDao{
 		}
 		return $fileList;
 	}
-	
-	public function isFileExist($bname, $bauthor) {
-		$db = $this->db();
-		$sql = "SELECT 1 FROM book WHERE book_name='" . $bname . "' AND book_author='" . $bauthor . "' LIMIT 1";
-		return $db->checkExist($sql);
-	}
 
-	public function delFileOnDisk($bookId) {
-		$file = $this->getBooksByBookId($bookId);
-		if(! empty($file)) {
-			$container = $this->container;
-			$disk_path = $container['ROOT_PATH'] . 'files/' . $file['book_author'] . '/' . $file['book_name'] . ' by ' . $file['book_author'] . '.' . $file['bformat'];
-			$disk_path = toGb($disk_path);
-			if(file_exists($disk_path)) {
-				unlink($disk_path);
-				return true;
-			}
-		}
-		return false;
-	}
-	
-
-	
 	public function delTagByBookId($bookId) {
 		$db = $this->db();
 		$sql = "DELETE FROM tag WHERE book_id=$bookId";
@@ -199,59 +177,110 @@ class FileDao extends BaseDao{
 			return false;
 		}
 	}
-
+*/
     //--------------------------------
     //插入一条 book 记录
     public function insertBook($file) {
-        $db = $this->db();
-        $sql = "INSERT INTO book(book_name, book_author, book_summary, book_size, book_type, book_style, book_status, book_original_site, book_uploader, book_upload_time) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        $stmt = $db->prepare($sql);
-        $param = array(
-            $file['book_name'],
-            $file['book_author'],
-            $file['book_summary'],
-            $file['book_size'],
-            $file['book_type'],
-            $file['book_style'],
-            1,
-            $file['book_original_site'],
-            $_SESSION['user']['user_id'],
-            date('Y-m-d H:i:s')
-        );
-        if($stmt->execute($param)) {
-            return $db->lastInsertId();
-        } else {
+        if(empty($file['book_name']) or empty($file['book_author'])) {
             return false;
         }
-    }
 
-    //删除一个 book 记录
-    public function delBooksByBid($bookId) {
         $db = $this->db();
-        $sql = "DELETE FROM book WHERE book_id=$bookId";
-        return $db->query($sql);
-    }
 
-    //插入一条 tag 记录
-    public function insertTag($bookId, $tags) {
-        $fieldStr = 'book_id';
-        $valueStr = $bookId;
-        $container = $this->container;
-        $updateStr= '';
-        foreach($container['vars']['attr_tags'] as $key=>$tag) {
-            $fieldStr .= (',' . $key);
-            if(in_array($key, $tags)) {
-                $valueStr .= ',1';
-                $updateStr .= ",`$key` = 1";
+        //强制覆盖旧的记录及设置默认值
+        $book = array(
+            'book_name' => $file['book_name'],
+            'book_author' => $file['book_author'],
+            'book_summary' => empty($file['book_summary']) ? '' : $file['book_summary'],
+            'book_size' => $file['book_size'],
+            'book_type' => empty($file['book_type']) ? 0 : $file['book_type'],
+            'book_style' => empty($file['book_style']) ? 0 : $file['book_style'],
+            'book_tags' => empty($file['book_tags']) ? '' : $file['book_tags'],
+            'book_status' => 2,
+            'book_original_site' => empty($file['book_original_site']) ? '' : $file['book_original_site'],
+            'book_uploader' => $_SESSION['user']['user_id'],
+            'book_upload_time' => date('Y-m-d H:i:s')
+        );
+
+        $bookId = $this->getDeletedBookId();
+        if($bookId) {
+            $this->delBook($bookId); //删除book_id相关数据
+            return $this->updateBook($bookId, $book) ? $bookId : false;
+        } else {
+            $fields = array();
+            $values = array();
+            foreach($book as $field =>$value) {
+                $fields[] = "`" . $field . "`";
+                $values[] = "'" . addslashes($value) . "'";
+            }
+            $sql = "INSERT INTO book(" . join(',', $fields) . ") VALUES(" . join(',', $values) . ")";
+            if($db->exec($sql)) {
+                return $db->lastInsertId();
             } else {
-                $valueStr .= ',0';
-                $updateStr .= ",`$key` = 0";
+                return false;
             }
         }
-        $updateStr = trim($updateStr,",");
-        $sql = "INSERT INTO `tag` ( $fieldStr) VALUES ($valueStr) on duplicate key update $updateStr;";
-        $this->db()->exec($sql);
+
     }
-	
+
+    //删除 book_id 相关所有数据
+    public function delBook($bookId, $isInsertBook=false) {
+        //将 book_status 设置为0，等待新纪录覆盖
+        if(! $isInsertBook) {
+            $this->updateBook($bookId, array('book_status'=>0));
+        }
+
+        //删除misc中所有相关记录
+        $this->container['miscdao']->deleteAllByBookId($bookId);
+
+        //删除txt文件
+        $this->delFileOnDisk($bookId);
+    }
+
+    //删除 txt文件
+    public function delFileOnDisk($bookId) {
+        $row = $this->getOneBook($bookId);
+        if(! empty($row)) {
+            $container = $this->container;
+            $disk_path = $container['ROOT_PATH'] . 'files/' . $row['book_author'] . '/' . $row['book_name'] . ' by ' . $row['book_author'] . '.txt';
+            $disk_path = $container['util']->toGb($disk_path);
+            if(file_exists($disk_path)) {
+                unlink($disk_path);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    //更新记录
+    public function updateBook($bookId, $file) {
+        $set = array();
+        foreach($file as $field =>$value) {
+            $set[] = "`" . $field . "`='" . addslashes($value) . "'";
+        }
+        $sql = "UPDATE `book` SET " . join(',', $set) . " WHERE `book_id`=" . $bookId;
+        return $this->db()->exec($sql) ? true : false;
+    }
+
+    //获取一条废弃记录的book_id (book_status == 0)
+    public function getDeletedBookId() {
+        $sql = "SELECT book_id FROM `book` WHERE book_status=0;";
+        $row = $this->getOneRow($sql);
+        return $row ? $row['book_id'] : false;
+    }
+
+    //获取一条完整记录
+    public function getOneBook($bookId) {
+        $sql = "SELECT * FROM `book` WHERE `book_id`=" . $bookId . " LIMIT 1;";
+        $row = $this->getOneRow($sql);
+        return $row ? $row : array();
+    }
+
+    //根据文件名和作者判断是否已存在
+    public function isBookExist($bname, $bauthor) {
+        $sql = "SELECT 1 FROM book WHERE book_name='" . $bname . "' AND book_author='" . $bauthor . "' LIMIT 1";
+        return $this->isExist($sql);
+    }
+
 }
 ?>

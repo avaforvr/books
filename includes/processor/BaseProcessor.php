@@ -2,7 +2,8 @@
 abstract class BaseProcessor {
     public $container;
 
-    public function __construct($container){
+    public function __construct(){
+        global $container;
         $this->container = $container;
     }
 

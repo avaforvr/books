@@ -5,7 +5,7 @@
 		<li>
 			<div class="t">
 				<h3>
-					<a href="{{WEB_ROOT}}onebook.php?book_id={{file['book_id']}}" target="_blank">{{file['book_name']}}</a>
+					<a href="{{ WEB_ROOT }}onebook.php?book_id={{file['book_id']}}" target="_blank">{{file['book_name']}}</a>
 					<span>作者：{{file['book_author']}}</span>
 				</h3>
 				<p>
@@ -34,8 +34,8 @@
 				</p>
 				{% if file['book_status'] %}
 				<p class="oc2">
-					<a href="{{WEB_ROOT}}download.php?book_id={{file['book_id']}}" target="_blank">下载</a>
-					<a href="{{WEB_ROOT}}editbook.php?book_id={{file['book_id']}}">编辑</a>
+					<a href="{{ WEB_ROOT }}download.php?book_id={{file['book_id']}}" target="_blank">下载</a>
+					<a href="{{ WEB_ROOT }}editbook.php?book_id={{file['book_id']}}">编辑</a>
 					<a href="javascript:void(0)" class="btnDelFile" id="del_{{file['book_id']}}">删除</a>
 				</p>
 				{% endif %}

@@ -38,5 +38,12 @@ class MiscDao extends BaseDao{
 		return $result; //操作结果是加1还是减1
 	}
 
+    public function deleteAllByBookId($bookId) {
+        $sql = "DELETE FROM `misc` WHERE `book_id`=" .  $bookId;
+        $this->db()->exec($sql);
+    }
+
+
+
 }
 ?>
