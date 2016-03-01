@@ -58,7 +58,7 @@
                 <th>原创网址</th>
                 <td colspan="3"><a href="{{file['book_original_site']}}" target="_blank">{{file['book_original_site']}}</a></td>
             </tr>
-			{% if file['book_exist'] == 1 %}
+			{% if file['book_status'] == 1 %}
             <tr>
             	<th>操作</th>
                 <td colspan="3" class="multiar"><a href="{{WEB_ROOT}}editbook.php?book_id={{file['book_id']}}">编辑</a><a href="{{WEB_ROOT}}download.php?book_id={{file['book_id']}}" target="_blank" class="ml2">下载</a></td>
@@ -67,11 +67,11 @@
         </table>
     </div>
 	<div class="articlePreview">
-		{% if file['book_exist'] == 1 %}
+		{% if file['book_status'] == 1 %}
 			<h3>文章试读</h3>
 			{{file['filePreview'] | raw}}
 			<div class="goOn">试读结束，请下载后阅读全文：<a href="{{WEB_ROOT}}download.php?book_id={{file['book_id']}}" target="_blank">{{file['book_name']}}</a></div>
-		{% elseif file['book_exist'] == 2 %}
+		{% elseif file['book_status'] == 2 %}
 			<h3 class="deleted">该文件尚未通过审核，将于24小时内审核结束。</h3>
 		{% else %}
 			<h3 class="deleted">因版权或其它原因，该文件已删除。</h3>

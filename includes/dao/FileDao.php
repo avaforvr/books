@@ -192,7 +192,7 @@ class FileDao extends BaseDao{
 	
 	public function setExist($bookId, $val) {
 		$db = $this->db();
-		$sql = "UPDATE book SET book_exist=$val WHERE book_id=$bookId";
+		$sql = "UPDATE book SET book_status=$val WHERE book_id=$bookId";
 		if($db->query($sql)) {
 			return true;
 		} else {
@@ -204,7 +204,7 @@ class FileDao extends BaseDao{
     //插入一条 book 记录
     public function insertBook($file) {
         $db = $this->db();
-        $sql = "INSERT INTO book(book_name, book_author, book_summary, book_size, book_type, book_style, book_exist, book_original_site, book_uploader, book_upload_time) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO book(book_name, book_author, book_summary, book_size, book_type, book_style, book_status, book_original_site, book_uploader, book_upload_time) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $stmt = $db->prepare($sql);
         $param = array(
             $file['book_name'],

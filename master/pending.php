@@ -27,17 +27,17 @@ switch ($act) {
 		die;
 	default:
 		$boxList = array();
-		$sql = "SELECT book_author FROM `book` WHERE book_exist=2 GROUP BY book_author";
+		$sql = "SELECT book_author FROM `book` WHERE book_status=2 GROUP BY book_author";
 		$db = $container['db'];
 		$rows = $db->fetchAssocArray($sql);
 		foreach($rows as $key => $row) {
 			$boxList[$key]['pending'] = array();
 			$boxList[$key]['exist'] = array();
 			$bauthor = $row['book_author'];
-			$box_files_sql = "SELECT book_id, book_name, book_author, book_exist FROM book WHERE book_author='$bauthor' ORDER BY book_upload_time DESC";
+			$box_files_sql = "SELECT book_id, book_name, book_author, book_status FROM book WHERE book_author='$bauthor' ORDER BY book_upload_time DESC";
 			$box_files = $db->fetchAssocArray($box_files_sql);
 			foreach($box_files as $file) {
-				if($file['book_exist'] == 2) {
+				if($file['book_status'] == 2) {
 					$boxList[$key]['pending'][] = $file;
 				} else {
 					$boxList[$key]['exist'][] = $file;

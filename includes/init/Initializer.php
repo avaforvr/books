@@ -22,19 +22,19 @@ class Initializer{
         };
         return $container;
     }
-
-	public function initVars($container){
-		$container['vars'] = function($c){
-			include $c['ROOT_PATH'].'includes/init/vars.php';
-            return $vars;
-        };
-        return $container;
-    }
 	
 	public function initBase($container){
 		$container['db'] = function($c){
 			include $c['ROOT_PATH'].'includes/init/Mysql.php';
             return MySQL::init($c['siteConf']);
+        };
+        $container['configdao'] = function($c){
+            include $c['ROOT_PATH'].'includes/dao/ConfigDao.php';
+            return new ConfigDao($c);
+        };
+        $container['vars'] = function($c){
+            $configdao = $c['configdao'];
+            return $configdao->getVars();
         };
 		$container['filedao'] = function($c){
 			include $c['ROOT_PATH'].'includes/dao/FileDao.php';

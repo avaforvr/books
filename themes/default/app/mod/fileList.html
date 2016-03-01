@@ -32,7 +32,7 @@
 					
 					<span>{{file['book_size']}}</span>
 				</p>
-				{% if file['book_exist'] %}
+				{% if file['book_status'] %}
 				<p class="oc2">
 					<a href="{{WEB_ROOT}}download.php?book_id={{file['book_id']}}" target="_blank">下载</a>
 					<a href="{{WEB_ROOT}}editbook.php?book_id={{file['book_id']}}">编辑</a>

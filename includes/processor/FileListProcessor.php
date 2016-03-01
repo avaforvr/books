@@ -106,8 +106,8 @@ class FileListProcessor implements BaseProcessor {
 	public function build_sql_default($sortBy) {
 		$orderby = $this->build_orderby($sortBy);
 		$sqls = array();
-		$sqls['getTotal'] = "SELECT count(*) FROM book WHERE book_exist=1";
-		$sqls['getFiles'] = "SELECT * FROM book WHERE book_exist=1" . $orderby;
+		$sqls['getTotal'] = "SELECT count(*) FROM book WHERE book_status=1";
+		$sqls['getFiles'] = "SELECT * FROM book WHERE book_status=1" . $orderby;
 		return $sqls;
 	}
 	
@@ -125,7 +125,7 @@ class FileListProcessor implements BaseProcessor {
 		$filedao = $container['filedao'];
 		
 		if($dataKey == 'index') {
-			$sql = "SELECT * FROM book WHERE book_exist = 1 ORDER BY book_upload_time DESC LIMIT 20";
+			$sql = "SELECT * FROM book WHERE book_status = 1 ORDER BY book_upload_time DESC LIMIT 20";
 			$this->fileList = $filedao->getFilesBySql($sql);
 		}
 		if($dataKey == 'browse') {

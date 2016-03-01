@@ -19,6 +19,13 @@ abstract class BaseDao{
         return $row;
     }
 
+    protected function getAllRows($sql) {
+        $stmt = $this->db()->query($sql);
+        $stmt->setFetchMode(PDO::FETCH_ASSOC);
+        $rows = $stmt->fetchAll();
+        return $rows;
+    }
+
     protected function isExist($sql) {
         $stmt = $this->db()->query($sql);
         return $stmt->fetch() ? true : false;

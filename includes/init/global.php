@@ -23,7 +23,6 @@ require_once __DIR__ . '/Initializer.php';
 $baseinit = new Initializer();
 $container = $baseinit->initConf($container);
 $container = $baseinit->initPath($container);
-$container = $baseinit->initVars($container);
 $container = $baseinit->initBase($container);
 $container = $baseinit->initUtil($container);
 $container = $baseinit->initTwig($container);

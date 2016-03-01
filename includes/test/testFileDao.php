@@ -12,7 +12,7 @@ $data = array(
     'book_size' => '416',
     'book_type' => '1',
     'book_style' => '1',
-    'book_exist' => '1',
+    'book_status' => '1',
     'book_original_site' => 'http://www.loulantxt.com/read.php?tid=674336&keyword=%C7%E3%C8%BB%D7%D4%CF%B2',
     'book_uploader' => '1',
     'book_upload_time' => '2016-02-26 16:15:14',
