@@ -19,7 +19,7 @@ var init = function () {
             break;
 
         case 'batchUpload':
-            require('./modules/batchUpload');
+            require('./modules/batchUpload').init();
             break;
 
         case 'login':

@@ -1,0 +1,10 @@
+<tr>
+    <th>文风：</th>
+    <td>
+        <select name="data[book_style]">
+            {% for id, style in attr_style %}
+                <option value="{{ id }}">{{ style }}</option>
+            {% endfor %}
+        </select>
+    </td>
+</tr>

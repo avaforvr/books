@@ -1,0 +1,11 @@
+<tr>
+    <th>分类：<span class="required">*</span></th>
+    <td>
+        <select name="data[book_type]">
+            {% for id, type in attr_type %}
+                <option value="{{ id }}">{{ type }}</option>
+            {% endfor %}
+        </select>
+    </td>
+    <td><span class="tip"></span></td>
+</tr>

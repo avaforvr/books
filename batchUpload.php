@@ -1,44 +1,40 @@
 <?
 include_once __DIR__ . '/includes/init/global.php';
+$util->checkLogin($container);
 
-if(! isLogin()) {
-    $util->redirect($container['WEB_ROOT'] . "login.php?back=" . $_SERVER['PHP_SELF']);
-}
+include_once __DIR__ . '/includes/processor/UploadProcessor.php';
+$upload = new UploadProcessor();
+
+$tplArray = array(
+    'attr_type' => $container['vars']['attr_type'],
+    'attr_style' => $container['vars']['attr_style'],
+    'attr_tags' => $container['vars']['attr_tags']
+);
 
 $act = isset($_REQUEST['act']) && $_REQUEST['act'] ? $_REQUEST['act'] : '';
-
-//{{{ Upload Processor
-include_once __DIR__ . '/includes/processor/UploadProcessor.php';
-$uploador = new UploadProcessor();
-//}}}
-
 switch ($act) {
 	case 'verifyDir':
-		$result = $uploador->process(array(
-				'container' => $container,
+		$result = $upload->process(array(
 				'act' => $act,
 				'dir' => $_POST['dir'],
 			));
-		echo json_encode($result);
-		die();
+        $tplArray['pageCode'] = 'verified';
+        $tplArray['result'] = $result;
 		break;
+
 	case 'batchUpload':
-		$result = $uploador->process(array(
-				'container' => $container,
+		$result = $upload->process(array(
 				'act' => $act,
 				'dir' => $_POST['dir'],
 				'book_type' => $_POST['book_type'],
 				'btags' => isset($_POST['btags']) ? $_POST['btags'] : array(),
 			));
 		echo json_encode($result);
-		die();
+        die();
 		break;
 	default:
+
 		break;
 }
-
-$tplArray['attr_type'] = $container['vars']['attr_type'];
-$tplArray['attr_tags'] = $container['vars']['attr_tags'];
-
 echo $container['twig']->render('batchUpload.html', $tplArray);
 ?>

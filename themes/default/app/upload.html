@@ -37,27 +37,8 @@
                 <td><input type="text" class="text" name="data[book_author]" readonly></td>
                 <td><span class="tip"></span></td>
             </tr>
-            <tr>
-                <th>分类：<span class="required">*</span></th>
-                <td>
-                    <select name="data[book_type]">
-                        {% for id, type in attr_type %}
-                            <option value="{{ id }}">{{ type }}</option>
-                        {% endfor %}
-                    </select>
-                </td>
-                <td><span class="tip"></span></td>
-            </tr>
-            <tr>
-                <th>文风：</th>
-                <td>
-                    <select name="data[book_style]">
-                        {% for id, style in attr_style %}
-                            <option value="{{ id }}">{{ style }}</option>
-                        {% endfor %}
-                    </select>
-                </td>
-            </tr>
+            {% include 'snippets/bookType.html' %}
+            {% include 'snippets/bookStyle.html' %}
             <tr>
                 <th>简介：</th>
                 <td colspan="2"><textarea class="area" name="data[book_summary]"></textarea></td>
@@ -66,17 +47,7 @@
                 <th>原创网址：</th>
                 <td colspan="2"><input type="text" class="text" name="data[book_original_site]"></td>
             </tr>
-            <tr>
-                <th>标签：</th>
-                <td colspan="2">
-                    <ul class="option-list">
-                        {% for id, tag in attr_tags %}
-                        <label><input type="checkbox" name="data[book_tags][]" value="{{ id }}">{{ tag }}</label>
-                        {% endfor %}
-                    </ul>
-                    <p id="bookTagsTip" class="tip" style="margin: 0;"></p>
-                </td>
-            </tr>
+            {% include 'snippets/bookTags.html' %}
             <tr>
                 <td class="td-btn" colspan="2">
                     <button id="uploadSubmitBtn" class="btn btn-primary" type="submit">上&nbsp;&nbsp;传</button>

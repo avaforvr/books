@@ -2,56 +2,7 @@
 include_once __DIR__ . '/BaseProcessor.php';
 
 class UploadProcessor extends BaseProcessor{
-	//get all paths in the directory
-	public function get_paths($path, &$paths) {
-		if(is_dir($path)) {
-			$dir = opendir($path);
-			while(($file = readdir($dir)) !== false) {
-				if($file != "." && $file != ".." && $file != "..") {
-					$this->get_paths($path . "\\" . $file, $paths);
-				}
-			}
-			closedir($dir);
-		}
-		if(is_file($path)) {
-			if(strripos($path, '~$')) {
-				echo 'temporary file: ' . $path;
-			} else {
-				$paths[] = $path;
-			}
-		}
-	}
-
-	public function pathToUtf8($path) {
-		$path = toUtf8($path);
-		if(! file_exists(toGb($path))) {
-			$epath = urlencode($path);
-			$epath = str_replace('%E3%83%BB', '%C2%B7', $epath);
-			$path = urldecode($epath);
-			$path = str_replace('――', '——', $path);
-		}
-		return $path;
-	}
-
-	//get the infomation of each file
-	public function get_files($filedao, $path) {
-		$paths =  array();
-		$this->get_paths($path, $paths);
-		$files = array();
-		foreach($paths as $path) {
-			$path = $this->pathToUtf8($path);
-			$path_arr = explode('\\', $path);
-			$wholename = end($path_arr);
-			$file = $this->verifyFile($filedao, $wholename);
-			if($file['code'] == 0) {
-				$file['book_size'] = filesize(toGb($path));
-			}
-			$file['book_path'] = $path;
-			$files[] = $file;
-		}
-		return $files;
-	}
-
+    //verifyAtta
     //-------------------------------------------------------------------
     //验证文件格式及book表相关信息
     public function verifyFile($wholename) {
@@ -95,7 +46,6 @@ class UploadProcessor extends BaseProcessor{
 
     //验证上传的附件，返回附件中包含的信息
     function verifyAtta($attachment) {
-        $result = array();
         if ($attachment["error"] > 0) {
             $result = array(
                 'code' => 99,
@@ -126,25 +76,8 @@ class UploadProcessor extends BaseProcessor{
         return $result;
     }
 
-    //上传新书，移动文件并插入数据
-    public function uploadNewBook($file) {
-        $filedao = $this->container['filedao'];
-        //检查记录是否已存在
-        if($filedao->isBookExist($file['book_name'], $file['book_author'])) {
-            return false;
-        }
-        //移动文件
-        if(! $this->moveFile($file)) {
-            return false;
-        }
-        //插入记录
-        $bookId = $filedao->insertBook($file);
-        if(! $bookId) {
-            return false;
-        }
-        return $bookId;
-    }
-
+    //uploadNewBook
+    //-------------------------------------------------------------------
     //移动文件
     public function moveFile($file) {
         $container = $this->container;
@@ -178,76 +111,161 @@ class UploadProcessor extends BaseProcessor{
         return true;
     }
 
-	public function process($params = array()) {
-		foreach ($params as $key => $param) {
-            $$key = $param;
+    //上传新书，移动文件并插入数据
+    public function uploadNewBook($file) {
+        $filedao = $this->container['filedao'];
+        //检查记录是否已存在
+        if($filedao->isBookExist($file['book_name'], $file['book_author'])) {
+            return false;
+        }
+        //移动文件
+        if(! $this->moveFile($file)) {
+            return false;
+        }
+        //插入记录
+        $bookId = $filedao->insertBook($file);
+        if(! $bookId) {
+            return false;
+        }
+        return $bookId;
+    }
+
+    //verifyDir
+    //-------------------------------------------------------------------
+	//获取硬盘目录中的文件路径
+	public function getPathsOnDisk($path, &$paths) {
+		if(is_dir($path)) {
+			$dir = opendir($path);
+			while(($file = readdir($dir)) !== false) {
+				if($file != "." && $file != ".." && $file != "..") {
+					$this->getPathsOnDisk($path . "\\" . $file, $paths);
+				}
+			}
+			closedir($dir);
+		}
+		if(is_file($path)) {
+			if(strripos($path, '~$')) {
+				echo 'temporary file: ' . $path;
+			} else {
+				$paths[] = $path;
+			}
+		}
+	}
+
+    //文件路径转为utf8编码
+	public function pathToUtf8($path) {
+        $util = $this->container['util'];
+		$path = $util->toUtf8($path);
+		if(! file_exists($util->toGb($path))) {
+			$epath = urlencode($path);
+			$epath = str_replace('%E3%83%BB', '%C2%B7', $epath);
+			$path = urldecode($epath);
+			$path = str_replace('――', '——', $path);
+		}
+		return $path;
+	}
+
+	//获取硬盘目录中的文件信息
+	public function getFilesOnDisk($path) {
+        $util = $this->container['util'];
+		$paths =  array();
+		$this->getPathsOnDisk($path, $paths);
+		$files = array();
+		foreach($paths as $path) {
+			$path = $this->pathToUtf8($path);
+			$path_arr = explode('\\', $path);
+			$wholename = end($path_arr);
+			$file = $this->verifyFile($wholename);
+			if($file['code'] == 0) {
+				$file['book_size'] = filesize($util->toGb($path));
+			}
+			$file['book_path'] = $path;
+			$files[] = $file;
+		}
+		return $files;
+	}
+
+    //验证目录下的文件是否可以上传
+    public function verifyDir($dir) {
+        $result = array(
+            'code' => 0,
+            'msg' => '',
+            'legal' => array(),
+            'illegal' => array(),
+        );
+        $filesInDir = $this->getFilesOnDisk($dir);
+
+        if(empty($filesInDir)) {
+            $result['code'] = 1;
+            $result['msg'] = '该目录下没有文件';
+        } else {
+            foreach($filesInDir as $file) {
+                if($file['code'] == 0) {
+                    $result['legal'][] = $file;
+                } else {
+                    $result['illegal'][] = $file;
+                }
+            }
+            if(empty($result['illegal'])) {
+                $result['msg'] = '共 ' . count($result['legal']) . ' 个文件可上传，文件列表如下：';
+            } else {
+                $result['code'] = 2;
+                $result['msg'] = '共 ' . count($result['illegal']) . ' 个文件不可用，请检查：';
+            }
         }
 
-		switch ($act) {
+        return $result;
+    }
+
+    //batchUpload
+    //-------------------------------------------------------------------
+
+    //process
+    //-------------------------------------------------------------------
+    public function process($params = array()) {
+		switch ($params['act']) {
 			case 'verifyAtta': //验证上传的附件，返回附件中包含的信息
-                $result = $this->verifyAtta($attachment);
+                $result = $this->verifyAtta($params['attachment']);
 				break;
 
 			case 'uploadNewBook': //单本上传
-                $result = $this->uploadNewBook($file); //返回bookId
+                $result = $this->uploadNewBook($params['file']); //返回bookId
 				break;
 
 			case 'verifyDir': //验证批量上传的目录
-				$result = array(
-					'code' => 0,
-					'msg' => '',
-					'legal' => array(),
-					'illegal' => array(),
-				);
-				$filesInDir = $this->get_files($container['filedao'], $dir);
-				if(empty($filesInDir)) {
-					$result['code'] = 1;
-					$result['msg'] = '该目录下没有文件';
-				} else {
-					foreach($filesInDir as $file) {
-						if($file['code'] == 0) {
-							$result['legal'][] = $file;
-						} else {
-							$result['illegal'][] = $file;
-						}
-					}
-					if(empty($result['illegal'])) {
-						$result['msg'] = '共 ' . count($result['legal']) . ' 个文件可上传，文件列表如下：';
-					} else {
-						$result['code'] = 2;
-						$result['msg'] = '共 ' . count($result['illegal']) . ' 个文件不可用，请检查：';
-					}
-				}
+                $result = $this->verifyDir($params['dir']);
 				break;
+
 			case 'batchUpload': //批量上传
-				$result = array(
-					'code' => 0,
-					'legal' => array(),
-					'illegal' => array(),
-				);
-				$filesInDir = $this->get_files($container['filedao'], $dir);
-				foreach($filesInDir as $file) {
-					$file['book_type'] = $btype;
-					$file['book_summary'] = '';
-					$file['brole'] = '';
-					$file['book_style'] = 0;
-					$file['book_original_site'] = '';
-					$file['btags'] = $btags;
-					$bid = $this->uploadNewBook($file);
-					if($bid) {
-						$result['legal'][] = $file;
-					} else {
-						$result['illegal'][] = $file;
-					}
-				}
-				if(empty($result['legal']) && empty($result['illegal'])) {
-					$result['code'] = 1;
-				}
+//				$result = array(
+//					'code' => 0,
+//					'legal' => array(),
+//					'illegal' => array(),
+//				);
+//				$filesInDir = $this->getFilesOnDisk($this->container['filedao'], $dir);
+//				foreach($filesInDir as $file) {
+//					$file['book_type'] = $btype;
+//					$file['book_summary'] = '';
+//					$file['brole'] = '';
+//					$file['book_style'] = 0;
+//					$file['book_original_site'] = '';
+//					$file['btags'] = $btags;
+//					$bid = $this->uploadNewBook($file);
+//					if($bid) {
+//						$result['legal'][] = $file;
+//					} else {
+//						$result['illegal'][] = $file;
+//					}
+//				}
+//				if(empty($result['legal']) && empty($result['illegal'])) {
+//					$result['code'] = 1;
+//				}
 				
 				break;
 			default:
 				break;
 		}
+
 		return $result;
 	}
 }

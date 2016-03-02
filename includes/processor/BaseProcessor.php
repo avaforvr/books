@@ -10,7 +10,11 @@ abstract class BaseProcessor {
     public function isActive() {
         return true;
     }
-    public function process() {}
+    public function process() {
+        foreach ($params as $key => $param) {
+            $$key = $param;
+        }
+    }
     public function render(){}
 }
 ?>

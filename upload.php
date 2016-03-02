@@ -9,7 +9,6 @@ $act = isset($_REQUEST['act']) && $_REQUEST['act'] ? $_REQUEST['act'] : '';
 switch ($act) {
 	case 'verifyAtta':
 		$result = $upload->process(array(
-				'container' => $container,
 				'act' => $act,
 				'attachment' => $_FILES["attachment"],
 			));
@@ -19,7 +18,6 @@ switch ($act) {
 	case 'uploadNewBook':
         $data = $util->trimArray($_POST['data']);
         $bookId = $upload->process(array(
-				'container' => $container,
 				'act' => $act,
 				'file' => $data,
 			));
