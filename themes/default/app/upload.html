@@ -19,11 +19,10 @@
         </table>
     </form>
 
-    <form action="{{ WEB_ROOT }}upload.php" method="post" id="uploadForm" class="form-a">
-        <input type="hidden" name="act" value="uploadNew">
+    <form action="{{ WEB_ROOT }}upload.php" method="post" id="uploadForm" class="form-a hide">
+        <input type="hidden" name="act" value="uploadNewBook">
         <input type="hidden" name="data[book_size]" value="">
         <input type="hidden" name="data[book_path]" value="">
-        <input type="hidden" name="check_book_tags" value="">
         <table>
             <col width="80" />
             <col width="280" />
@@ -80,12 +79,15 @@
             </tr>
             <tr>
                 <td class="td-btn" colspan="2">
-                    <button class="btn btn-primary" type="submit">上&nbsp;&nbsp;传</button>
+                    <button id="uploadSubmitBtn" class="btn btn-primary" type="submit">上&nbsp;&nbsp;传</button>
                     <button class="btn btn-secondary" type="reset">重&nbsp;&nbsp;置</button>
-                    <span id="submitTip" class="tip"></span>
+                    <span id="uploadSubmitTip" class="tip"></span>
                 </td>
             </tr>
         </table>
     </form>
+
+    <div id="uploadSuccess" class="hide">&radic; 上传成功</div>
+    <div id="uploadFail" class="hide">&times; 上传失败</div>
 </div>
 {% endblock %}

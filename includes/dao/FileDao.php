@@ -179,6 +179,11 @@ class FileDao extends BaseDao{
 	}
 */
     //--------------------------------
+    //将book_tags转换成字符串
+    public function tagsToString($tags) {
+        return is_array($tags) ? join('|', $tags) : $tags;
+    }
+
     //插入一条 book 记录
     public function insertBook($file) {
         if(empty($file['book_name']) or empty($file['book_author'])) {
@@ -188,16 +193,19 @@ class FileDao extends BaseDao{
         $db = $this->db();
 
         //强制覆盖旧的记录及设置默认值
+        if(isset($file['book_tags'])) {
+            $file['book_tags'] = $this->tagsToString($file['book_tags']); //将book_tags转换成字符串
+        }
         $book = array(
             'book_name' => $file['book_name'],
             'book_author' => $file['book_author'],
-            'book_summary' => empty($file['book_summary']) ? '' : $file['book_summary'],
+            'book_summary' => isset($file['book_summary']) ? $file['book_summary'] : '',
             'book_size' => $file['book_size'],
-            'book_type' => empty($file['book_type']) ? 0 : $file['book_type'],
-            'book_style' => empty($file['book_style']) ? 0 : $file['book_style'],
-            'book_tags' => empty($file['book_tags']) ? '' : $file['book_tags'],
+            'book_type' => isset($file['book_type']) ? $file['book_type'] : 0,
+            'book_style' => isset($file['book_style']) ? $file['book_style'] : 0,
+            'book_tags' => isset($file['book_tags']) ? $file['book_tags'] : '',
             'book_status' => 2,
-            'book_original_site' => empty($file['book_original_site']) ? '' : $file['book_original_site'],
+            'book_original_site' => isset($file['book_original_site']) ? $file['book_original_site'] : '',
             'book_uploader' => $_SESSION['user']['user_id'],
             'book_upload_time' => date('Y-m-d H:i:s')
         );
@@ -254,6 +262,10 @@ class FileDao extends BaseDao{
 
     //更新记录
     public function updateBook($bookId, $file) {
+        if(isset($file['book_tags'])) {
+            $file['book_tags'] = $this->tagsToString($file['book_tags']); //将book_tags转换成字符串
+        }
+
         $set = array();
         foreach($file as $field =>$value) {
             $set[] = "`" . $field . "`='" . addslashes($value) . "'";
@@ -277,8 +289,8 @@ class FileDao extends BaseDao{
     }
 
     //根据文件名和作者判断是否已存在
-    public function isBookExist($bname, $bauthor) {
-        $sql = "SELECT 1 FROM book WHERE book_name='" . $bname . "' AND book_author='" . $bauthor . "' LIMIT 1";
+    public function isBookExist($bookName, $bookAuthor) {
+        $sql = "SELECT 1 FROM book WHERE book_name='" . $bookName . "' AND book_author='" . $bookAuthor . "' LIMIT 1";
         return $this->isExist($sql);
     }
 

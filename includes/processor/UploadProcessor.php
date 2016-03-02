@@ -2,50 +2,6 @@
 include_once __DIR__ . '/BaseProcessor.php';
 
 class UploadProcessor extends BaseProcessor{
-	public function insertFile($container, $file) {
-		if(! $this->moveFile($container['ROOT_PATH'], $file)) {
-			return false;
-		}
-		$filedao = $container['filedao'];
-		if($filedao->isBookExist($file['book_name'], $file['book_author'])) {
-			return false;
-		}
-		$bid = $filedao->insertBook($file);
-		if(! $bid) {
-			return false;
-		}
-		if(isset($file['btags']) && ! empty($file['btags'])) {
-			$filedao->insertTag($bid, $file['btags']);
-		}
-		return $bid;
-	}
-	
-	public function moveFile($ROOT_PATH, $file) {
-		$oldPath = $file['book_path'];
-		$newFolder = $ROOT_PATH . 'files/' . $file['book_author'];
-		$newPath = $newFolder . '/' . $file['book_name'] . ' by ' . $file['book_author'] . '.txt';
-
-		$oldPath = toGb($oldPath);
-		$newFolder = toGb($newFolder);
-		$newPath = toGb($newPath);
-		
-		if(! file_exists($newFolder)) {
-			if(! mkdir($newFolder, 0777, true)) {
-				return false;
-			}
-		}
-		if(! file_exists($newPath)) {
-			if(copy($oldPath, $newPath)) {
-				if(strpos($oldPath, '/temp/')) {
-					unlink($oldPath);
-				}
-			} else {
-				return false;
-			}
-		}
-		return true;
-	}
-	
 	//get all paths in the directory
 	public function get_paths($path, &$paths) {
 		if(is_dir($path)) {
@@ -62,10 +18,10 @@ class UploadProcessor extends BaseProcessor{
 				echo 'temporary file: ' . $path;
 			} else {
 				$paths[] = $path;
-			}		
+			}
 		}
 	}
-	
+
 	public function pathToUtf8($path) {
 		$path = toUtf8($path);
 		if(! file_exists(toGb($path))) {
@@ -82,7 +38,7 @@ class UploadProcessor extends BaseProcessor{
 		$paths =  array();
 		$this->get_paths($path, $paths);
 		$files = array();
-		foreach($paths as $path) {	
+		foreach($paths as $path) {
 			$path = $this->pathToUtf8($path);
 			$path_arr = explode('\\', $path);
 			$wholename = end($path_arr);
@@ -153,10 +109,12 @@ class UploadProcessor extends BaseProcessor{
                 $result = array(
                     'code' => 0,
                     'msg' => $attaInfo['msg'],
-                    'book_name' => $attaInfo['book_name'],
-                    'book_author' => $attaInfo['book_author'],
-                    'book_size' => $attachment["size"],
-                    'book_path' => $tempPath
+                    'book' => array(
+                        'book_name' => $attaInfo['book_name'],
+                        'book_author' => $attaInfo['book_author'],
+                        'book_size' => $attachment["size"],
+                        'book_path' => $tempPath
+                    )
                 );
             } else {
                 $result = array(
@@ -168,25 +126,72 @@ class UploadProcessor extends BaseProcessor{
         return $result;
     }
 
+    //上传新书，移动文件并插入数据
+    public function uploadNewBook($file) {
+        $filedao = $this->container['filedao'];
+        //检查记录是否已存在
+        if($filedao->isBookExist($file['book_name'], $file['book_author'])) {
+            return false;
+        }
+        //移动文件
+        if(! $this->moveFile($file)) {
+            return false;
+        }
+        //插入记录
+        $bookId = $filedao->insertBook($file);
+        if(! $bookId) {
+            return false;
+        }
+        return $bookId;
+    }
+
+    //移动文件
+    public function moveFile($file) {
+        $container = $this->container;
+        $util = $container['util'];
+
+        $oldPath = $file['book_path'];
+        $newFolder = $container['ROOT_PATH'] . 'files/' . $file['book_author'];
+        $newPath = $newFolder . '/' . $this->getFileName($file);
+
+        $oldPath = $util->toGb($oldPath);
+        $newFolder = $util->toGb($newFolder);
+        $newPath = $util->toGb($newPath);
+
+        //创建文件夹
+        if(! file_exists($newFolder)) {
+            if(! mkdir($newFolder, 0777, true)) {
+                return false;
+            }
+        }
+
+        //复制文件
+        if(! file_exists($newPath)) {
+            if(copy($oldPath, $newPath)) {
+                if(strpos($oldPath, '/temp/')) {
+                    unlink($oldPath);
+                }
+            } else {
+                return false;
+            }
+        }
+        return true;
+    }
+
 	public function process($params = array()) {
 		foreach ($params as $key => $param) {
             $$key = $param;
         }
-		
+
 		switch ($act) {
 			case 'verifyAtta': //验证上传的附件，返回附件中包含的信息
                 $result = $this->verifyAtta($attachment);
-                break;
+				break;
 
+			case 'uploadNewBook': //单本上传
+                $result = $this->uploadNewBook($file); //返回bookId
 				break;
-			case 'uploadNew': //单本上传
-				$bid = $this->insertFile($container, $file);
-				if($bid) {
-					$result = $bid;
-				} else {
-					$result = false;
-				}
-				break;
+
 			case 'verifyDir': //验证批量上传的目录
 				$result = array(
 					'code' => 0,
@@ -228,7 +233,7 @@ class UploadProcessor extends BaseProcessor{
 					$file['book_style'] = 0;
 					$file['book_original_site'] = '';
 					$file['btags'] = $btags;
-					$bid = $this->insertFile($container, $file);
+					$bid = $this->uploadNewBook($file);
 					if($bid) {
 						$result['legal'][] = $file;
 					} else {

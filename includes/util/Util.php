@@ -24,7 +24,7 @@ class Util {
     function trimArray($arr) {
         foreach($arr as $key => $value) {
             if(is_array($value)) {
-                $arr[$key] = trimArray($value);
+                $arr[$key] = $this->trimArray($value);
             } else {
                 $arr[$key] = trim($value);
             }
