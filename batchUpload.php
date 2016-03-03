@@ -37,7 +37,6 @@ switch ($act) {
         die();
 		break;
 	default:
-
 		break;
 }
 echo $container['twig']->render('batchUpload.html', $tplArray);
