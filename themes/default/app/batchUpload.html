@@ -9,37 +9,20 @@
 
     <h1>批量上传</h1>
 
-    <form action="{{ WEB_ROOT }}batchUpload.php" method="post" id="verifyForm" class="form-a">
-        <input type="hidden" name="act" value="verifyDir">
-        <table width="100%">
-            <tr>
-                <th width="50">目录：</th>
-                <td><input type="text" class="text" name="dir"></td>
-                <td width="140"><button class="btn btn-primary ml3" type="submit">验证目录</button></td>
-            </tr>
-        </table>
-    </form>
+    {% if result is not defined or result.code != 0  %}
+        {% include 'batchUpload/verifyForm.html' %}
+    {%  endif %}
 
-    <form id="buForm">
-        <input type="hidden" name="act" value="batchUpload">
-        <input type="hidden" name="legalDir" value="">
+    {% if result is defined %}
+        {% if result.code == 0 %}
+            {% include 'batchUpload/uploadForm.html' %}
+            {% include 'batchUpload/resultSuccessList.html' %}
+        {%  elseif result.code == 2 %}
+            {% include 'batchUpload/resultErrorList.html' %}
+        {%  else %}
+            {% include 'batchUpload/resultErrorTip.html' %}
+        {%  endif %}
 
-
-        <div class="batchOption" style="display:none">
-            <table>
-                <col width="80" />
-                <col width="280" />
-                <col width="" />
-                {% include 'snippets/bookType.html' %}
-                {% include 'snippets/bookStyle.html' %}
-                {% include 'snippets/bookTags.html' %}
-                <tr>
-                    <td colspan="3">
-                        <button id="btnBatchUpload" class="btn btn-primary" type="submit">上&nbsp;&nbsp;传</button>
-                    </td>
-                </tr>
-            </table>
-        </div>
-    </form>
+    {%  endif %}
 </div>
 {% endblock %}

@@ -168,8 +168,20 @@ require('../lib/jqueryForm');
 
 //验证目录
 var initVerifyForm = function () {
-    $('#verifyForm').submit(function () {
-        return $.trim($(this).find('input[name="dir"]').val()).length > 0;
+    var verifyForm = $('#verifyForm'),
+        dir = verifyForm.find('input[name="dir"]');
+
+    //目录输入框获取焦点
+    if(! dir.prop('readonly')) {
+        dir.focus();
+    }
+
+    verifyForm.submit(function () {
+        var isChecked = $.trim(dir.val()).length > 0;
+        if(! isChecked) {
+            dir.focus();
+        }
+        return isChecked;
     });
 };
 

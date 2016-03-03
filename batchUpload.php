@@ -14,11 +14,15 @@ $tplArray = array(
 $act = isset($_REQUEST['act']) && $_REQUEST['act'] ? $_REQUEST['act'] : '';
 switch ($act) {
 	case 'verifyDir':
+        if(empty($_POST['dir'])) {
+            break;
+        }
+        $dir = $_POST['dir'];
 		$result = $upload->process(array(
 				'act' => $act,
-				'dir' => $_POST['dir'],
+				'dir' => $dir,
 			));
-        $tplArray['pageCode'] = 'verified';
+        $tplArray['dir'] = $dir;
         $tplArray['result'] = $result;
 		break;
 
