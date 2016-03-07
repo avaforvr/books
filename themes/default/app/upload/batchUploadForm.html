@@ -1,0 +1,18 @@
+<form action="{{ WEB_ROOT }}upload.php" method="post" id="batchForm" class="form-a mb3 hide">
+    <input type="hidden" name="act" value="batchUpload">
+    <input type="hidden" name="data[files]" value="">
+
+    {% set domPrefix = 'batch' %}
+    <table>
+        {% include 'upload/colgroup.html' %}
+
+        {% set typeIsRequired = false %}
+        {% include 'snippets/bookType.html' %}
+
+        {% include 'snippets/bookStyle.html' %}
+        {% include 'snippets/bookTags.html' %}
+
+        {% set btnPrefix = 'batch' %}
+        {% include 'upload/btns.html' %}
+    </table>
+</form>

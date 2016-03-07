@@ -1,5 +1,6 @@
+{% set typeIsRequired = typeIsRequired is defined ? typeIsRequired : true %}
 <tr>
-    <th>分类：<span class="required">*</span></th>
+    <th>分类：{% if typeIsRequired %}<span class="required">*</span>{% endif %}</th>
     <td>
         <select name="data[book_type]">
             {% for id, type in attr_type %}

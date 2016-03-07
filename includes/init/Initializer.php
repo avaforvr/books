@@ -13,7 +13,8 @@ class Initializer{
 			$paths = array();
 			$paths['tpl'] = $c['ROOT_PATH'] . 'themes/' . $c['siteConf']['theme'] . '/app/';
 			$paths['caches'] = $c['ROOT_PATH'] . 'caches/';
-			$paths['files'] = $c['ROOT_PATH'] . 'files/';
+			$paths['files'] = 'E:/books/files/';
+			$paths['temp'] = 'E:/books/temp/';
 			$public_path = $c['WEB_ROOT'] . 'themes/' . $c['siteConf']['theme'];
 			$paths['css'] = $public_path . '/css/';
 			$paths['js'] = $public_path . '/js/';

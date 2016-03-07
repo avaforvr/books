@@ -9,10 +9,16 @@ var elem = {
     "attaTip": $('#attaTip'),
 
     "uploadForm": $('#uploadForm'),
-    "uploadSubmitTip": $('#uploadSubmitTip'),
-    "uploadSubmitBtn": $('#uploadSubmitBtn'),
-    "bookTagsTip": $('#bookTagsTip'),
+    "uploadBtn": $('#uploadBtn'),
+    "uploadTip": $('#uploadTip'),
+    "uploadTagsTip": $('#uploadTagsTip'),
 
+    "batchForm": $('#batchForm'),
+    "batchBtn": $('#batchBtn'),
+    "batchTip": $('#batchTip'),
+    "batchTagsTip": $('#batchTagsTip'),
+
+    "resultList": $('#resultList'),
     "successResult": $('#uploadSuccess'),
     "failResult": $('#uploadFail')
 };
@@ -20,26 +26,74 @@ var elem = {
 //清空上传附件表单
 var cleanAttaForm = function () {
     elem.attaInput.val('');
-    elem.attaTip.hide();
+    elem.attaTip.html('');
 };
 //清空文件信息表单
-var cleanUploadForm = function () {
-    elem.uploadSubmitTip.html('');
-    elem.uploadSubmitBtn.prop('disabled', false);
-    elem.bookTagsTip.html('');
+var cleanDataForm = function () {
+    elem.uploadBtn.prop('disabled', false);
+    elem.uploadTip.html('');
+    elem.uploadTagsTip.html('');
     elem.uploadForm.hide().get(0).reset();
+
+    elem.batchBtn.prop('disabled', false);
+    elem.batchTip.html('');
+    elem.batchTagsTip.html('');
+    elem.batchForm.hide().get(0).reset();
 };
 //隐藏上传结果
 var cleanResult = function () {
+    elem.resultList.hide();
     elem.successResult.hide();
     elem.failResult.hide();
+};
+
+var getIllegalHtml = function (msg, files) {
+    var str = '<div class="list-a"><hr class="mb4">' +
+        '<h3 class="error">' + config.error + ' ' + msg + '</h3>' +
+        '<table><thead><tr>' +
+        '<th>文件路径</th>' +
+        '<th>错误提示</th>' +
+        '</tr></thead><tbody>';
+
+    for(var key in files) {
+        var file = files[key];
+        str += '<tr>' +
+            '<td>' + file.book_path + '</td>' +
+            '<td>' + file.msg + '</td>' +
+            '</tr>';
+    }
+
+    str += '</tbody></table></div>';
+    return str;
+};
+
+var getLegalHtml = function (msg, files) {
+    var str = '<div class="list-a"><hr class="mb4">' +
+        '<h3 class="success">' + config.success + ' ' + msg + '</h3>' +
+        '<table><thead><tr>' +
+        '<th>书名</th>' +
+        '<th>作者</th>' +
+        '<th>文件路径</th>' +
+        '</tr></thead><tbody>';
+
+    for(var key in files) {
+        var file = files[key];
+        str += '<tr>' +
+            '<td>' + file.book_name + '</td>' +
+            '<td>' + file.book_author + '</td>' +
+            '<td>' + file.book_path + '</td>' +
+            '</tr>';
+    }
+
+    str += '</tbody></table></div>';
+    return str;
 };
 
 //上传附件
 var initAttaForm = function () {
     //点击Choose File按钮回复原始状态
     elem.attaInput.mousedown(function() {
-        cleanUploadForm();
+        cleanDataForm();
         cleanResult();
     });
 
@@ -47,26 +101,32 @@ var initAttaForm = function () {
     elem.attaInput.change(function() {
         if(elem.attaInput.val() == '') {
             elem.attaTip.attr('class', 'tip error').html(config.error + '请选择文件');
-            elem.uploadForm.hide();
+            cleanDataForm();
+            cleanResult();
             return false;
         }
+        elem.attaTip.html('');
         var options = {
             dataType: 'json',
             success: function(r) {
-                elem.attaTip.innerHTML = r.msg;
-                if(r.code == 0) {
-                    for(var key in r.book) {
-                        console.log('input[name="data[' + key + ']"]');
-                        console.log(r.book[key]);
-                        elem.uploadForm.find('input[name="data[' + key + ']"]').val(r.book[key]);
+                if(r.code == 'illegal') {
+                    elem.resultList.html(getIllegalHtml(r.msg, r.illegal)).show();
+                } else if(r.code == 0) {
+                    if(r.isBatchUpload) {
+                        elem.resultList.html(getLegalHtml(r.msg, r.legal)).show();
+                        elem.batchForm.show().find('input[name="data[files]"]').val(JSON.stringify(r.legal));
+                    } else {
+                        for(var key in r) {
+                            if(key.indexOf('book_') != -1) {
+                                elem.uploadForm.find('input[name="data[' + key + ']"]').val(r[key]);
+                            }
+                        }
+                        elem.attaTip.attr('class', 'tip success').html(config.success + r.msg);
+                        elem.uploadForm.show();
                     }
 
-                    elem.attaTip.attr('class', 'tip success').html(config.success + r.msg);
-
-                    elem.uploadForm.show();
                 } else {
                     elem.attaTip.attr('class', 'tip error').html(config.error + r.msg);
-                    elem.uploadForm.hide();
                 }
             }
         };
@@ -74,7 +134,7 @@ var initAttaForm = function () {
     });
 };
 
-//提交文件信息表单
+//单个文件表单
 var initUploadForm = function () {
     var form = elem.uploadForm;
 
@@ -101,7 +161,7 @@ var initUploadForm = function () {
         });
         if(isChecked) {
             if(form.find('input[name="data[book_tags][]"]:checked').length > 5) {
-                elem.bookTagsTip.attr('class', 'tip error').html(config.error + '标签不能超过5个');
+                elem.uploadTagsTip.attr('class', 'tip error').html(config.error + '标签不能超过5个');
                 return false;
             }
         } else {
@@ -111,12 +171,12 @@ var initUploadForm = function () {
         var options = {
             dataType: 'json',
             beforeSubmit: function() {
-                elem.uploadSubmitTip.html(config.loading);
-                elem.uploadSubmitBtn.prop('disabled', true);
+                elem.uploadTip.html(config.loading);
+                elem.uploadBtn.prop('disabled', true);
             },
             success: function(r) {
                 cleanAttaForm();
-                cleanUploadForm();
+                cleanDataForm();
 
                 if(r.code == 0) {
                     elem.successResult.show();
@@ -126,7 +186,7 @@ var initUploadForm = function () {
             },
             error: function () {
                 cleanAttaForm();
-                cleanUploadForm();
+                cleanDataForm();
                 elem.failResult.show();
             }
         };
@@ -136,9 +196,52 @@ var initUploadForm = function () {
     });
 };
 
+//多个文件表单
+var initBatchForm = function () {
+    elem.batchForm.submit(function () {
+        var form = $(this);
+        if(form.find('input[name="data[files]"]').val().length == 0) {
+            elem.batchTip.attr('class', 'tip error').html(config.error + '获取附件信息出现问题，请重新上传');
+            return false;
+        }
+        if(form.find('input[name="data[book_tags][]"]:checked').length > 5) {
+            elem.uploadTagsTip.attr('class', 'tip error').html(config.error + '标签不能超过5个');
+            return false;
+        }
+
+        var options = {
+            dataType: 'json',
+            beforeSubmit: function() {
+                elem.batchTip.html(config.loading);
+                elem.batchBtn.prop('disabled', true);
+            },
+            success: function(r) {
+                cleanAttaForm();
+                cleanDataForm();
+                elem.resultList.hide();
+
+                if(r.code == 0) {
+                    elem.successResult.show();
+                } else {
+                    elem.failResult.show();
+                }
+            },
+            error: function () {
+                cleanAttaForm();
+                cleanDataForm();
+                elem.resultList.hide();
+                elem.failResult.show();
+            }
+        };
+        form.ajaxSubmit(options);
+        return false;
+    });
+};
+
 module.exports = {
     "init": function () {
         initAttaForm();
         initUploadForm();
+        initBatchForm();
     }
 };

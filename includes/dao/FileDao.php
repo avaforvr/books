@@ -250,7 +250,7 @@ class FileDao extends BaseDao{
         $row = $this->getOneBook($bookId);
         if(! empty($row)) {
             $container = $this->container;
-            $disk_path = $container['ROOT_PATH'] . 'files/' . $row['book_author'] . '/' . $row['book_name'] . ' by ' . $row['book_author'] . '.txt';
+            $disk_path = $container['path']['files'] . $row['book_author'] . '/' . $row['book_name'] . ' by ' . $row['book_author'] . '.txt';
             $disk_path = $container['util']->toGb($disk_path);
             if(file_exists($disk_path)) {
                 unlink($disk_path);
@@ -290,8 +290,47 @@ class FileDao extends BaseDao{
 
     //根据文件名和作者判断是否已存在
     public function isBookExist($bookName, $bookAuthor) {
-        $sql = "SELECT 1 FROM book WHERE book_name='" . $bookName . "' AND book_author='" . $bookAuthor . "' LIMIT 1";
+        $sql = "SELECT 1 FROM book WHERE book_name='" . addslashes($bookName) . "' AND book_author='" . addslashes($bookAuthor) . "' LIMIT 1";
         return $this->isExist($sql);
+    }
+
+    //返回完整文件名
+    public function getFileName($file) {
+        return $file['book_name'] . ' by ' . $file['book_author'] . '.txt';
+    }
+
+    //移动文件
+    public function moveFile($file) {
+        $container = $this->container;
+        $util = $container['util'];
+
+        $oldPath = $file['book_path'];
+        $newFolder = $container['path']['files'] . $file['book_author'];
+        $newPath = $newFolder . '/' . $container['filedao']->getFileName($file);
+
+        $oldPath = $util->toGb($oldPath);
+        $newFolder = $util->toGb($newFolder);
+        $newPath = $util->toGb($newPath);
+
+        //创建文件夹
+        if(! file_exists($newFolder)) {
+            if(! mkdir($newFolder, 0777, true)) {
+                return false;
+            }
+        }
+
+        //复制文件
+        if(! file_exists($newPath)) {
+            if(copy($oldPath, $newPath)) {
+                if(strpos($oldPath, '/temp/')) {
+                    unlink($oldPath);
+                }
+            } else {
+                echo 'Wrong file: ' . $util->toUtf8($oldPath) . '<br>';
+                return false;
+            }
+        }
+        return true;
     }
 
 }

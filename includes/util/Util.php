@@ -37,6 +37,7 @@ class Util {
         try{
             $encode = mb_detect_encoding($str, array('ASCII','GB2312','GBK','UTF-8'));
             $str = iconv($encode,'utf-8//IGNORE', $str);
+            $str = str_replace('・', '·', $str);
             return $str;
         } catch(Exception $e) {
             var_dump($e);
@@ -203,6 +204,18 @@ class Util {
             $this -> redirect($container['WEB_ROOT'] . "login.php?back=" . $_SERVER['PHP_SELF']);
         }
     }
+
+    //文件解压缩
+    function zipExtract($zipPath, $extractTo) {
+        global $container;
+        include $container['ROOT_PATH'] . 'vender/pclzip/pclzip.lib.php';
+        $archive = new PclZip($zipPath);
+        if ($archive->extract(PCLZIP_OPT_PATH, $extractTo,
+                PCLZIP_OPT_REMOVE_PATH, 'install/release') == 0) {
+            die("Error : ".$archive->errorInfo(true));
+        }
+    }
+
 }
 
 ?>
