@@ -1,11 +1,7 @@
 <?php
-class DbUtil {
-    public $container;
+include_once __DIR__ . '/BaseUtil.php';
 
-	function __construct($container) {
-        $this->container = $container;
-	}
-
+class DbUtil extends BaseUtil {
     protected function db() {
         return $this->container['db'];
     }
