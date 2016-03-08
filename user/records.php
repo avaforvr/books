@@ -1,6 +1,6 @@
 <?
 include_once __DIR__ . '../../includes/init/global.php';
-$util->checkLogin();
+$container['util']->checkLogin();
 
 //include_once __DIR__ . '../../includes/file.func.php';
 $userId = $_SESSION['user']['user_id'];

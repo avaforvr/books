@@ -1,9 +1,6 @@
 <?
 include_once __DIR__ . '../../includes/init/global.php';
-
-if(! isLogin()) {
-	$util->redirect($container['WEB_ROOT'] . "login.php?back=" . $_SERVER['PHP_SELF']);
-}
+$container['util']->checkLogin();
 
 $tplArray['html_main'] = $container['twig']->render('master/statistics.html', array());
 

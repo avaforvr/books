@@ -1,7 +1,7 @@
 <?php
 include_once __DIR__ . '/BaseProcessor.php';
 
-class FileListProcessor implements BaseProcessor {
+class FileListProcessor extends  BaseProcessor {
 	
 	public function build_orderby($sortBy) {
 		if($sortBy == 1) {

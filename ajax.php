@@ -7,7 +7,7 @@ switch ($act) {
 	case 'setEva':
 		$result = array('code' => 0, 'msg' => '');
 		
-		if(! isLogin()) {
+		if(! $container['login']) {
 			$result['code'] = 1;
 			$result['msg'] = 'Please login first.';
 		} else {

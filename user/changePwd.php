@@ -1,6 +1,6 @@
 <?
 include_once __DIR__ . '../../includes/init/global.php';
-$util->checkLogin();
+$container['util']->checkLogin();
 
 $act = isset($_REQUEST['act']) && $_REQUEST['act'] ? $_REQUEST['act'] : '';
 

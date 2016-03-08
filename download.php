@@ -1,13 +1,10 @@
 <?
 include_once __DIR__ . '/includes/init/global.php';
+$container['util']->checkLogin();
 
 $bid = isset($_REQUEST['book_id']) && $_REQUEST['book_id'] ? intval($_REQUEST['book_id']) : 0;
 if($bid == 0) {
 	$util->redirect("index.php");
-}
-
-if(! isLogin()) {
-	$util->redirect($container['WEB_ROOT'] . "login.php?back=" . $_SERVER['PHP_SELF']);
 }
 
 $file = $container['filedao']->getFileByBookId($bid);
