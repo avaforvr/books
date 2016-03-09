@@ -7,7 +7,7 @@ if($bid == 0) {
 	$util->redirect("index.php");
 }
 
-$file = $container['filedao']->getFileByBookId($bid);
+$file = $container['filedao']->getOneBook($bid);
 $filePath = $container['ROOT_PATH'] . $file['book_path'];
 $fileName = basename($filePath);
 

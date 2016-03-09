@@ -168,6 +168,8 @@ var initUploadForm = function () {
             return false;
         }
 
+        var isUploadBook = form.find('input[name="act"]').val() != 'editBook';
+
         var options = {
             dataType: 'json',
             beforeSubmit: function() {
@@ -175,8 +177,12 @@ var initUploadForm = function () {
                 elem.uploadBtn.prop('disabled', true);
             },
             success: function(r) {
-                cleanAttaForm();
-                cleanDataForm();
+                if(isUploadBook) {
+                    cleanAttaForm();
+                    cleanDataForm();
+                } else {
+                    form.hide();
+                }
 
                 if(r.code == 0) {
                     elem.successResult.show();
@@ -185,8 +191,12 @@ var initUploadForm = function () {
                 }
             },
             error: function () {
-                cleanAttaForm();
-                cleanDataForm();
+                if(isUploadBook) {
+                    cleanAttaForm();
+                    cleanDataForm();
+                } else {
+                    form.hide();
+                }
                 elem.failResult.show();
             }
         };

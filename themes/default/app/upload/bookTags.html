@@ -3,7 +3,7 @@
     <td colspan="2">
         <ul class="option-list">
             {% for id, tag in attr_tags %}
-                <label><input type="checkbox" name="data[book_tags][]" value="{{ id }}">{{ tag }}</label>
+                <label><input type="checkbox" name="data[book_tags][]" value="{{ id }}"{{ id in file['book_tags'] ? ' checked' : '' }}>{{ tag }}</label>
             {% endfor %}
         </ul>
         <p id="{{ domPrefix }}TagsTip" class="tip" style="margin: 0;"></p>

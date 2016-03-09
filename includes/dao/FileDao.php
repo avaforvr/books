@@ -55,14 +55,6 @@ class FileDao extends BaseDao{
 		return $fileList;
 	}
 	
-	public function getFileByBookId($bookId) {
-		$file = $this->getBooksByBookId($bookId);
-		$file['btags'] = $this->getTagsByBookId($bookId);
-		$file['misc'] = isLogin() ? $this->getMiscByBidUid($bookId, $_SESSION['user']['user_id']) : array();
-		$file = $this->handleFile($file);
-		return $file;
-	}
-	
 	public function getBookIds($sql) {
 		$db = $this->db();
 		$bookIds = array();
@@ -76,30 +68,9 @@ class FileDao extends BaseDao{
 	public function getFilesByBookIds($bookIds) {
 		$fileList = array();
 		foreach($bookIds as $bookId) {
-			$fileList[] = $this->getFileByBookId($bookId);
+			$fileList[] = $this->getOneBook($bookId);
 		}
 		return $fileList;
-	}
-
-	public function delTagByBookId($bookId) {
-		$db = $this->db();
-		$sql = "DELETE FROM tag WHERE book_id=$bookId";
-		return $db->query($sql);
-	}
-
-	public function setBooksByBookId($bookId, $file) {
-		$db = $this->db();
-		$sql = "UPDATE book SET
-			book_name='". addslashes($file['book_name']) ."',
-			book_author='". addslashes($file['book_author']) ."',
-			book_summary='". addslashes($file['book_summary']) ."',
-			brole='". $file['brole'] ."',
-			book_type='". $file['book_type'] ."',
-			book_style='". $file['book_style'] ."',
-			book_original_site='". addslashes($file['book_original_site']) ."'
-			WHERE book_id=" . $bookId;
-		$isok = $db->query($sql);
-		return $isok ? true : false;
 	}
 	
 	public function setTagByBookId($bookId, $file) {
@@ -135,12 +106,6 @@ class FileDao extends BaseDao{
 		
 		}
 		return $isok ? true : false;
-	}
-	
-	public function setFileByBookId($bookId, $file) {
-		$isok_books = $this->setBooksByBookId($bookId, $file);
-		$isok_tags = $this->setTagByBookId($bookId, $file);
-		return ($isok_books && $isok_tags) ? true : false;
 	}
 	
 	public function setExtra($option, $bookId, $value) {
@@ -211,7 +176,7 @@ class FileDao extends BaseDao{
                 $values[] = "'" . addslashes($value) . "'";
             }
             $sql = "INSERT INTO book(" . join(',', $fields) . ") VALUES(" . join(',', $values) . ")";
-            if($db->exec($sql)) {
+            if($db->exec($sql) !== FALSE) {
                 return $db->lastInsertId();
             } else {
                 return false;
@@ -259,10 +224,12 @@ class FileDao extends BaseDao{
 
         $set = array();
         foreach($file as $field =>$value) {
-            $set[] = "`" . $field . "`='" . addslashes($value) . "'";
+            if($field != 'book_id') {
+                $set[] = "`" . $field . "`='" . addslashes($value) . "'";
+            }
         }
         $sql = "UPDATE `book` SET " . join(',', $set) . " WHERE `book_id`=" . $bookId;
-        return $this->db()->exec($sql) ? true : false;
+        return $this->db()->exec($sql) !== FALSE ? true : false;
     }
 
     //修改book_status
@@ -272,7 +239,7 @@ class FileDao extends BaseDao{
         } else {
             $sql = "UPDATE book SET book_status=$status WHERE book_id=" . $bookId;
         }
-        return $this->db()->exec($sql) ? true : false;
+        return $this->db()->exec($sql) !== FALSE ? true : false;
     }
 
     //获取一条废弃记录的book_id (book_status == 0)
@@ -286,7 +253,15 @@ class FileDao extends BaseDao{
     public function getOneBook($bookId) {
         $sql = "SELECT * FROM `book` WHERE `book_id`=" . $bookId . " LIMIT 1;";
         $row = $this->getOneRow($sql);
-        return $row ? $row : array();
+        if($row) {
+            //解析book_tags
+            if(! empty($row['book_tags'])) {
+                $row['book_tags'] = explode('|', $row['book_tags']);
+            }
+            return $row;
+        } else {
+            return array();
+        }
     }
 
     //根据文件名和作者判断是否已存在

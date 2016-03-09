@@ -4,32 +4,5 @@
     <input type="hidden" name="data[book_path]" value="">
 
     {% set domPrefix = 'upload' %}
-    <table>
-        {% include 'upload/colgroup.html' %}
-        <tr>
-            <th>书名：<span class="required">*</span></th>
-            <td><input type="text" class="text" name="data[book_name]" readonly></td>
-            <td><span class="tip"></span></td>
-        </tr>
-        <tr>
-            <th>作者：<span class="required">*</span></th>
-            <td><input type="text" class="text" name="data[book_author]" readonly></td>
-            <td><span class="tip"></span></td>
-        </tr>
-
-        {% include 'snippets/bookType.html' %}
-        {% include 'snippets/bookStyle.html' %}
-
-        <tr>
-            <th>简介：</th>
-            <td colspan="2"><textarea class="area" name="data[book_summary]"></textarea></td>
-        </tr>
-        <tr>
-            <th>原创网址：</th>
-            <td colspan="2"><input type="text" class="text" name="data[book_original_site]"></td>
-        </tr>
-        {% include 'snippets/bookTags.html' %}
-
-        {% include 'upload/btns.html' %}
-    </table>
+    {% include 'upload/tableInBookForm.html' %}
 </form>

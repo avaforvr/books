@@ -1,18 +1,16 @@
 <?php
 include_once __DIR__ . '/BaseProcessor.php';
 
-class OnebookProcessor implements BaseProcessor {
+class OnebookProcessor extends  BaseProcessor {
 
 	public function isActive() {
 		return true;
 	}
 	
 	public function process($params = array()) {
-		foreach ($params as $key => $param) {
-            $$key = $param;
-        }
+        $container = $this->container;
 		$fileDao = $container['filedao'];
-		$file = $fileDao->getFileByBookId($bid);
+		$file = $fileDao->getOneBook($params['bookId']);
 		
 		$filePath = toGb($container['ROOT_PATH'] . $file['book_path']);
 		$content = file_get_contents($filePath);

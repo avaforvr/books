@@ -1,87 +1,23 @@
-<!doctype html>
-<html>
-<head>
-<title>Ava is reading...</title>
-{% include 'common/link.html' %}
-</head>
+{% set dataKey = 'upload' %}
+{% extends "common/base.html" %}
 
-<body data-key="upload">
-{% include 'common/header.html' %} 
+{% block main %}
 <div class="main-a">
+    <div class="related-pages">
+        <a href="{{ WEB_ROOT }}onebook.php?book_id={{ file['book_id'] }}" target="_blank">文件详细信息</a>
+    </div>
+
     <h1>{{file['book_name']}}</h1>
-	<form action="{{ WEB_ROOT }}editbook.php?book_id={{file['book_id']}}" method="post" id="editForm">
-		<input type="hidden" name="act" value="editInfo">
-		<input type="hidden" name="bookInfo[book_id]" value="{{file['book_id']}}">
-		<table width="100%">
-			<tr>
-				<th width="80">书名：<span class="required">*</span></th>
-				<td width="280"><input type="text" class="text" name="bookInfo[book_name]" value="{{file['book_name']}}" readonly></td>
-				<td><span id="bnameTip" class="tip">不可修改</span></td>
-			</tr>
-			<tr>
-				<th>作者：<span class="required">*</span></th>
-				<td><input type="text" class="text" name="bookInfo[book_author]" value="{{file['book_author']}}" readonly></td>
-				<td><span id="bauthorTip" class="tip">不可修改</span></td>
-			</tr>
-			<tr>
-				<th>分类：<span class="required">*</span></th>
-				<td>
-					<div class="select">
-						<input type="hidden" name="bookInfo[book_type]" value="{{file['book_type']}}">
-						<span>{{attr_type[file['book_type']]}}</span>
-						<ul>
-							{% for type in attr_type %}
-							<li>{{type}}</li>
-							{% endfor %}
-						</ul>
-					</div>
-				</td>
-				<td><span id="btypeTip" class="tip"></span></td>
-			</tr>
-			<tr>
-				<th>简介：</th>
-				<td colspan="2"><textarea class="area" name="bookInfo[book_summary]">{{file['book_summary']}}</textarea></td>
-			</tr>
-			<tr>
-				<th>主角：</th>
-				<td colspan="2"><input type="hidden" name="bookInfo[brole]" value="{{file['brole']}}"><span class="tip">多个主角用英文逗号隔开，如“张三,李四”</span></td>
-			</tr>
-			<tr>
-				<th>文风：</th>
-				<td>
-					<div class="select">
-						<input type="hidden" name="bookInfo[book_style]" value="{{file['book_style']}}">
-						<span>{{attr_style[file['book_style']]}}</span>
-						<ul>
-							{% for style in attr_style %}
-							<li>{{style}}</li>
-							{% endfor %}
-						</ul>
-					</div>
-				</td>
-			</tr>
-			<tr>
-				<th>原创网址：</th>
-				<td colspan="2"><input type="text" class="text" name="bookInfo[book_original_site]" value="{{file['book_original_site']}}"><span id="borigTip" class="tip"></span></td>
-			</tr>
-			<tr>
-				<th>标签：</th>
-				<td colspan="2">
-					<ul class="optionList">
-						{% for key, tag in tags_with_state %}
-						<li><input type="checkbox" name="bookInfo[btags][]" value="{{key}}"{{tag['checked']}}> <label>{{tag['text']}}</label></li>
-						{% endfor %}
-					</ul>
-					<p id="btagsTip" class="tip"></p>
-				</td>
-			</tr>
-			<tr>
-				<td class="td-btn" colspan="2"><input class="btn btn-primary" type="submit" value="保  存"><input class="btn btn-secondary" type="reset" value="重  置"></td>
-			</tr>
-		</table>
-	</form>
+
+    <form action="{{ WEB_ROOT }}editbook.php?book_id={{file['book_id']}}" method="post" id="uploadForm" class="form-a">
+        <input type="hidden" name="act" value="editBook">
+        <input type="hidden" name="data[book_id]" value="{{file['book_id']}}">
+
+        {% set domPrefix = 'upload' %}
+        {% include 'upload/tableInBookForm.html' %}
+    </form>
+
+    <div id="uploadSuccess" class="success-large hide">&radic; 修改成功！</div>
+    <div id="uploadFail" class="error-large hide">&times; 修改失败，请刷新重试！</div>
 </div>
-{% include 'common/footer.html' %}
-{% include 'common/script.html' %}
-</body>
-</html>
+{% endblock %}

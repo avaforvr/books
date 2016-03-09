@@ -3,7 +3,7 @@
     <td>
         <select name="data[book_style]">
             {% for id, style in attr_style %}
-                <option value="{{ id }}">{{ style }}</option>
+                <option value="{{ id }}"{{ file['book_style'] == id ? ' selected' : '' }}>{{ style }}</option>
             {% endfor %}
         </select>
     </td>

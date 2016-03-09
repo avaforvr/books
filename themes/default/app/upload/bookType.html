@@ -4,7 +4,7 @@
     <td>
         <select name="data[book_type]">
             {% for id, type in attr_type %}
-                <option value="{{ id }}">{{ type }}</option>
+                <option value="{{ id }}"{{ file['book_type'] == id ? ' selected' : '' }}>{{ type }}</option>
             {% endfor %}
         </select>
     </td>
