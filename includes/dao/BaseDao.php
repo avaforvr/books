@@ -8,25 +8,25 @@ abstract class BaseDao{
         $this->container = $container;
     }
 
-    protected function db(){
+    public function db(){
         return $this->container['db'];
     }
 
-    protected function getOneRow($sql) {
+    public function getOneRow($sql) {
         $stmt = $this->db()->query($sql);
         $stmt->setFetchMode(PDO::FETCH_ASSOC);
         $row = $stmt->fetch();
         return $row;
     }
 
-    protected function getAllRows($sql) {
+    public function getAllRows($sql, $mode=PDO::FETCH_ASSOC) {
         $stmt = $this->db()->query($sql);
-        $stmt->setFetchMode(PDO::FETCH_ASSOC);
+        $stmt->setFetchMode($mode);
         $rows = $stmt->fetchAll();
         return $rows;
     }
 
-    protected function isExist($sql) {
+    public function isExist($sql) {
         $stmt = $this->db()->query($sql);
         return $stmt->fetch() ? true : false;
     }

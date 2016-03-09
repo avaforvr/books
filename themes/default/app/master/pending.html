@@ -1,29 +1,47 @@
-<h1>待审核文件<span class="total">({{total}})</span></h1>
-<div class="fileBoxList">
-	{% for box in boxList %}
-	<dl class="fileBox">
-		{% for file in box['pending'] %}
-		<dt{{loop.last ? ' class="last"' : ''}} id="bid_{{file['book_id']}}">
-			<h3>
-				<a href="{{ WEB_ROOT }}onebook.php?book_id={{file['book_id']}}" target="_blank">{{file['book_name']}}</a>
-				<span>by {{file['book_author']}}</span>
-			</h3>
-			<div class="o">
-				<input class="btn5 btn-delete" type="submit" value="重复了">
-				<input class="btn6 btn-pass" type="submit" value="通 过">
-			</div>
-		</dt>
-		{% endfor %}
-		
-		{% if box['exist']|length != 0 %}
-		<dd>
-			<ul class="c">
-				{% for file in box['exist'] %}
-				<li><a href="{{ WEB_ROOT }}onebook.php?book_id={{file['book_id']}}" target="_blank">{{file['book_name']}}</a></li>
-				{% endfor %}
-			</ul>
-		</dd>
-		{% endif %}
-	</dl>
+{% set dataKey = 'pending' %}
+{% extends "master/base.html" %}
+
+{% block content %}
+<h1>待审核文件</h1>
+
+<div class="list-b" id="pendingList">
+	{% for box in list %}
+        <dl class="list-b-box">
+            <dt>
+                {% if box['pending']|length > 1 %}
+                    <div class="options fr">
+                        <button class="btn btn-primary btn-batch-pass" type="button">全部通过</button>
+                    </div>
+                {% endif %}
+
+                <h3>{{ box['book_author'] }}</h3>
+            </dt>
+            <dd>
+                {% if box['exist']|length != 0 %}
+                    <ul class="exist">
+                        {% for file in box['exist'] %}
+                            <li><i class="fa fa-angle-right"></i><a href="{{ WEB_ROOT }}onebook.php?book_id={{ file['book_id'] }}" target="_blank">{{ file['book_name'] }}</a></li>
+                        {% endfor %}
+                    </ul>
+                    <hr>
+                {% endif %}
+
+                <ul class="pending">
+                    {% for file in box['pending'] %}
+                        <li data-book-id="{{ file['book_id'] }}">
+                            <div class="options fr">
+                                <button class="btn btn-secondary btn-repeat" type="button">重复了</button>
+                                <button class="btn btn-primary btn-pass ml2" type="button">通&nbsp;过</button>
+                            </div>
+                            <a href="{{ WEB_ROOT }}onebook.php?book_id={{ file['book_id'] }}" target="_blank">{{ file['book_name'] }}</a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </dd>
+        </dl>
+	{% else %}
+        <div class="success-large">&radic; 所有文件审批完毕</div>
 	{% endfor %}
 </div>
+
+{% endblock %}

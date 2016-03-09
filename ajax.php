@@ -7,7 +7,7 @@ switch ($act) {
 	case 'setEva':
 		$result = array('code' => 0, 'msg' => '');
 		
-		if(! $container['login']) {
+		if(! $container['user']) {
 			$result['code'] = 1;
 			$result['msg'] = 'Please login first.';
 		} else {
@@ -30,7 +30,7 @@ switch ($act) {
 		break;
 	case 'delFile':
 		$bid = $_POST['book_id'];
-		$result = $container['filedao']->setExist($bid, 0);
+		$result = $container['filedao']->updateBookStatus($bid, 0);
 		echo $result ? 1 : 0;
 		break;
 	default:

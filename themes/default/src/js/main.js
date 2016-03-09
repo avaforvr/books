@@ -39,7 +39,7 @@ var init = function () {
             break;
 
         case 'pending':
-            require('./modules/pending');
+            require('./modules/pending').init();
             break;
 
         default:

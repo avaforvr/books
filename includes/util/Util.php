@@ -29,7 +29,7 @@ class Util extends BaseUtil {
 
     function checkLogin() {
         $container = $this->container;
-        if (!$container['login']) {
+        if (!$container['user']) {
             $this->redirect($container['WEB_ROOT'] . "login.php?back=" . $_SERVER['PHP_SELF']);
         }
     }
@@ -100,6 +100,7 @@ class Util extends BaseUtil {
      }
      */
 
+    //字符串及数值转换
     //file size to [M, K, B]
     function transSize($size) {
         if ($size >= 1024 * 1024) {
@@ -115,6 +116,22 @@ class Util extends BaseUtil {
     function dataToHtml($str) {
         $newStr = str_replace("\r\n", "<br>", $str);
         return $newStr;
+    }
+
+    //数组转换成sql需要的组合
+    function getSqlFields($arr) {
+        $fields = array();
+        foreach($arr as $field) {
+            $fields[] = "`" . $field . "`";
+        }
+        return join(',', $fields);
+    }
+    function getSqlValues($arr) {
+        $values = array();
+        foreach($arr as $value) {
+            $values[] = "'" . addslashes($value) . "'";
+        }
+        return join(',', $values);
     }
 
     //数组操作
@@ -139,7 +156,25 @@ class Util extends BaseUtil {
         }
     }
 
-    //数组操作
+    //数组扁平化，获取最低端的字符串组成的数组
+    function flatArray($arr) {
+        $flat = array();
+        foreach ($arr as $value) {
+            if (is_array($value)) {
+                $flatSub = $this->flatArray($value);
+            } else {
+                $flat[] = $value;
+            }
+            if(! empty($flatSub)) {
+                foreach($flatSub as $flatSubValue){
+                    $flat[] = $flatSubValue;
+                }
+            }
+        }
+        return $flat;
+    }
+
+    //文件操作
     //-------------------------------------------------------------------
     //文件解压缩
     function zipExtract($zipPath, $extractTo) {

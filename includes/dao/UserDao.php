@@ -2,7 +2,6 @@
 include_once __DIR__ . '/BaseDao.php';
 
 class UserDao extends BaseDao{
-
     //通过 user_id 获取 user数组
 	public function getUserByUid($userId) {
         $sql = "SELECT * FROM user WHERE user_id=$userId LIMIT 1";

@@ -65,9 +65,8 @@ class Initializer{
             include $c['ROOT_PATH'].'includes/util/DbUtil.php';
             return new DbUtil($c);
         };
-
-        $container['login'] = function($c){
-            return (isset($_SESSION['user']) && !empty($_SESSION['user']) && $_SESSION['user']['user_id'] > 0);
+        $container['user'] = function($c){
+            return isset($_SESSION['user']) && !empty($_SESSION['user']) ? $_SESSION['user'] : false;
         };
         return $container;
     }
@@ -90,8 +89,8 @@ class Initializer{
                 'REQUEST_URI' => urlencode($_SERVER['REQUEST_URI']),
                 'VERSION' => substr((strtotime(date('Y-m-d H:i:s')) - strtotime('2014-04-01 00:00:00')), -6)
             );
-            if($c['login']) {
-                $globals['user_name'] = $_SESSION['user']['user_name'];
+            if($c['user']) {
+                $globals['user_name'] = $c['user']['user_name'];
             }
 
             foreach($globals as $key => $value) {

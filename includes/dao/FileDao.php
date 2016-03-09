@@ -86,15 +86,7 @@ class FileDao extends BaseDao{
 		$sql = "DELETE FROM tag WHERE book_id=$bookId";
 		return $db->query($sql);
 	}
-	
-	public function delFileByBookId($bookId) {
-		//删除txt文件
-		$del_disk = $this->delFileOnDisk($bookId);
-		$del_books = $this->delBooksByBid($bookId);
-		$del_tags = $this->delTagByBookId($bookId);
-		return ($del_disk && $del_books && $del_extra && $del_tags) ? true : false;
-	}
-	
+
 	public function setBooksByBookId($bookId, $file) {
 		$db = $this->db();
 		$sql = "UPDATE book SET
@@ -168,15 +160,7 @@ class FileDao extends BaseDao{
 		}
 	}
 	
-	public function setExist($bookId, $val) {
-		$db = $this->db();
-		$sql = "UPDATE book SET book_status=$val WHERE book_id=$bookId";
-		if($db->query($sql)) {
-			return true;
-		} else {
-			return false;
-		}
-	}
+
 */
     //--------------------------------
     //将book_tags转换成字符串
@@ -196,6 +180,11 @@ class FileDao extends BaseDao{
         if(isset($file['book_tags'])) {
             $file['book_tags'] = $this->tagsToString($file['book_tags']); //将book_tags转换成字符串
         }
+
+        //如果该作者存在，则上传文件需要审批
+        $sql = "SELECT 1 FROM `book` WHERE book_author='" . $file['book_author'] . "' LIMIT 1;";
+        $file['book_status'] = $this->isExist($sql) ? 2 : 1;
+
         $book = array(
             'book_name' => $file['book_name'],
             'book_author' => $file['book_author'],
@@ -204,7 +193,7 @@ class FileDao extends BaseDao{
             'book_type' => isset($file['book_type']) ? $file['book_type'] : 0,
             'book_style' => isset($file['book_style']) ? $file['book_style'] : 0,
             'book_tags' => isset($file['book_tags']) ? $file['book_tags'] : '',
-            'book_status' => 2,
+            'book_status' => $file['book_status'],
             'book_original_site' => isset($file['book_original_site']) ? $file['book_original_site'] : '',
             'book_uploader' => $_SESSION['user']['user_id'],
             'book_upload_time' => date('Y-m-d H:i:s')
@@ -235,7 +224,7 @@ class FileDao extends BaseDao{
     public function delBook($bookId, $isInsertBook=false) {
         //将 book_status 设置为0，等待新纪录覆盖
         if(! $isInsertBook) {
-            $this->updateBook($bookId, array('book_status'=>0));
+            $this->updateBookStatus($bookId, 0);
         }
 
         //删除misc中所有相关记录
@@ -243,6 +232,8 @@ class FileDao extends BaseDao{
 
         //删除txt文件
         $this->delFileOnDisk($bookId);
+
+        return true;
     }
 
     //删除 txt文件
@@ -271,6 +262,16 @@ class FileDao extends BaseDao{
             $set[] = "`" . $field . "`='" . addslashes($value) . "'";
         }
         $sql = "UPDATE `book` SET " . join(',', $set) . " WHERE `book_id`=" . $bookId;
+        return $this->db()->exec($sql) ? true : false;
+    }
+
+    //修改book_status
+    public function updateBookStatus($bookId, $status) {
+        if(is_array($bookId)) {
+            $sql = "UPDATE book SET book_status=$status WHERE book_id IN (" . join(',', $bookId) . ")";
+        } else {
+            $sql = "UPDATE book SET book_status=$status WHERE book_id=" . $bookId;
+        }
         return $this->db()->exec($sql) ? true : false;
     }
 

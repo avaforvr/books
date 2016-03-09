@@ -1,11 +1,10 @@
 <?
 include_once __DIR__ . '/includes/init/global.php';
 
-
 $act = isset($_REQUEST['act']) && $_REQUEST['act'] ? $_REQUEST['act'] : '';
 $back = isset($_REQUEST['back']) && $_REQUEST['back'] ? $_REQUEST['back'] : $WEB_ROOT;
 
-if($act != 'logout' && $container['login']) {
+if($act != 'logout' && $container['user']) {
     $util->redirect($back);
 }
 
