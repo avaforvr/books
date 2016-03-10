@@ -27,8 +27,6 @@ $container = $baseinit->initBase($container);
 $container = $baseinit->initUtil($container);
 $container = $baseinit->initTwig($container);
 
-$util = $container['util'];
-
 function p() {
     $argvs = func_get_args();
     echo "<div style=\"text-align: left;\">\r\n";

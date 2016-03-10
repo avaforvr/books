@@ -14,12 +14,12 @@ var init = function () {
             require('./modules/browse');
             break;
 
-        case 'upload':
-            require('./modules/upload').init();
+        case 'onebook':
+            require('./modules/like').init();
             break;
 
-        case 'batchUpload':
-            require('./modules/batchUpload').init();
+        case 'upload':
+            require('./modules/upload').init();
             break;
 
         case 'login':

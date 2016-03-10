@@ -1,74 +1,72 @@
-<!doctype html>
-<html>
-<head>
-<title>Ava is reading...</title>
-{% include 'common/link.html' %}
-</head>
+{% set dataKey = 'onebook' %}
+{% extends "common/base.html" %}
 
-<body data-key="index">
-{% include 'common/header.html' %} 
+{% block main %}
 <div class="main-a">
-	{% if file|length != 0 %}
-    <div class="articleTitle">
-		<h1>{{file['book_name']}}</h1>
-		<div class="heat">
-			热度：<span class="eva_count" id="eva_count_{{file['book_id']}}">{{file['beva']}}</span>
-			{% if file['misc']['meva'] %}
-			<span class="eva eva_1" title="取消喜欢" id="eva_{{file['book_id']}}"></span>
-			{% else %}
-			<span class="eva" title="喜欢" id="eva_{{file['book_id']}}"></span>
-			{% endif %}
-		</div>
-	</div>
-    <div class="articleInfo">
-        <table>
-            <tr>
-                <th width="10%">作者</th>
-                <td width="40%">{{file['book_author']}}</td>
-                <th width="10%">主角</th>
-                <td width="40%">{{file['brole']}}</td>
-            </tr>
-            <tr>
-                <th>分类</th>
-                <td>{{file['book_type']}}</td>
-                <th>上传日期</th>
-                <td>{{file['bdate']}}</td>
-            </tr>
-            <tr>
-                <th>文风</th>
-                <td>{{file['book_style']}}</td>
-                <th>文件大小</th>
-                <td>{{file['book_size']}}</td>
-            </tr>
-            <tr>
-                <th>标签</th>
-                <td>
-					{% for tag in file['btags'] %}
-                    <span>{{tag}}</span>
-                    {% endfor %}
-                </td>
-            </tr>
-            <tr>
-                <th>文案</th>
-                <td colspan="3">{{file['book_summary']}}</td>
-            </tr>
-            <tr>
-                <th>原创网址</th>
-                <td colspan="3"><a href="{{file['book_original_site']}}" target="_blank">{{file['book_original_site']}}</a></td>
-            </tr>
-			{% if file['book_status'] == 1 %}
-            <tr>
-            	<th>操作</th>
-                <td colspan="3" class="multiar"><a href="{{ WEB_ROOT }}editbook.php?book_id={{file['book_id']}}">编辑</a><a href="{{ WEB_ROOT }}download.php?book_id={{file['book_id']}}" target="_blank" class="ml2">下载</a></td>
-            </tr>
-			{% endif %}
-        </table>
-    </div>
-	<div class="articlePreview">
+    {% if file is not empty %}
+        <div class="article-title">
+            <h1>{{ file['book_name'] }}</h1>
+            {% include 'snippets/like.html' %}
+        </div>
+
+        <div class="article-info">
+            <table>
+                <colgroup>
+                    <col width="10%">
+                    <col width="40%">
+                    <col width="10%">
+                    <col width="40%">
+                </colgroup>
+                <tr>
+                    <th>作者</th>
+                    <td>{{ file['book_author'] }}</td>
+                    <th>上传用户</th>
+                    <td>{{ file['show']['book_uploader'] }}</td>
+                </tr>
+                <tr>
+                    <th>分类</th>
+                    <td>{{ file['show']['book_type'] }}</td>
+                    <th>上传日期</th>
+                    <td>{{ file['book_upload_time'] }}</td>
+                </tr>
+                <tr>
+                    <th>文风</th>
+                    <td>{{ file['show']['book_style'] }}</td>
+                    <th>文件大小</th>
+                    <td>{{ file['book_size'] }}</td>
+                </tr>
+
+                {% if file['show']['book_tags'] is not empty %}
+                    <tr>
+                        <th>标签</th>
+                        <td colspan="3">
+                            {% for tag in file['show']['book_tags'] %}
+                            <span>{{tag}}</span>
+                            {% endfor %}
+                        </td>
+                    </tr>
+                {% endif %}
+
+                {% if file['book_summary'] %}
+                    <tr>
+                        <th>文案</th>
+                        <td colspan="3">{{ file['book_summary']|raw }}</td>
+                    </tr>
+                {% endif %}
+                {% if file['book_original_site'] %}
+                    <tr>
+                        <th>原创网址</th>
+                        <td colspan="3"><a href="{{ file['book_original_site'] }}" target="_blank">{{ file['book_original_site'] }}</a></td>
+                    </tr>
+                {% endif %}
+            </table>
+        </div>
+
+        <div class="article-preview">
 		{% if file['book_status'] == 1 %}
 			<h3>文章试读</h3>
-			{{file['filePreview'] | raw}}
-			<div class="goOn">试读结束，请下载后阅读全文：<a href="{{ WEB_ROOT }}download.php?book_id={{file['book_id']}}" target="_blank">{{file['book_name']}}</a></div>
+			{{ file['filePreview'] | raw}}
+			<div class="goOn">试读结束，请下载后阅读全文：<a href="{{ WEB_ROOT }}download.php?book_id={{ file['book_id'] }}" target="_blank">{{ file['book_name'] }}</a></div>
 		{% elseif file['book_status'] == 2 %}
 			<h3 class="deleted">该文件尚未通过审核，将于24小时内审核结束。</h3>
 		{% else %}
@@ -76,10 +74,7 @@
 		{% endif %}
     </div>
 	{% else %}
-	<div class="failDone doneMt">&times; 很遗憾，没找到！</div>
+	    <div class="error-large middle">&times; 很遗憾，没找到！</div>
 	{% endif %}
 </div>
-{% include 'common/footer.html' %}
-{% include 'common/script.html' %}
-</body>
-</html>
+{% endblock %}

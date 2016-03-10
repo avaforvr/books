@@ -1,0 +1,4 @@
+<button class="btn btn-secondary btn-like{{ file['is_liked'] ? ' liked' : '' }}" data-book-id="{{ file['book_id'] }}">
+    <i class="fa fa-heart"></i>
+    <span>{{ file['is_liked'] ? '取消' : '喜欢' }}</span>
+</button>

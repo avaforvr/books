@@ -27,10 +27,14 @@ class Util extends BaseUtil {
         }
     }
 
-    function checkLogin() {
+    function checkLogin($backUrl='') {
         $container = $this->container;
         if (!$container['user']) {
-            $this->redirect($container['WEB_ROOT'] . "login.php?back=" . $_SERVER['PHP_SELF']);
+            if($backUrl == '') {
+                $this->redirect($container['WEB_ROOT'] . "login.php?back=" . $_SERVER['REQUEST_URI']);
+            } else {
+                $this->redirect($container['WEB_ROOT'] . "login.php?back=" . $backUrl);
+            }
         }
     }
 
@@ -110,12 +114,6 @@ class Util extends BaseUtil {
         } else {
             return $size . ' B';
         }
-    }
-
-    //show summary with line feeds
-    function dataToHtml($str) {
-        $newStr = str_replace("\r\n", "<br>", $str);
-        return $newStr;
     }
 
     //数组转换成sql需要的组合

@@ -3,16 +3,6 @@ include_once __DIR__ . '/BaseDao.php';
 
 class FileDao extends BaseDao{
 /*
-	public function handleFile($file) {
-		$file['book_size'] = transSize($file['book_size']);
-		$file['book_path'] = 'files/' . $file['book_author'] . '/' . $file['book_name'] . ' by ' . $file['book_author'] . '.txt';
-		$file['book_summary'] = dataToHtml($file['book_summary']);
-		$vars = $this->container['vars'];
-		$file['btype_lang'] = $vars['attr_type'][$file['book_type']];
-		$file['bstyle_lang'] = $vars['attr_style'][$file['book_style']];
-		return $file;
-	}
-	
 	public function getBooksByBookId($bookId) {
 		$db = $this->db();
 		$sql = "SELECT * FROM book WHERE book_id=$bookId LIMIT 1";
@@ -72,59 +62,6 @@ class FileDao extends BaseDao{
 		}
 		return $fileList;
 	}
-	
-	public function setTagByBookId($bookId, $file) {
-		$db = $this->db();
-		$btags = empty($file['btags']) ? array() : $file['btags'];
-		$btagsInDb = $this->getTagsByBookId($bookId);
-		if(empty($btagsInDb)) {
-			if(empty($btags)) {
-				$isok = true;
-			} else {
-				$isok = $this->insertTag($bookId, $btags);
-			}
-		} else {
-			if(empty($btags)) {
-				$isok = $this->delTagByBookId($bookId);
-			} else {
-				$sql = "UPDATE tag SET ";
-				$attr_tags = $this->container['vars']['attr_tags'];
-				foreach($attr_tags as $key=>$tag) {
-					if(in_array($key, $btags)) {
-						$sql .= ($key . "=1");
-					} else {
-						$sql .= ($key . "=0");
-					}
-					if($key != ('t' . count($attr_tags))) {
-						$sql .= ",";
-					} else {
-						$sql .= " WHERE book_id=" . $bookId;
-					}
-				}
-				$isok = $db->query($sql);
-			}
-		
-		}
-		return $isok ? true : false;
-	}
-	
-	public function setExtra($option, $bookId, $value) {
-		$db = $this->db();
-		$field = 'b' . $option;
-		if($field == 'beva' && $value !== 1) {
-			$sql_get = "SELECT $field FROM `book` WHERE book_id=$bookId;";
-			$row = $db->fetchAssoc($sql_get);
-			if($row[$field] > 0) {
-				$sql = "UPDATE book SET $field=$field-1 WHERE book_id=$bookId";
-			}
-		} else {
-			$sql = "UPDATE book SET $field=$field+1 WHERE book_id=$bookId";
-		}
-		if(isset($sql)) {
-			$db->query($sql);
-		}
-	}
-	
 
 */
     //--------------------------------
@@ -205,11 +142,8 @@ class FileDao extends BaseDao{
     public function delFileOnDisk($bookId) {
         $row = $this->getOneBook($bookId);
         if(! empty($row)) {
-            $container = $this->container;
-            $disk_path = $container['path']['files'] . $row['book_author'] . '/' . $row['book_name'] . ' by ' . $row['book_author'] . '.txt';
-            $disk_path = $container['util']->toGb($disk_path);
-            if(file_exists($disk_path)) {
-                unlink($disk_path);
+            if(file_exists($row['book_path'])) {
+                unlink($row['book_path']);
                 return true;
             }
         }
@@ -251,18 +185,60 @@ class FileDao extends BaseDao{
 
     //获取一条完整记录
     public function getOneBook($bookId) {
+        $container = $this->container;
         $sql = "SELECT * FROM `book` WHERE `book_id`=" . $bookId . " LIMIT 1;";
-        $row = $this->getOneRow($sql);
-        if($row) {
+        $file = $this->getOneRow($sql);
+        if ($file) {
             //解析book_tags
-            if(! empty($row['book_tags'])) {
-                $row['book_tags'] = explode('|', $row['book_tags']);
+            if (!empty($file['book_tags'])) {
+                $file['book_tags'] = explode('|', $file['book_tags']);
             }
-            return $row;
+            //文件存放路径
+            $file['book_path'] = $container['util']->toGb($this->getFilePath($file));
+
+            return $file;
         } else {
             return array();
         }
     }
+
+    //在getOneBook的基础上扩展需要在页面展示的内容
+    public function getShowBook($bookId) {
+        $container = $this->container;
+        $file = $this->getOneBook($bookId);
+        if (! empty($file)) {
+            //是否喜欢
+            $file['is_liked'] = $container['miscdao']->isLiked($file['book_id']);
+
+            $file['show'] = array();
+
+            //上传用户的用户名
+            $user = $container['userdao']->getUserByUid($file['book_uploader']);
+            $file['show']['book_uploader'] = $user ? $user['user_name'] : '';
+
+            //分类文风标签等转换成文字
+            $vars = $container['vars'];
+            $file['show']['book_type'] = $vars['attr_type'][$file['book_type']];
+            $file['show']['book_style'] = $vars['attr_type'][$file['book_style']];
+            $file['show']['book_tags'] = array();
+            if($file['book_tags']) {
+                foreach($file['book_tags'] as $tagKey) {
+                    $file['show']['book_tags'][] = $vars['attr_tags'][$tagKey];
+                }
+            }
+
+            //book_size
+            $file['book_size'] = $container['util']->transSize($file['book_size']);
+
+            //book_summary 换行
+            $file['book_summary'] = nl2br($file['book_summary']);
+
+            return $file;
+        } else {
+            return array();
+        }
+    }
+
 
     //根据文件名和作者判断是否已存在
     public function isBookExist($bookName, $bookAuthor) {
@@ -273,6 +249,11 @@ class FileDao extends BaseDao{
     //返回完整文件名
     public function getFileName($file) {
         return $file['book_name'] . ' by ' . $file['book_author'] . '.txt';
+    }
+
+    //返回完整文件路径
+    public function getFilePath($file) {
+        return $this->container['path']['files'] . $file['book_author'] . '/' . $this->getFileName($file);
     }
 
     //移动文件

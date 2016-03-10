@@ -1,35 +1,35 @@
 <?
 include_once __DIR__ . '/includes/init/global.php';
-$container['util']->checkLogin();
+$util = $container['util'];
+$util->checkLogin($_SERVER['HTTP_REFERER']);
 
-$bid = isset($_REQUEST['book_id']) && $_REQUEST['book_id'] ? intval($_REQUEST['book_id']) : 0;
-if($bid == 0) {
+$bookId = isset($_REQUEST['book_id']) && $_REQUEST['book_id'] ? intval($_REQUEST['book_id']) : 0;
+if($bookId == 0) {
 	$util->redirect("index.php");
 }
 
-$file = $container['filedao']->getOneBook($bid);
-$filePath = $container['ROOT_PATH'] . $file['book_path'];
+$file = $container['filedao']->getOneBook($bookId);
+$filePath = $file['book_path'];
 $fileName = basename($filePath);
 
-if(file_exists(toGb($filePath))) {
+if(file_exists($filePath)) {
 	
-	$userId = $_SESSION['user']['user_id'];
+	$userId = $container['user']['user_id'];
 	$container['userdao']->setMoneyAndCtbt($userId, -1, 0); //下载，财富-1，贡献+0
-	$container['filedao']->setExtra('down', $bid, 1); //总下载次数+1
-	$container['miscdao']->setRecord('down', $bid, $userId); //记录
+	$container['miscdao']->setMisc($bookId, 'misc_down' , 1);; //记录
 
 	header("Content-type: text/plain");
 	
 	$userAgent = $_SERVER["HTTP_USER_AGENT"];
 	if (preg_match("/MSIE/", $userAgent)) {
-		header('Content-Disposition: attachment; filename="' . toGb($fileName) . '"');  
+		header('Content-Disposition: attachment; filename="' . $fileName . '"');
 	} else if (preg_match("/Firefox/", $userAgent)) {  
 		header('Content-Disposition: attachment; filename="' . $fileName . '"');
 	} else {  
-		header("Content-Disposition: attachment; filename=" . $fileName);
+		header("Content-Disposition: attachment; filename=" . $util->toUtf8($fileName));
 	}
 
-	readfile(toGb($filePath));
+	readfile($filePath);
 	
 } else {
 	die();

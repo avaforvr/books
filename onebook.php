@@ -1,21 +1,30 @@
 <?
 include_once __DIR__ . '/includes/init/global.php';
-
+$util = $container['util'];
 $bookId = isset($_REQUEST['book_id']) && $_REQUEST['book_id'] ? intval($_REQUEST['book_id']) : 0;
 if($bookId == 0) {
-	$util->redirect("index.php");
+    $util->redirect("index.php");
 }
 
-$container['filedao']->setExtra('browse', $bookId, 1); //总下载次数+1
+$fileDao = $container['filedao'];
+$file = $fileDao->getShowBook($bookId);
 
-//{{{ details
-include_once __DIR__ . '/includes/processor/OnebookProcessor.php';
-$onebook = new OnebookProcessor();
-$tplArray['file'] = $onebook->process(array(
-		'container' => $container,
-		'bookId' => $bookId,
-	));
+if(! empty($file)) {
+    $content = $util->toUtf8(file_get_contents($file['book_path']));
+    $lines = explode("\r\n", $content);
+    $filePreview = '';
+    foreach($lines as $key => $line) {
+        if($key == 29) {
+            $filePreview = $filePreview . '<p>' . $line . '...' . '</p>';
+        } else if($key < 29) {
+            $filePreview = $filePreview . '<p>' . $line . '</p>';
+        } else {
+            break;
+        }
+    }
+    $file['filePreview'] = $filePreview;
+}
 
-echo $container['twig']->render('onebook.html', $tplArray);
+echo $container['twig']->render('onebook.html', array('file'=>$file));
 
 ?>

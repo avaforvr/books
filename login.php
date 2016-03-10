@@ -1,6 +1,6 @@
 <?
 include_once __DIR__ . '/includes/init/global.php';
-
+$util = $container['util'];
 $act = isset($_REQUEST['act']) && $_REQUEST['act'] ? $_REQUEST['act'] : '';
 $back = isset($_REQUEST['back']) && $_REQUEST['back'] ? $_REQUEST['back'] : $WEB_ROOT;
 

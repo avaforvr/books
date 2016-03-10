@@ -51,3 +51,29 @@
         color: @colorText;
     }
 }
+
+.btn-like {
+    position: absolute;
+    top: 50%;
+    right: 0;
+    margin-top: -13px;
+    width: 60px;
+
+    cursor: pointer;
+    padding: 5px 0;
+    color: @colorLightGray;
+    font-size: 12px;
+    .fa {
+        margin-right: 5px;
+    }
+    &.liked {
+        background: @colorPrimary;
+        color: #fff;
+    }
+
+    &[disabled],
+    &.disabled {
+        border: solid 1px @colorBtnSecondary;
+        background-color: #fff;
+    }
+}

@@ -4,35 +4,24 @@ include_once __DIR__ . '/includes/init/global.php';
 $act = isset($_REQUEST['act']) && $_REQUEST['act'] ? $_REQUEST['act'] : '';
 
 switch ($act) {
-	case 'setEva':
-		$result = array('code' => 0, 'msg' => '');
-		
+	case 'like':
 		if(! $container['user']) {
-			$result['code'] = 1;
-			$result['msg'] = 'Please login first.';
+            $result = array('code' => 1, 'msg' => '为了更好的用户体验，请登录网站~');
 		} else {
-			$userId = $_SESSION['user']['user_id'];
-			$bid = $_POST['book_id'];
-			$record_result = $container['miscdao']->setRecord('eva', $bid, $userId); //更新misc记录
-			$container['filedao']->setExtra('eva', $bid, $record_result); //好评总数更新
-			if($record_result){
-				$container['userdao']->setMoneyAndCtbt($userId, 0, 1); //好评，财富+0，贡献+1，取消好评不加财富
-				$result['msg'] = 'Success plus.';
-				$result['isplus'] = 1;
-			} else {
-				$result['msg'] = 'Success reduce.';
-				$result['isplus'] = 0;
-			}
+
+            $bookId = $_GET['bookId'];
+            $likeVal = $_GET['likeVal'];
+            $userId = $container['user']['user_id'];
+            $record_result = $container['miscdao']->setMisc($bookId, 'misc_eva' , $likeVal);; //更新misc记录
+            if($likeVal === 1) {
+                $container['userdao']->setMoneyAndCtbt($userId, 0, 1); //好评，财富+0，贡献+1，取消好评不加财富
+            }
+            $result = array('code' => 0, 'msg' => '操作成功');
 		}
 		
 		echo json_encode($result);
-		die();
 		break;
-	case 'delFile':
-		$bid = $_POST['book_id'];
-		$result = $container['filedao']->updateBookStatus($bid, 0);
-		echo $result ? 1 : 0;
-		break;
+
 	default:
 		break;
 }
