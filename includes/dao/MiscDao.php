@@ -30,7 +30,7 @@ class MiscDao extends BaseDao{
     public function isLiked($bookId) {
         if($this->container['user']) {
             $userId = $this->container['user']['user_id'];
-            $sql = "SELECT 1 FROM `misc` WHERE misc_eva=1 AND book_id=" . $bookId . " AND user_id=" . $userId . " LIMIT 1";
+            $sql = "SELECT 1 FROM `misc` WHERE misc_like=1 AND book_id=" . $bookId . " AND user_id=" . $userId . " LIMIT 1";
             return $this->isExist($sql);
         } else {
             return false;

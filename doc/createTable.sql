@@ -37,8 +37,8 @@ CREATE TABLE IF NOT EXISTS misc(
 	user_id int,
 	misc_down boolean,
 	misc_down_time varchar(20),
-	misc_eva boolean,
-	misc_eva_time varchar(20)
+	misc_like boolean,
+	misc_like_time varchar(20)
 ) DEFAULT CHARSET=utf8;
 
 -- 搜索 searches
