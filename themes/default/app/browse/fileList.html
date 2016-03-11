@@ -1,0 +1,36 @@
+{% if fileList is not empty %}
+    {% set listClass = 'list-c' %}
+
+	{{html_listFilter | raw}}
+	<ul class="{{ listClass }}">
+        {% for file in fileList %}
+        <dl class="{{ listClass }}-box">
+            <dt class="{{ listClass }}-title">
+                <h3>
+                    <a href="{{ WEB_ROOT }}onebook.php?book_id={{ file['book_id'] }}" target="_blank">{{ file['book_name'] }}</a>
+                </h3>
+                <span>作者：{{ file['book_author'] }}</span>
+            </dt>
+            <dd class="{{ listClass }}-info">
+                {% if file['book_type'] != 0 %}
+                    <span>{{ file['show']['book_type'] }}</span>
+                {% endif %}
+
+                {% if file['book_style'] != 0 %}
+                    <span>{{ file['show']['book_style'] }}</span>
+                {% endif %}
+
+                {% for tag in file['btags'] %}
+                    <span>{{tag}}</span>
+                {% endfor %}
+
+                <span>{{ file['book_size'] }}</span>
+            </dd>
+            <dd class="{{ listClass }}-summary">{{ file['book_summary']|raw }}</dd>
+        </dl>
+		{% endfor %}
+	</ul>
+	{{html_pageString | raw}}
+{% else %}
+	<div class="browseTip">没有记录</div>
+{% endif %}

@@ -4,14 +4,8 @@ include_once __DIR__ . '/includes/init/global.php';
 //{{{ fileList
 include_once __DIR__ . '/includes/processor/FileListProcessor.php';
 $fileList = new FileListProcessor();
-$fileList->process(array(
-		'container' => $container,
-		'dataKey' => 'index',
-	));
-$tplArray['html_fileList'] = $fileList->render(array(
-		'container' => $container,
-		'extendClass' => ' separated',
-	));
+$fileList->process(array('dataKey' => 'index'));
+$tplArray['fileList'] = $fileList->render();
 //}}}
 
 //{{{ hotSearch

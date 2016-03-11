@@ -1,9 +1,9 @@
 {% extends "common/base.html" %}
 
 {% block main %}
-<div class="main_home">
+<div class="wrapper">
     {% include 'common/quickNav.html' %}
     {% include 'common/hotSearch.html' %}
-    {{html_fileList | raw}}
+    {{fileList | raw}}
 </div>
 {% endblock %}

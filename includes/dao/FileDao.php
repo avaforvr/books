@@ -183,20 +183,57 @@ class FileDao extends BaseDao{
         return $row ? $row['book_id'] : false;
     }
 
+    //扩展Book非展示数据
+    public function extendData($file) {
+        //解析book_tags
+        if (! empty($file['book_tags'])) {
+            $file['book_tags'] = explode('|', $file['book_tags']);
+        }
+        //文件存放路径
+        $file['book_path'] = $this->container['util']->toGb($this->getFilePath($file));
+
+        return $file;
+    }
+
+    //扩展Book展示数据
+    public function extendShow($file) {
+        $container = $this->container;
+        //是否喜欢
+        $file['is_liked'] = $container['miscdao']->isLiked($file['book_id']);
+
+        $file['show'] = array();
+
+        //上传用户的用户名
+        $user = $container['userdao']->getUserByUid($file['book_uploader']);
+        $file['show']['book_uploader'] = $user ? $user['user_name'] : '';
+
+        //分类文风标签等转换成文字
+        $vars = $container['vars'];
+        $file['show']['book_type'] = $vars['attr_type'][$file['book_type']];
+        $file['show']['book_style'] = $vars['attr_type'][$file['book_style']];
+
+        $file['show']['book_tags'] = array();
+        if(! empty($file['book_tags'])) {
+            foreach($file['book_tags'] as $tagKey) {
+                $file['show']['book_tags'][] = $vars['attr_tags'][$tagKey];
+            }
+        }
+
+        //book_size
+        $file['book_size'] = $container['util']->transSize($file['book_size']);
+
+        //book_summary 换行
+        $file['book_summary'] = nl2br($file['book_summary']);
+
+        return $file;
+    }
+
     //获取一条完整记录
     public function getOneBook($bookId) {
-        $container = $this->container;
         $sql = "SELECT * FROM `book` WHERE `book_id`=" . $bookId . " LIMIT 1;";
         $file = $this->getOneRow($sql);
         if ($file) {
-            //解析book_tags
-            if (!empty($file['book_tags'])) {
-                $file['book_tags'] = explode('|', $file['book_tags']);
-            }
-            //文件存放路径
-            $file['book_path'] = $container['util']->toGb($this->getFilePath($file));
-
-            return $file;
+            return $this->extendData($file);
         } else {
             return array();
         }
@@ -204,41 +241,26 @@ class FileDao extends BaseDao{
 
     //在getOneBook的基础上扩展需要在页面展示的内容
     public function getShowBook($bookId) {
-        $container = $this->container;
         $file = $this->getOneBook($bookId);
         if (! empty($file)) {
-            //是否喜欢
-            $file['is_liked'] = $container['miscdao']->isLiked($file['book_id']);
-
-            $file['show'] = array();
-
-            //上传用户的用户名
-            $user = $container['userdao']->getUserByUid($file['book_uploader']);
-            $file['show']['book_uploader'] = $user ? $user['user_name'] : '';
-
-            //分类文风标签等转换成文字
-            $vars = $container['vars'];
-            $file['show']['book_type'] = $vars['attr_type'][$file['book_type']];
-            $file['show']['book_style'] = $vars['attr_type'][$file['book_style']];
-            $file['show']['book_tags'] = array();
-            if($file['book_tags']) {
-                foreach($file['book_tags'] as $tagKey) {
-                    $file['show']['book_tags'][] = $vars['attr_tags'][$tagKey];
-                }
-            }
-
-            //book_size
-            $file['book_size'] = $container['util']->transSize($file['book_size']);
-
-            //book_summary 换行
-            $file['book_summary'] = nl2br($file['book_summary']);
-
-            return $file;
+            return $this->extendShow($file);
         } else {
             return array();
         }
     }
 
+    public function getShowBooks($sql) {
+        $books = array();
+        $rows = $this->getAllRows($sql);
+        if($rows) {
+            foreach($rows as $row) {
+                $row = $this->extendData($row);
+                $row = $this->extendShow($row);
+                $books[] = $row;
+            }
+        }
+        return $books;
+    }
 
     //根据文件名和作者判断是否已存在
     public function isBookExist($bookName, $bookAuthor) {

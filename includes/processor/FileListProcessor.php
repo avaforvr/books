@@ -59,7 +59,8 @@ class FileListProcessor extends  BaseProcessor {
 		return $sqls;
 	}
 	
-	public function build_sql_hsearch($sortBy, $container) {
+	public function build_sql_hsearch($sortBy) {
+        $container = $this->container;
 		$orderby = $this->build_orderby($sortBy);
 		
 		$filedao = $container['filedao'];
@@ -110,82 +111,85 @@ class FileListProcessor extends  BaseProcessor {
 		$sqls['getFiles'] = "SELECT * FROM book WHERE book_status=1" . $orderby;
 		return $sqls;
 	}
-	
-	public function isActive() {
-		return true;
-	}
-	
+
 	public function process($params = array()) {
-		foreach ($params as $key => $param) {
-            $$key = $param;
+        $filedao = $this->container['filedao'];
+        $this->dataKey = $params['dataKey'];
+        switch($params['dataKey']) {
+            case 'index':
+                $sql = "SELECT * FROM book WHERE book_status = 1 ORDER BY book_upload_time DESC LIMIT 20";
+                $this->fileList = $filedao->getShowBooks($sql);
+                break;
+
+            case 'browse':
+                $this->html_listFilter = '';
+                $this->html_pageString = '';
+                switch ($act) {
+                    case 'sbfilter':
+                        $sqls = $this->build_sql_sbfilter($sortBy);
+                        break;
+                    case 'sbsearch':
+                        $sqls = $this->build_sql_sbsearch($sortBy);
+                        break;
+                    case 'headerSearch':
+                        $sqls = $this->build_sql_hsearch($sortBy);
+                        break;
+                    default:
+                        $sqls = $this->build_sql_default($sortBy, $container);
+                        break;
+                }
+
+                //数据库查询游标
+                $sqlGetTotal = $sqls['getTotal'];
+                $filesTotal = $container['db']->getCount($sqlGetTotal);
+                if($filesTotal > $pageSize) {
+                    $limitoffset = " LIMIT $pageSize OFFSET " . ($page - 1) * $pageSize;
+                } else {
+                    $limitoffset = "";
+                }
+
+
+                if(! empty($sqls['getBookIds'])) {
+                    $sqlGetBids = $sqls['getBookIds'] . $limitoffset;
+                    $bids = $filedao->getBookIds($sqlGetBids);
+                    $this->fileList = $filedao->getFilesByBookIds($bids);
+                } else {
+                    $sqlGetFiles = $sqls['getFiles'] . $limitoffset;
+                    $this->fileList = $filedao->getFilesBySql($getFilesByBids);
+                }
+
+                $url = $_SERVER['REQUEST_URI'];
+                $pageTotal = ($filesTotal == 0) ? 0 : ceil($filesTotal / $pageSize);
+                $this->html_pageString = getPageString($page, $url, $filesTotal, $pageSize);
+                $this->html_listFilter = $container['twig']->render("browse/listFilter.html", array(
+                    'sortByUrl' => remove_param_in_url($url, array('sortby', 'page'), true),
+                    'sortBy' => $sortBy,
+                    'filesTotal' => $filesTotal,
+                    'pageTotal' => $pageTotal,
+                ));
+                break;
+
+            default:
+                break;
         }
-		$this->html_listFilter = '';
-		$this->html_pageString = '';
-		
-		$filedao = $container['filedao'];
-		
-		if($dataKey == 'index') {
-			$sql = "SELECT * FROM book WHERE book_status = 1 ORDER BY book_upload_time DESC LIMIT 20";
-			$this->fileList = $filedao->getFilesBySql($sql);
-		}
-		if($dataKey == 'browse') {
-			switch ($act) {
-				case 'sbfilter':
-					$sqls = $this->build_sql_sbfilter($sortBy);
-					break;
-				case 'sbsearch':
-					$sqls = $this->build_sql_sbsearch($sortBy);
-					break;
-				case 'headerSearch':
-					$sqls = $this->build_sql_hsearch($sortBy, $container);
-					break;
-				default:
-					$sqls = $this->build_sql_default($sortBy, $container);
-					break;
-			}
-			
-			//数据库查询游标
-			$sqlGetTotal = $sqls['getTotal'];
-			$filesTotal = $container['db']->getCount($sqlGetTotal);
-			if($filesTotal > $pageSize) {
-				$limitoffset = " LIMIT $pageSize OFFSET " . ($page - 1) * $pageSize;
-			} else {
-				$limitoffset = "";
-			}
-			
-			
-			if(! empty($sqls['getBookIds'])) {
-				$sqlGetBids = $sqls['getBookIds'] . $limitoffset;
-				$bids = $filedao->getBookIds($sqlGetBids);
-				$this->fileList = $filedao->getFilesByBookIds($bids);
-			} else {
-				$sqlGetFiles = $sqls['getFiles'] . $limitoffset;
-				$this->fileList = $filedao->getFilesBySql($getFilesByBids);
-			}
-			
-			$url = $_SERVER['REQUEST_URI'];
-			$pageTotal = ($filesTotal == 0) ? 0 : ceil($filesTotal / $pageSize);
-			$this->html_pageString = getPageString($page, $url, $filesTotal, $pageSize);			
-			$this->html_listFilter = $container['twig']->render("browse/listFilter.html", array(
-					'sortByUrl' => remove_param_in_url($url, array('sortby', 'page'), true),
-					'sortBy' => $sortBy,
-					'filesTotal' => $filesTotal,
-					'pageTotal' => $pageTotal,
-				));
-			
-		}
-		
 	}
 	
     public function render($params = array()) {
-		foreach ($params as $key => $param) {
-            $$key = $param;
+        switch($this->dataKey) {
+            case 'index':
+                $params['fileList'] = $this->fileList;
+                break;
+
+            case 'browse':
+                $params['fileList'] = $this->fileList;
+                $params['html_listFilter'] = $this->html_listFilter;
+                $params['html_pageString'] = $this->html_pageString;
+                break;
+
+            default:
+                break;
         }
-		$params['WEB_ROOT'] = $container['WEB_ROOT'];
-		$params['html_listFilter'] = $this->html_listFilter;
-		$params['html_pageString'] = $this->html_pageString;
-		$params['fileList'] = $this->fileList;
-		return $container['twig']->render("mod/fileList.html", $params);
+		return $this->container['twig']->render("browse/fileList.html", $params);
 	}
 }
 ?>
