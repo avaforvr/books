@@ -223,7 +223,9 @@ class FileDao extends BaseDao{
         $file['book_size'] = $container['util']->transSize($file['book_size']);
 
         //book_summary 换行
-        $file['book_summary'] = nl2br($file['book_summary']);
+        if($file['book_summary']) {
+            $file['book_summary'] = nl2br($file['book_summary']);
+        }
 
         return $file;
     }
