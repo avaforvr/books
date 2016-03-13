@@ -1,0 +1,17 @@
+<div class="pager">
+    {% if currentPage == 2 %}
+        <a class="btn btn-secondary" href="{{ firstPageUrl }}"><i class="fa fa-step-backward"></i></a>
+    {% elseif currentPage > 2 %}
+        <a class="btn btn-secondary" href="{{ baseUrl ~ (currentPage ) - 1 }}"><i class="fa fa-step-backward"></i></a>
+    {% endif %}
+
+    <select onchange="javascript:location.href=this.value;">
+        {% for i in (1..pageTotal) %}
+            <option value="{{ i==1 ? firstPageUrl : (baseUrl~i) }}"{{ currentPage == i ? ' selected' : '' }}>{{ i }}</option>
+        {% endfor %}
+    </select>
+
+    {% if currentPage < pageTotal %}
+        <a class="btn btn-secondary" href="{{ baseUrl ~ (currentPage ) + 1 }}"><i class="fa fa-step-forward"></i></a>
+    {% endif %}
+</div>

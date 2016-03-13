@@ -75,10 +75,10 @@
     }
 }
 
-//小说列表
+//首页小说列表
 .list-c-box {
     background: #fff;
-    box-shadow: 0 1px 3px @colorLightGray;
+    .common-shadow();
     padding: 18px 30px 15px;
     margin-bottom: @space;
     line-height: 22px;
@@ -86,7 +86,18 @@
         margin-bottom: 0;
     }
 }
-.list-c-title {
+
+//浏览搜索小说列表
+.list-d {
+    margin: 0 @space*1.25 @space;
+}
+.list-d-box {
+    background: url(../images/listDLine.gif) repeat-x 0 100%;
+    padding: 14px 5px 16px;
+    line-height: 22px;
+}
+
+.list-c-title, .list-d-title {
     float: left;
     h3 {
         float: left;
@@ -97,7 +108,7 @@
         margin-left: @space/2;
     }
 }
-.list-c-info {
+.list-c-info, .list-d-info {
     float: right;
     text-align: right;
     color: @colorLightGray;
@@ -105,7 +116,7 @@
         margin-left: @space/2;
     }
 }
-.list-c-summary {
+.list-c-summary, .list-d-summary {
     clear: both;
     padding-top: @space/2;
     font-size: 14px;

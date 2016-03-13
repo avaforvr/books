@@ -1,25 +1,20 @@
-<!doctype html>
-<html>
-<head>
-<title>Ava is reading...</title>
-{% include 'common/link.html' %}
-</head>
+{% set dataKey = 'browse' %}
+{% extends "common/base.html" %}
 
-<body data-key="browse">
-{% include 'common/header.html' %} 
-<div class="main_browse">
-    <div class="sidebar">
-		{% include 'browse/filterForm.html' %} 
-		{% include 'browse/keyForm.html' %} 
-		{% include 'common/hotSearch.html' %} 
+{% block main %}
+<div class="main-b">
+    <div class="side">
+		{% include 'browse/filter.html' %}
+        <div class="side-hr"></div>
+
+		{% include 'browse/keyForm.html' %}
+        <div class="side-hr"></div>
+
+        {% set hotSearchClass = 'side-hot' %}
+		{% include 'common/hotSearch.html' %}
     </div>
-    <div class="col2Main">
-		{{html_fileList | raw}}
-    </div>
-    <div class="clear">
+    <div class="main-b-cont">
+		{{fileList | raw}}
     </div>
 </div>
-{% include 'common/footer.html' %}
-{% include 'common/script.html' %}
-</body>
-</html>
+{% endblock %}

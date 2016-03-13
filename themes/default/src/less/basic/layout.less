@@ -8,7 +8,7 @@
     width: @maxWidth - 100;
     padding: 0 50px 30px;
     background: #fff;
-    .box-shadow(0 1px 3px @colorLightGray);;
+    .common-shadow();
     min-height: 560px;
     h1 {
         padding: 25px 0;
@@ -19,9 +19,13 @@
     width: @maxWidth;
     margin: 0 auto;
     padding-bottom: @space;
-    background: url(../images/sidebar.gif) repeat-y 0 0 #fff;
-    box-shadow: 0 1px 3px @colorLightGray;
+    background: url(../images/side.gif) repeat-y 0 0 #fff;
+    .common-shadow();
     min-height:600px;
+}
+.main-b-cont {
+    margin-left: @sideWidth;
+    overflow: hidden;
 }
 
 .related-pages {

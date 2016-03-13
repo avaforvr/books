@@ -34,11 +34,14 @@ var cleanDataForm = function () {
     elem.uploadTip.html('');
     elem.uploadTagsTip.html('');
     elem.uploadForm.hide().get(0).reset();
+    elem.batchForm.find('input[name="data[book_size]"]').val('');
+    elem.batchForm.find('input[name="data[book_path]"]').val('');
 
     elem.batchBtn.prop('disabled', false);
     elem.batchTip.html('');
     elem.batchTagsTip.html('');
     elem.batchForm.hide().get(0).reset();
+    elem.batchForm.find('input[name="data[files]"]').val('');
 };
 //隐藏上传结果
 var cleanResult = function () {

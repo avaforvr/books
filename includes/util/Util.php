@@ -45,6 +45,7 @@ class Util extends BaseUtil {
             $encode = mb_detect_encoding($str, array('ASCII', 'GB2312', 'GBK', 'UTF-8'));
             $str = iconv($encode, 'utf-8//IGNORE', $str);
             $str = str_replace('・', '·', $str);
+            $str = str_replace('―', '—', $str);
             return $str;
         } catch (Exception $e) {
             var_dump($e);
@@ -243,27 +244,21 @@ class Util extends BaseUtil {
     }
 
     //生成翻页代码
-    function getPageString($page, $url, $filesTotal, $pageSize) {
-        $pageString = '';
-
-        $url = remove_param_in_url($_SERVER['REQUEST_URI'], array('page'), true) . 'page=';
+    function getPager($currentPage, $url, $filesTotal, $pageSize) {
+        $baseUrl = $this->remove_param_in_url($url, array('page'), true) . 'page=';
+        $firstPageUrl = $this->remove_param_in_url($url, array('page'), false);
 
         if ($filesTotal > $pageSize) {
             $pageTotal = ceil($filesTotal / $pageSize);
-            if ($page != 1) {
-                $pageString .= '<a class="pre" href="' . $url . ($page - 1) . '">' . '上一页' . '</a>';
-            }
-            $pageString .= '<div class="sele"><span>' . $page . '</span><ul>';
-            for ($i = 1; $i <= $pageTotal; $i++) {
-                $pageString .= '<li><a href="' . $url . $i . '">' . $i . '</a></li>';
-            }
-            $pageString .= '</ul></div>';
-            if ($page != $pageTotal) {
-                $pageString .= '<a class="next" href="' . $url . ($page + 1) . '">' . '下一页' . '</a>';
-            }
+            return $this->container['twig']->render("mod/pager.html", array(
+                'baseUrl' => $baseUrl,
+                'firstPageUrl' => $firstPageUrl,
+                'pageTotal' => $pageTotal,
+                'currentPage' => $currentPage,
+            ));
+        } else {
+            return '';
         }
-        $pageString = '<div class="pages">' . $pageString . '</div>';
-        return $pageString;
     }
 
 }

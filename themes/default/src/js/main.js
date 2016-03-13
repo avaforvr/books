@@ -11,7 +11,7 @@ var init = function () {
             break;
 
         case 'browse':
-            require('./modules/browse');
+            require('./modules/browse').init();
             break;
 
         case 'onebook':

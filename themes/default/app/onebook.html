@@ -63,12 +63,18 @@
         </div>
 
         <div class="article-preview">
-		{% if file['book_status'] == 1 %}
+		{% if file['book_status'] == 1 or file['book_status'] == 2 %}
 			<h3>文章试读</h3>
 			{{ file['filePreview'] | raw}}
-			<div class="goOn">试读结束，请下载后阅读全文：<a href="{{ WEB_ROOT }}download.php?book_id={{ file['book_id'] }}" target="_blank">{{ file['book_name'] }}</a></div>
+
+            {% if file['book_status'] == 1 %}
+                <div class="goOn">试读结束，请下载后阅读全文：<a href="{{ WEB_ROOT }}download.php?book_id={{ file['book_id'] }}" target="_blank">{{ file['book_name'] }}</a></div>
+            {% else %}
+                <div class="goOn">该文件尚未通过审核，无法下载。将于24小时内审核结束，请耐心等待。</div>
+            {% endif %}
+
 		{% elseif file['book_status'] == 2 %}
-			<h3 class="deleted">该文件尚未通过审核，将于24小时内审核结束。</h3>
+
 		{% else %}
 			<h3 class="deleted">因版权或其它原因，该文件已删除。</h3>
 		{% endif %}

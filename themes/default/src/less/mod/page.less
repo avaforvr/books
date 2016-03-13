@@ -1,7 +1,7 @@
 //小说列表
 .separated li {
 	background: #fff;
-	box-shadow: 0 1px 3px @colorLightGray;
+    .common-shadow();
 	padding: 18px 30px 15px;
 	margin-top: 20px;
 	line-height: 22px;
@@ -29,19 +29,6 @@
 	}
 }
 /*书库*/
-.main_browse {
-	clear: both;
-	width: @maxWidth;
-	margin: 20px auto 0;
-	padding-bottom: 20px;
-	background: url(../images/sidebar.gif) repeat-y 0 0 #fff;
-	box-shadow: 0 1px 3px @colorLightGray;
-	min-height:600px;
-}
-.sidebar {
-	width: @sideWidth;
-	float: left;
-}
 .sbSearch {
 	background: url(../images/line1.gif) repeat-x 0 100%;
 	padding: 10px 17px 22px 15px;
@@ -57,26 +44,7 @@
 		margin-top: 12px;
 	}
 }
-.sb-menu {
-	padding: 10px 15px;
-	font-size: 14px;
-	line-height: 24px;
-}
-.sb-separate {
-	background: url(../images/line1.gif) repeat-x 0 100%;
-	height: 2px;
-}
-.sbHot {
-	line-height: 22px;
-	padding: 13px 17px 0 15px;
-	h3 {
-		margin-bottom: 2px;
-	}
-	a {
-		margin-right: 12px;
-	}
-}
-.col2Main {
+.main-b-cont {
 	margin-left: @sideWidth;
 }
 .padMain {
@@ -133,48 +101,7 @@
 		}
 	}
 }
-.pages {
-	text-align: center;
-	clear: both;
-	padding-top: 30px;
-	.pre, .next {
-        display: inline-block;
-        vertical-align: middle;
-        background: url(../images/btn.gif) no-repeat;
-        border: none;
-        cursor: pointer;
-        text-align: center;
-        overflow: hidden;
-        &:hover {
-            text-decoration: none;
-        }
-        width: 36px;
-		height: 36px;
-		line-height: 300px;
-		margin: 0 10px;
-	}
-	.pre {
-		background-position: 0 -26px;
-		&:hover {
-			background-position: -38px -26px;
-		}
-	}
-	.next {
-		background-position: -76px -26px;
-		&:hover {
-			background-position: -114px -26px;
-		}
-	}
-	.select {
-		ul {
-			top: auto;
-			bottom: 29px;
-			li {
-				padding: 0;
-			}
-		}
-	}
-}
+
 .browseTip {
 	padding: 25px;
 }

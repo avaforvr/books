@@ -8,12 +8,9 @@
 	{% for box in list %}
         <dl class="list-b-box">
             <dt>
-                {% if box['pending']|length > 1 %}
-                    <div class="options fr">
-                        <button class="btn btn-primary btn-batch-pass" type="button">全部通过</button>
-                    </div>
-                {% endif %}
-
+                <div class="options fr">
+                    <button class="btn btn-primary btn-batch-pass" type="button">全部通过</button>
+                </div>
                 <h3>{{ box['book_author'] }}</h3>
             </dt>
             <dd>

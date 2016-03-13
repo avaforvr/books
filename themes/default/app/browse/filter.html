@@ -1,0 +1,17 @@
+<form action="{{ WEB_ROOT }}browse.php" method="get" id="filterForm" class="side-form">
+    <input type="hidden" name="act" value="sbfilter">
+
+    <select name="type">
+        {% for id, type in attr_type %}
+        <option value="{{ id }}">{{ id==0 ? '选择分类' : type }}</option>
+        {% endfor %}
+    </select>
+
+    <select name="style">
+        {% for id, style in attr_style %}
+        <option value="{{ id }}">{{ id==0 ? '选择文风' : style }}</option>
+        {% endfor %}
+    </select>
+
+    <p class="tac"><button type="submit" class="btn btn-primary">搜&nbsp;&nbsp;索</button></p>
+</form>

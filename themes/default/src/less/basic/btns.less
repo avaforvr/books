@@ -34,20 +34,26 @@
 }
 
 .btn-primary {
-    &,
+    & {
+        background-color: @colorBtnPrimary;
+        color: #fff;
+    }
     &:hover,
     &:active,
     &:focus {
-        background-color: @colorBtnPrimary;
+        background-color: lighten(@colorBtnPrimary, 5%);
         color: #fff;
     }
 }
 .btn-secondary {
-    &,
+    & {
+        background-color: @colorBtnSecondary;
+        color: @colorText;
+    }
     &:hover,
     &:active,
     &:focus {
-        background-color: @colorBtnSecondary;
+        background-color: lighten(@colorBtnSecondary, 3%);
         color: @colorText;
     }
 }

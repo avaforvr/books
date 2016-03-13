@@ -9,7 +9,7 @@ if($bookId == 0) {
 $fileDao = $container['filedao'];
 $file = $fileDao->getShowBook($bookId);
 
-if(! empty($file)) {
+if(! empty($file) && $file['book_status'] != 0) {
     $content = $util->toUtf8(file_get_contents($file['book_path']));
     $lines = explode("\r\n", $content);
     $filePreview = '';

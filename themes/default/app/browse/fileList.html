@@ -1,7 +1,7 @@
 {% if fileList is not empty %}
-    {% set listClass = 'list-c' %}
+	{{filter | raw}}
 
-	{{html_listFilter | raw}}
+    {% set listClass = listClass is defined ? listClass : 'list-d' %}
 	<ul class="{{ listClass }}">
         {% for file in fileList %}
         <dl class="{{ listClass }}-box clearfix">
@@ -34,7 +34,8 @@
         </dl>
 		{% endfor %}
 	</ul>
-	{{html_pageString | raw}}
+
+	{{pager | raw}}
 {% else %}
 	<div class="browseTip">没有记录</div>
 {% endif %}

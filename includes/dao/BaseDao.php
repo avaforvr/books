@@ -30,6 +30,15 @@ abstract class BaseDao{
         $stmt = $this->db()->query($sql);
         return $stmt->fetch() ? true : false;
     }
+
+    public function getCount($sql) {
+        $stmt = $this->db()->query($sql);
+        $stmt->setFetchMode(PDO::FETCH_NUM);
+        $count = $stmt->fetch();
+        return $count[0];
+    }
+
+
 }
 
 ?>

@@ -1,8 +1,9 @@
 @headerHeight: 40px;
 .header {
     margin-bottom: @space;
+    min-width: @maxWidth;
     .gradient(#323232, #202020);
-    .box-shadow(0 1px 3px @colorLightGray);
+    .common-shadow();
     line-height: @headerHeight;
     &, a {
         color: #ddd;

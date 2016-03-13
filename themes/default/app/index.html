@@ -3,7 +3,10 @@
 {% block main %}
 <div class="wrapper">
     {% include 'common/quickNav.html' %}
+
+    {% set hotSearchClass = 'index-hot' %}
     {% include 'common/hotSearch.html' %}
+
     {{fileList | raw}}
 </div>
 {% endblock %}
