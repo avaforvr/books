@@ -210,7 +210,7 @@ class FileDao extends BaseDao{
         //分类文风标签等转换成文字
         $vars = $container['vars'];
         $file['show']['book_type'] = $vars['attr_type'][$file['book_type']];
-        $file['show']['book_style'] = $vars['attr_type'][$file['book_style']];
+        $file['show']['book_style'] = $vars['attr_style'][$file['book_style']];
 
         $file['show']['book_tags'] = array();
         if(! empty($file['book_tags'])) {
