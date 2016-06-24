@@ -21,6 +21,7 @@ switch ($act) {
 		$file = $container['filedao']->getOneBook($bookId);
 
         echo $container['twig']->render('editbook.html', array(
+            'attr_sex' => $container['vars']['attr_sex'],
             'attr_type' => $container['vars']['attr_type'],
             'attr_style' => $container['vars']['attr_style'],
             'attr_tags' => $container['vars']['attr_tags'],

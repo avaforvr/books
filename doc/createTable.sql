@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS book(
 	book_author varchar(100) comment '作者',
 	book_summary text comment '简介',
 	book_size int comment '文件体积',
-	book_sex int(2) comment '类型',
+	book_sex int(2) comment '性向',
 	book_type int(2) comment '类型',
 	book_style int(2) comment '文风',
 	book_tags varchar(20) comment '标签',

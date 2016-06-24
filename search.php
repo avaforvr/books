@@ -2,6 +2,7 @@
 include_once __DIR__ . '/includes/init/global.php';
 
 //{{{ 类型、文风筛选
+$tplArray['attr_sex'] = $container['vars']['attr_sex'];
 $tplArray['attr_type'] = $container['vars']['attr_type'];
 $tplArray['attr_style'] = $container['vars']['attr_style'];
 //}}}

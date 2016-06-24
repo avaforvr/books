@@ -21,6 +21,10 @@
                     <span>{{ file['show']['book_style'] }}</span>
                 {% endif %}
 
+                {% if file['book_sex'] != 0 %}
+                <span>{{ file['show']['book_sex'] }}</span>
+                {% endif %}
+
                 {% for tag in file['btags'] %}
                     <span>{{tag}}</span>
                 {% endfor %}

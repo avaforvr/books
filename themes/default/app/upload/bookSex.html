@@ -1,0 +1,11 @@
+{% set sexIsRequired = sexIsRequired is defined ? sexIsRequired : true %}
+<tr>
+    <th>性向：{% if sexIsRequired %}<span class="required">*</span>{% endif %}</th>
+    <td>
+        <select name="data[book_sex]">
+            {% for id, sex in attr_sex %}
+                <option value="{{ id }}"{{ file['book_sex'] == id ? ' selected' : '' }}>{{ sex }}</option>
+            {% endfor %}
+        </select>
+    </td>
+</tr>

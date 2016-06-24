@@ -69,9 +69,10 @@ class FileListProcessor extends BaseProcessor {
 
         $cache_file = $searchdao->getCacheFile($sid);
         if (!$cache_file) {
-            $attr_tags = $container['vars']['attr_tags'];
+            $attr_sex = $container['vars']['attr_sex'];
             $attr_type = $container['vars']['attr_type'];
             $attr_style = $container['vars']['attr_style'];
+            $attr_tags = $container['vars']['attr_tags'];
 
             $bids = array();
             $hkeys = explode(' ', $hkeystr);

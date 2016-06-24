@@ -6,6 +6,9 @@
     <table>
         {% include 'upload/colgroup.html' %}
 
+        {% set sexIsRequired = false %}
+        {% include 'upload/bookSex.html' %}
+
         {% set typeIsRequired = false %}
         {% include 'upload/bookType.html' %}
 

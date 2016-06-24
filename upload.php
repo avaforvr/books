@@ -29,6 +29,7 @@ switch ($act) {
         $files = json_decode($data['files'], TRUE);
         $bookTags = isset($data['book_tags']) ? join('|', $data['book_tags']) : '';
         foreach($files as $key => $file) {
+            $files[$key]['book_sex'] = $data['book_sex'];
             $files[$key]['book_type'] = $data['book_type'];
             $files[$key]['book_style'] = $data['book_style'];
             if($bookTags != '') {
@@ -45,6 +46,7 @@ switch ($act) {
 
 	default:
         echo $container['twig']->render('upload.html', array(
+            'attr_sex' => $container['vars']['attr_sex'],
             'attr_type' => $container['vars']['attr_type'],
             'attr_style' => $container['vars']['attr_style'],
             'attr_tags' => $container['vars']['attr_tags']

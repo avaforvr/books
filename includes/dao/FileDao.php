@@ -92,6 +92,7 @@ class FileDao extends BaseDao{
             'book_author' => $file['book_author'],
             'book_summary' => isset($file['book_summary']) ? $file['book_summary'] : '',
             'book_size' => $file['book_size'],
+            'book_sex' => isset($file['book_sex']) ? $file['book_sex'] : 0,
             'book_type' => isset($file['book_type']) ? $file['book_type'] : 0,
             'book_style' => isset($file['book_style']) ? $file['book_style'] : 0,
             'book_tags' => isset($file['book_tags']) ? $file['book_tags'] : '',
@@ -209,6 +210,7 @@ class FileDao extends BaseDao{
 
         //分类文风标签等转换成文字
         $vars = $container['vars'];
+        $file['show']['book_sex'] = $vars['attr_sex'][$file['book_sex']];
         $file['show']['book_type'] = $vars['attr_type'][$file['book_type']];
         $file['show']['book_style'] = $vars['attr_style'][$file['book_style']];
 

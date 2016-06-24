@@ -35,17 +35,18 @@
                     <th>文件大小</th>
                     <td>{{ file['book_size'] }}</td>
                 </tr>
-
-                {% if file['show']['book_tags'] is not empty %}
-                    <tr>
-                        <th>标签</th>
-                        <td colspan="3">
+                <tr>
+                    <th>性向</th>
+                    <td>{{ file['show']['book_sex'] }}</td>
+                    <th>标签</th>
+                    <td>
+                        {% if file['show']['book_tags'] is not empty %}
                             {% for tag in file['show']['book_tags'] %}
-                            <span class="mr4">{{tag}}</span>
+                                <span class="mr4">{{tag}}</span>
                             {% endfor %}
-                        </td>
-                    </tr>
-                {% endif %}
+                        {% endif %}
+                    </td>
+                </tr>
 
                 {% if file['book_summary'] %}
                     <tr>

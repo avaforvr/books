@@ -17,7 +17,7 @@ app.use(lessMiddleware('/themes/default/src/less', {
 var jsfiles = ['main'];
 for( var i in jsfiles){
     var f  = jsfiles[i];
-    var key = __dirname + '/default/src/js/main.js';
+    var key = __dirname + '/default/src/js/' + f + '.js';
     var module = {};
     module[key] = {expose: f};
     app.get('/themes/default/js/' + f + '.js', browserify([module],{
