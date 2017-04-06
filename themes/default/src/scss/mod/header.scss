@@ -1,10 +1,10 @@
-@headerHeight: 40px;
+$headerHeight: 40px;
 .header {
-    margin-bottom: @space;
-    min-width: @maxWidth;
-    .gradient(#323232, #202020);
-    .common-shadow();
-    line-height: @headerHeight;
+    margin-bottom: $space;
+    min-width: $maxWidth;
+    @include gradient(#323232, #202020);
+    @include common-shadow();
+    line-height: $headerHeight;
     &, a {
         color: #ddd;
     }
@@ -15,7 +15,7 @@
     padding: 0 15px;
     font-size: 16px;
     text-decoration: none;
-    .gradient(#464646, #2e2e2e);
+    @include gradient(#464646, #2e2e2e);
     &:hover {
         text-decoration: none;
         background: #464646;
@@ -26,7 +26,7 @@
     float: left;
     font-size: 14px;
     a {
-        margin-left: @space;
+        margin-left: $space;
     }
 }
 #header-search {
@@ -51,7 +51,7 @@
         width: 28px;
         height: 24px;
         padding: 0;
-        .border-radius(0);
+        @include border-radius(0);
         font-size: 15px;
         color: #bfd971;
         &:hover {

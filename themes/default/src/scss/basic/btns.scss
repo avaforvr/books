@@ -11,9 +11,9 @@
     white-space: nowrap;
     cursor: pointer;
     border: none;
-    .user-select('none');
-    .appearance('none');
-    .border-radius(3px);
+    @include user-select('none');
+    @include appearance('none');
+    @include border-radius(3px);
 
     //==================== Set primary button colors - can override later ====================
     &,
@@ -21,7 +21,7 @@
     &:active,
     &:focus {
         text-decoration: none;
-        background-color: @colorBtnPrimary;
+        background-color: $colorBtnPrimary;
         color: #fff;
     }
 
@@ -29,32 +29,32 @@
     &.disabled {
         cursor: default;
         pointer-events: none;
-        background-color: @colorLightGray;
+        background-color: $colorLightGray;
     }
 }
 
 .btn-primary {
     & {
-        background-color: @colorBtnPrimary;
+        background-color: $colorBtnPrimary;
         color: #fff;
     }
     &:hover,
     &:active,
     &:focus {
-        background-color: lighten(@colorBtnPrimary, 5%);
+        background-color: lighten($colorBtnPrimary, 5%);
         color: #fff;
     }
 }
 .btn-secondary {
     & {
-        background-color: @colorBtnSecondary;
-        color: @colorText;
+        background-color: $colorBtnSecondary;
+        color: $colorText;
     }
     &:hover,
     &:active,
     &:focus {
-        background-color: lighten(@colorBtnSecondary, 3%);
-        color: @colorText;
+        background-color: lighten($colorBtnSecondary, 3%);
+        color: $colorText;
     }
 }
 
@@ -67,19 +67,19 @@
 
     cursor: pointer;
     padding: 5px 0;
-    color: @colorLightGray;
+    color: $colorLightGray;
     font-size: 12px;
     .fa {
         margin-right: 5px;
     }
     &.liked {
-        background: @colorPrimary;
+        background: $colorPrimary;
         color: #fff;
     }
 
     &[disabled],
     &.disabled {
-        border: solid 1px @colorBtnSecondary;
+        border: solid 1px $colorBtnSecondary;
         background-color: #fff;
     }
 }

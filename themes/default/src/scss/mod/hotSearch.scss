@@ -1,10 +1,10 @@
 .index-hot {
     background: #fff;
-    .common-shadow();
+    @include common-shadow();
     height: 32px;
     line-height: 32px;
     padding: 0 30px;
-    margin-bottom: @space;
+    margin-bottom: $space;
     h3{
         float: left;
     }

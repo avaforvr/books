@@ -1,16 +1,16 @@
 //上传文件获取到的文件列表
 .list-a {
-    margin-bottom: @space;
-    border-bottom: dotted 1px @colorBorder;
+    margin-bottom: $space;
+    border-bottom: dotted 1px $colorBorder;
     h3 {
-        margin-bottom: @space/2;
+        margin-bottom: $space/2;
         font-size: 120%;
     }
     table {
         width: 100%;
         th, td {
             padding: 7px 10px;
-            border-top: dotted 1px @colorBorder;
+            border-top: dotted 1px $colorBorder;
         }
         th {
             background: #f5f5f5;
@@ -22,21 +22,21 @@
 
 //按照作者排序的文件列表
 .list-b-box {
-    margin-bottom: @space;
-    border: solid 1px @colorBorder;
-    padding: @space/2 @space*1.5;
-    .border-radius(3px);
+    margin-bottom: $space;
+    border: solid 1px $colorBorder;
+    padding: $space/2 $space*1.5;
+    @include border-radius(3px);
     h3 {
-        font: normal 150%/36px @fontFamilyYahei;
+        font: normal 150%/36px $fontFamilyYahei;
     }
     dt {
-        margin-bottom: @space/2;
-        border-bottom: solid 1px @colorBorder;
-        padding-bottom: @space/2;
+        margin-bottom: $space/2;
+        border-bottom: solid 1px $colorBorder;
+        padding-bottom: $space/2;
     }
     .pending {
         li {
-            border-bottom: dotted 1px @colorBorder;
+            border-bottom: dotted 1px $colorBorder;
             line-height: 36px;
             padding: 8px 0;
             &:last-child {
@@ -51,13 +51,13 @@
         }
     }
     .exist {
-        margin-left: -@space;
+        margin-left: -$space;
         li {
-            padding-left: @space;
+            padding-left: $space;
             display: inline-block;
             vertical-align: top;
             width: 33.33%;
-            .box-sizing(border-box);
+            @include box-sizing(border-box);
             line-height: 30px;
         }
         //&:nth-child(3n+1) {
@@ -68,7 +68,7 @@
         }
     }
     hr {
-        margin: @space/2 0;
+        margin: $space/2 0;
     }
     a {
         font-size: 120%;
@@ -78,9 +78,9 @@
 //首页小说列表
 .list-c-box {
     background: #fff;
-    .common-shadow();
+    @include common-shadow();
     padding: 18px 30px 15px;
-    margin-bottom: @space;
+    margin-bottom: $space;
     line-height: 22px;
     &:last-child {
         margin-bottom: 0;
@@ -89,7 +89,7 @@
 
 //浏览搜索小说列表
 .list-d {
-    margin: 0 @space*1.25 @space;
+    margin: 0 $space*1.25 $space;
 }
 .list-d-box {
     background: url(../images/listDLine.gif) repeat-x 0 100%;
@@ -104,21 +104,21 @@
         font-size: 14px;
     }
     span {
-        color: @colorLightGray;
-        margin-left: @space/2;
+        color: $colorLightGray;
+        margin-left: $space/2;
     }
 }
 .list-c-info, .list-d-info {
     float: right;
     text-align: right;
-    color: @colorLightGray;
+    color: $colorLightGray;
     span {
-        margin-left: @space/2;
+        margin-left: $space/2;
     }
 }
 .list-c-summary, .list-d-summary {
     clear: both;
-    padding-top: @space/2;
+    padding-top: $space/2;
     font-size: 14px;
     line-height: 26px;
 }

@@ -1,5 +1,6 @@
 var gulp = require('gulp');
-var less = require('gulp-less');
+//var less = require('gulp-less');
+var sass = require('gulp-sass');
 var uglify  = require('gulp-uglify');
 var source = require('vinyl-source-stream');
 var streamify = require('gulp-streamify');
@@ -7,11 +8,17 @@ var browserify = require('browserify');
 
 var theme = 'default';
 
-gulp.task('less', function () {
-    gulp.src(['./' + theme + '/src/less/*.less'])
-        .pipe(less())
-        .pipe(gulp.dest('./' + theme + '/css'));
+gulp.task('sass', function () {
+    gulp.src(['./' + theme + '/src/less/*.scss'])
+    .pipe(sass().on('error', sass.logError))
+    .pipe(gulp.dest('./' + theme + '/css'));
 });
+
+//gulp.task('less', function () {
+//    gulp.src(['./' + theme + '/src/less/*.less'])
+//        .pipe(less())
+//        .pipe(gulp.dest('./' + theme + '/css'));
+//});
 
 gulp.task('js', function(){
     var jsfiles = ['main'];
@@ -28,7 +35,7 @@ gulp.task('js', function(){
 });
 
 gulp.task('default', function () {
-    gulp.run('less');
+    gulp.run('sass');
     gulp.run('js');
 
     //监视less文件的变化

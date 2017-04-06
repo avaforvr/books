@@ -1,6 +1,6 @@
 .base-input, .text, select, textarea {
     background: #fff;
-    border: solid 1px @colorInputBorder;
+    border: solid 1px $colorInputBorder;
     line-height: 1.3;
     box-sizing: border-box;
     padding: 8px 10px;
@@ -12,7 +12,7 @@ textarea {
     line-height: 26px;
 }
 .required {
-    color:@colorHighlight;
+    color:$colorHighlight;
 }
 
 .form-a {
@@ -46,15 +46,15 @@ textarea {
     }
     .tip {
         margin-left: 15px;
-        color: @colorTip;
+        color: $colorTip;
         font-size: 12px;
     }
     .success {
-        color:@colorSuccess;
+        color:$colorSuccess;
         font-size: 14px;
     }
     .error {
-        color:@colorError;
+        color:$colorError;
         font-size: 14px;
     }
     .fa {

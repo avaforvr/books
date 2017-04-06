@@ -1,0 +1,47 @@
+//快速导航
+@mixin quickNav($color:$colorPrimary) {
+    background: $color;
+    &:hover {
+        background: lighten($color, 5%);
+    }
+}
+
+.quick-nav {
+    margin-bottom: $space;
+    margin-left: -$space/2;
+    a {
+        margin-left: $space/2;
+        display: inline-block;
+        vertical-align: top;
+        width: ($maxWidth - $space*2.5)/6;
+        height: 50px;
+        @include common-shadow();
+        text-align: center;
+        color: #fff;
+        font: normal 18px/50px $fontFamilyYahei;
+        text-decoration: none;
+        text-shadow: 0 1px $colorGray;
+    }
+    .fa {
+        margin-right: 10px;
+        font-size: 20px;
+    }
+    .a1 {
+        @include quickNav(#0075c3);
+    }
+    .a2 {
+        @include quickNav(#7ca600);
+    }
+    .a3 {
+        @include quickNav(#c47100);
+    }
+    .a4 {
+        @include quickNav(#c50000);
+    }
+    .a5 {
+        @include quickNav(#af00c5);
+    }
+    .a6 {
+        @include quickNav(#0098c5);
+    }
+}

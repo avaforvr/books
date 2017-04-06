@@ -6,7 +6,7 @@
 .fr { float: right; }
 .clear { clear: both; }
 .clearfix, .wrapper, .column {
-    .clearfix()
+    @include clearfix()
 }
 
 .mt1 { margin-top: 5px; }
@@ -31,29 +31,29 @@
 
 .hide { display: none; }
 hr {
-    background: @colorBorder;
+    background: $colorBorder;
     height: 1px;
     line-height: 1px;
     font-size: 0;
     border: none;
 }
-.success { color: @colorSuccess; }
-.error { color: @colorError; }
+.success { color: $colorSuccess; }
+.error { color: $colorError; }
 
-.success { color: @colorSuccess; }
-.error { color: @colorError; }
+.success { color: $colorSuccess; }
+.error { color: $colorError; }
 
 .success-large, .error-large {
     padding: 25px 0;
-    font: normal 36px/1.5 @fontFamilyYahei;
+    font: normal 36px/1.5 $fontFamilyYahei;
     text-align: center;
     &.middle {
         padding-top: 200px;
     }
 }
 .success-large {
-    color:@colorSuccess;
+    color:$colorSuccess;
 }
 .error-large {
-    color:@colorError;
+    color:$colorError;
 }

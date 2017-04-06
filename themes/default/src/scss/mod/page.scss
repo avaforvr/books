@@ -1,7 +1,7 @@
 //小说列表
 .separated li {
 	background: #fff;
-    .common-shadow();
+    @include common-shadow();
 	padding: 18px 30px 15px;
 	margin-top: 20px;
 	line-height: 22px;
@@ -45,14 +45,14 @@
 	}
 }
 .main-b-cont {
-	margin-left: @sideWidth;
+	margin-left: $sideWidth;
 }
 .padMain {
 	padding: 0 30px 30px;
 	h1 {
 		padding: 25px 0;
 		.total {
-			color:@colorLightGray;
+			color:$colorLightGray;
 			margin-left: 15px;
 		}
 	}
@@ -95,7 +95,7 @@
 		position: absolute;
 		top: 15px;
 		right: 25px;
-		color: @colorLightGray;
+		color: $colorLightGray;
 		span {
 			margin: 0 6px;
 		}
@@ -167,7 +167,7 @@
 }
 
 .fileBox {
-	border: solid 1px @colorBorder;
+	border: solid 1px $colorBorder;
 	margin-bottom: 15px;
 	font-size: 14px;
 	dt {
@@ -177,7 +177,7 @@
 		line-height: 30px;
 		white-space: nowrap;
 		position: relative;
-		border-bottom: dotted 1px @colorBorder;
+		border-bottom: dotted 1px $colorBorder;
 		&.last{
 			border-bottom: none;
 		}
@@ -192,7 +192,7 @@
 		right: 10px;
 	}
 	.c {
-		border-top: dotted 1px @colorBorder;
+		border-top: dotted 1px $colorBorder;
 		padding: 10px 0;
 		overflow: hidden;
 		li {

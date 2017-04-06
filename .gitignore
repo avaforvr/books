@@ -20,3 +20,4 @@ caches/book/*
 test.php
 themes/node_modules/
 themes/default/css/global.css
+themes/default-less/

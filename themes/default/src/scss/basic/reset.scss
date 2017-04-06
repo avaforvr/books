@@ -6,16 +6,16 @@ body, h1, h2, h3, h4, h5, h6, hr, p, blockquote, dl, dt, dd, ul, ol, li, pre, fo
 body {
 	font-size: 12px;
     line-height: 1.5;
-	font-family: @fontFamilyBase;
-	color: @colorText;
-    background: @colorBody;
+	font-family: $fontFamilyBase;
+	color: $colorText;
+    background: $colorBody;
 }
 button, input, select, textarea {
     font-size: 14px;
-    font-family: @fontFamilyBase;
-    color: @colorText;
+    font-family: $fontFamilyBase;
+    color: $colorText;
     vertical-align: middle;
-    .box-sizing(border-box);
+    @include box-sizing(border-box);
     &:focus {
         outline: none;
     }
@@ -27,7 +27,7 @@ address, cite, dfn, em, var {
 	font-style: normal;
 }
 code, kbd, pre, samp {
-	font-family: @fontFamilyBase;
+	font-family: $fontFamilyBase;
 }
 small {
 	font-size: 12px;
@@ -37,7 +37,7 @@ ul, ol {
 }
 a {
 	text-decoration: none;
-	color: @colorLink;
+	color: $colorLink;
 }
 a:hover {
 	text-decoration: underline;
@@ -72,7 +72,7 @@ img {
 
 h1 {
     font-size: 28px;
-    font-family: @fontFamilyYahei;
+    font-family: $fontFamilyYahei;
     font-weight: normal;
     line-height: 36px;
 }
