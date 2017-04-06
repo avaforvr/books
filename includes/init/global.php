@@ -14,7 +14,7 @@ require_once __DIR__ . '/cookie.php';
 error_reporting($siteConf['DEBUG_MODE'] ? E_ALL : E_ALL & ~E_NOTICE & ~E_STRICT & ~E_DEPRECATED);
 
 //Initializer
-require_once __DIR__ . '../../../vender/Pimple.php';
+require_once __DIR__ . '../../../vendor/Pimple.php';
 $container = new Pimple();
 
 require_once __DIR__ . '/path.php';

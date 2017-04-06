@@ -177,7 +177,7 @@ class Util extends BaseUtil {
     //-------------------------------------------------------------------
     //文件解压缩
     function zipExtract($zipPath, $extractTo) {
-        include $this->container['ROOT_PATH'] . 'vender/pclzip/pclzip.lib.php';
+        include $this->container['ROOT_PATH'] . 'vendor/pclzip/pclzip.lib.php';
         $archive = new PclZip($zipPath);
         if ($archive->extract(PCLZIP_OPT_PATH, $extractTo,
                 PCLZIP_OPT_REMOVE_PATH, 'install/release') == 0

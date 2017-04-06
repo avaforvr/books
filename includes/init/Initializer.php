@@ -73,7 +73,7 @@ class Initializer{
 
     public function initTwig($container){
         $container['twig'] = function($c){
-            include $c['ROOT_PATH'] . 'vender/Twig/lib/Twig/Autoloader.php';
+            include $c['ROOT_PATH'] . 'vendor/Twig/lib/Twig/Autoloader.php';
             Twig_Autoloader::register();
             $loader = new Twig_Loader_Filesystem($c['path']['tpl']);
             $twig = new Twig_Environment($loader, array(

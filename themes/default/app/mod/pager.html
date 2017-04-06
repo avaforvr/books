@@ -1,8 +1,8 @@
 <div class="pager">
     {% if currentPage == 2 %}
-        <a class="btn btn-secondary" href="{{ firstPageUrl }}"><i class="fa fa-step-backward"></i></a>
+        <a class="btn btn-secondary" href="{{ firstPageUrl }}"><i class="fa fa-chevron-left" aria-hidden="true"></i></a>
     {% elseif currentPage > 2 %}
-        <a class="btn btn-secondary" href="{{ baseUrl ~ (currentPage ) - 1 }}"><i class="fa fa-step-backward"></i></a>
+        <a class="btn btn-secondary" href="{{ baseUrl ~ (currentPage - 1) }}"><i class="fa fa-chevron-left" aria-hidden="true"></i></a>
     {% endif %}
 
     <select onchange="javascript:location.href=this.value;">
@@ -12,6 +12,6 @@
     </select>
 
     {% if currentPage < pageTotal %}
-        <a class="btn btn-secondary" href="{{ baseUrl ~ (currentPage ) + 1 }}"><i class="fa fa-step-forward"></i></a>
+        <a class="btn btn-secondary" href="{{ baseUrl ~ (currentPage + 1) }}"><i class="fa fa-chevron-right" aria-hidden="true"></i></a>
     {% endif %}
 </div>
